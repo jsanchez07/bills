@@ -1,0 +1,59 @@
+<script type="text/javascript">
+ 
+ function putResult(){
+ 
+// var input = document.getElementById( "time" );
+var input = document.theForm.time.value;
+
+ var res = input.split(":");
+ 
+ var hour = parseInt(res[0]);
+ var minutes = parseInt(res[1]);
+
+var degForMinutes = minutes*6;
+var degForHour = (hour*30) + (minutes/2);
+
+var distance = degForHour - degForMinutes;
+
+  document.getElementById("result").value= distance+" degrees";
+  
+
+}
+
+
+
+</script>
+
+
+<HTML>
+<HEAD>
+
+<br />
+<br />
+<TITLE>Finances</TITLE></HEAD> 
+<BODY> 
+ <form id = "time" name = "theForm" Method = "POST" action= "">
+ <table border ='1' width ='100%' align='center'>
+
+ <tr align ="center" style ="background-color: blue; color: white">
+ <td>Time</td>
+ <td><input type = 'text' name = 'time' id = 'time'></td>
+<td><input type = "button" value ="calculate"
+             onclick = "putResult()"/></p></td>
+ </tr><tr align = "center" style = "background-color: red; color: white">
+ <td>Difference between angles</td>
+ <td><input type = 'text' name ='result' id = 'result'></td>
+ <td></td>
+ </tr>
+ 
+<?php 
+//ini_set('max_execution_time', 300); 
+            
+   
+
+?>
+
+</TABLE>
+</form>
+<br />
+</html>

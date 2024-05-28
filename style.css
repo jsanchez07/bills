@@ -1,0 +1,583 @@
+
+hr{
+    width: 90%;
+    
+}
+h1 {
+	font-family: Times New Roman;
+	font-size:500%;
+	color:#31B404;	
+}
+	
+h2 {
+	font-size:200%;
+}
+	
+p {
+	font-size:100%;
+  	 color:white;
+}
+
+  /*logged in as user*/	 
+uN {
+	color: blue;
+}
+
+/*not sure if these are doing anything after individual css was applied*/
+ul{
+
+}	
+
+li {
+	display: inline;
+	color:white;
+}
+
+li a {
+    display: inline;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/*navBar and userBar globally */
+.navBar{
+	float: left;
+	background-color: #484848;
+	padding: 20px 10px;
+	border-radius: 5px;
+	position: fixed;
+	z-index: 2;
+	top:8px;
+}
+	
+.navBar a:hover{
+    background-color: #31B404;
+    }
+    
+.userNav{
+  position: fixed;
+  right: 0;
+  top: 24px;
+  float: right;
+  z-index: 2;
+  
+	}
+
+.userNav a{
+    display: block;
+    }
+.userNav a:hover{
+    background-color:red;
+}
+
+
+/*all the colors*/
+.blue{
+    background-color: #0469e3 ;
+    color: black;
+}
+.gray{
+    background-color: gray;
+    color: red;
+}
+
+.green{
+    background-color: #31B404;
+    color: black;
+}
+
+.yellow{
+    background-color: yellow;
+    color: black;
+}
+.red{
+    background-color: red;
+    color: black;
+}
+
+
+/*rows for old table*/
+rows {
+	font-family: Arial, Sans-serif; 
+	padding: 15px 5px;
+	margin: 0px 0px;
+	}
+
+
+/*form stuff for the login form*/	
+formTextHeading {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	font-family: courier; 
+	font-size:250%; 
+	color: #31B404;
+}
+
+formTextHeadingWrong {
+	
+	font-family: courier;
+	font-size:250%;
+	color:#CC0000;
+}
+	
+formText {
+	text-align: left;
+	font-weight: 600;
+	color:#31B404;
+	padding: 50px 10px;
+	margin: 15px;
+}
+
+/*nothing yet for these two*/	
+body { 
+	
+
+}
+div {
+  
+}
+
+
+.center {
+	position: relative;
+	justify-content: center;
+	text-align: center;
+}
+
+/*new table of bills*/
+.listOfHeaders{
+    
+    padding: 0px 0px 0px 110px;
+    margin: 0px 0px 0px 0px;
+    display: flex;
+    align-items: flex-end;
+    background-color: white;
+    z-index: 2;
+    
+    
+}
+.listOfBills{
+   	display: block;
+   	margin-top: 0px;
+   	
+}
+
+.rowsOfBills{
+    display: block;
+    width: 97%;
+    margin: 0px 0px 0px 35px;
+}
+
+/* class used to change the background colors based on status*/
+[class^="this-row"]{
+    background-color: none;
+    margin: 0px 100px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+
+.storeHeader{
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    display: inline-flex;
+    width: 15%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+     
+ }
+ 
+.store{
+    display: inline-flex;
+    font-size: 19px;
+    font-weight: bold;
+    width: 17%;
+    color:black;
+    padding: 10px 35px;
+}
+
+.dueDateHeader{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    width: 7%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+    
+}
+.nextDue{
+    display: inline-flex;
+    font-size: 19px;
+    width: 8%;
+    padding: 10px 35px;
+    color: black;
+}
+
+.daysLeftHeader{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    width:4%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+}
+.daysLeft{
+    display: inline-flex;
+    font-size: 19px;
+    width: 3%;
+    padding: 10px 35px;
+    color:black;
+}
+
+.lastPayDateHeader{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    width: 8.5%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+}
+.lastPayment{
+    display: inline-flex;
+    font-size: 19px;
+    width: 10%;
+    padding: 10px 35px;
+    color:black;
+}
+
+.lastPayAmountHeader{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    width: 5%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+}
+.payAmount{
+    display: inline-flex;
+    font-size: 19px;
+    width: 5%;
+    padding: 10px 35px;
+    color:black;
+}
+
+.statusHeader{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    width: 7%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+}
+
+.status{
+    display: inline-flex;
+    font-size: 19px;
+    width: 5%;
+    padding: 10px 35px;
+    color: black;
+    position: relative;
+    top: 10px;
+    justify-content: center;
+}
+
+.paymentHeader{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    width: 5%;
+    padding: 0px 35px;
+    color: black;
+    align-items: flex-end;
+}
+
+.paymentButtonListItem{
+    display: inline-flex;
+    font-size: 19px;
+    width: 5%;
+    padding: 10px 35px;
+    color: black;
+}
+
+.paymentButton{
+    display: block;
+    background-color: #0469e3; 
+  	color: white;
+  	padding: 10px 25px 10px 25px;
+  	margin: 0px 0px 10px 0px;
+  	font-size: 15px;
+  	border-radius: 25px;
+    transition: .5s;
+    white-space: nowrap; 
+    min-width: auto;
+    border: 2px solid blue;
+}
+
+.paymentButton:hover{
+    background-color: #31B404;
+}
+.payment-dropdown{
+     display: block;
+    float: right;
+     padding: 16px 16px;
+     margin-right: 5px;
+     outline: 2px;
+}
+.payment-dropdown-content {
+    display: none;
+    position: relative;
+    min-width: 100px;
+    width: 50%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
+    z-index: 1;
+}
+
+.payment-dropdown-content p{
+    color: black;
+    display: flex;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+}
+.show-payment-info{
+    display: block;
+    background-color: white;
+    position: relative;
+    margin-left: 300px;
+    color: black;
+     border-radius: 10px;
+}
+
+.link-to-website-button{
+    display: block;
+    position: relative;
+    border: 1px solid blue;
+    padding: 10px 20px;
+    top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    border-radius: 15px;
+    background-color: #0469e3;
+    color: white;
+}
+.link-to-website-button:hover{
+    background-color: #31B404;
+}
+.link-to-website-button a{
+    font-size: 115%;
+    color: white;
+}
+
+.payForm{
+    margin: 50px 0px 10px 0px;
+}
+
+#payFormRow{
+    padding: 10px 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.selectors{
+    display: flex;
+    justify-content: center;
+}
+
+#payFormRow input{
+    padding: 2px 22px 2px 27px;
+    margin: 0px 46px 0px 89px;
+}
+
+#payFormTitle{
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    flex:1 1 auto;
+    text-align: center;
+}
+
+#payFormHeaders ol:nth-child(1){
+    font-weight: 700;
+    color: black;
+    display: flex;
+    text-align:center;
+    justify-content: space-evenly;
+    text-decoration: bold;
+}
+#payFormHeaders li{
+    color:black;
+}
+
+#capturePaymentButton{
+    color: white;
+    background-color: #0469e3;
+    border-radius: 25px;
+    border: 2px solid #0469e3;
+    transition: 0.4s;
+}
+
+#capturePaymentButton:hover{
+    background-color: #31B404 ;
+}
+
+[id^="my-cred-dropdown"]{
+    display: none;
+    position: relative;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+    top: 25px;
+    text-align: center;
+}
+
+/*dropdown button for logout and stuff*/
+.dropbtn {
+    display: block;
+    background-color: #484848;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.5s;
+	padding: 20px 10px;
+}
+
+.dropbtn:hover {
+    background-color: #31B404;
+}
+.dropdown {
+    display: block;
+    float: right;
+     padding: 16px 16px;
+     margin-right: 5px;
+     outline: 2px;
+     
+    
+}
+
+.dropdown-content {
+    display: none;
+    position: relative;
+    background-color: white;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.dropdown a:hover {
+    background-color: red;
+}
+
+.show {
+    display: flex;
+    position: center;
+    color: black;
+    font-weight: 600;
+}
+
+#timeDisplay{
+    position: relative;
+    font-weight: 400;
+    width: max-content;
+    display: flex;
+    padding-left: 32%;
+    margin: 75px 0px 50px 0px;
+    font-size: 200%;
+    color: 484848;
+}
+
+#loginHeaderDiv {
+    margin: 50px 0px 0px 0px;
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
+	width : "100%"; 	
+}
+
+#loginDiv {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width:100%;	
+}
+	 
+#loginTable{
+	display: flex;
+	background-color: #484848;
+	align-items: center;
+	padding: 10px 40px;
+	border-radius: 25px;
+}
+
+
+#loginSubmitButton {
+	position: relative;
+    left: 34%;
+	text-align: center;
+	background-color: #31B404; 
+  	color: white;
+  	padding: 10px 25px 10px 25px;
+  	margin: 0px 0px 10px 0px;
+  	font-size: 15px;
+  	border-radius: 25px;
+  	border: 2px solid #0469e3;
+    transition: .7s;
+}
+
+
+#loginSubmitButton:hover {
+	color: white;
+	background-color: #0469e3;
+}
+
+#total h2{
+    display:flex;
+    color: black;
+    text-align: center;
+    justify-content: center;
+    
+}
+
+.canvas{
+    width: 60%;
+}
+#mychart{
+    width: 75%;
+    max-width: 80%;
+    margin: 100px 0px 0px 0px;
+    position: relative;
+    left: auto;
+    right: auto;
+}
+
