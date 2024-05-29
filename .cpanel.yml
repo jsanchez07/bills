@@ -1,5 +1,5 @@
 # cpanel.yml
-
+---
 deployment:
   tasks:
     - export DEPLOYPATH=/hjsd2000/public_html/bills/

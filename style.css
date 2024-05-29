@@ -24,9 +24,6 @@ uN {
 }
 
 /*not sure if these are doing anything after individual css was applied*/
-ul{
-
-}	
 
 li {
 	display: inline;
@@ -144,16 +141,6 @@ formText {
 	padding: 50px 10px;
 	margin: 15px;
 }
-
-/*nothing yet for these two*/	
-body { 
-	
-
-}
-div {
-  
-}
-
 
 .center {
 	position: relative;
