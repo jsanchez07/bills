@@ -488,7 +488,7 @@ rows {
 #mychart{
     width: 75%;
     max-width: 80%;
-    margin: 100px 0px 0px 0px;
+    margin: 100px 0px;
     position: relative;
     left: auto;
     right: auto;
