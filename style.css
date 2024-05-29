@@ -543,6 +543,14 @@ formText {
 	border-radius: 25px;
 }
 
+.formDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    background-color: darkgray
+}
 
 #loginSubmitButton {
 	position: relative;

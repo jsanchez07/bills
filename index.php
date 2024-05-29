@@ -34,15 +34,17 @@ if(isset($_SESSION['role']))
 			</div>
 		</div>
 		<div id="loginDiv" style="text-align: center;">
-			<form action="input.php" method="post">
-				<h2>Login</h2>
-				<label for="user">Username:</label>
-				<input type="text" name="user" id="user" /><br>
-				<label for="pass">Password:</label>
-				<input type="password" name="pass" id="pass" /><br>
-				<button type="submit" id="loginSubmitButton">Submit</button>
-			</form>
-			<!-- <a href="registerNew.php" style="color: #C0C0C0">Register New</a> -->
+			<div class = "formDiv">
+				<form action="input.php" method="post">
+					<h2>Login</h2>
+					<label for="user">Username:</label>
+					<input type="text" name="user" id="user" /><br>
+					<label for="pass">Password:</label>
+					<input type="password" name="pass" id="pass" /><br>
+					<button type="submit" id="loginSubmitButton">Submit</button>
+				</form>
+				<!-- <a href="registerNew.php" style="color: #C0C0C0">Register New</a> -->
+			</div>
 		</div>
 
 	</body>
