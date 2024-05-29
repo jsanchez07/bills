@@ -1,12 +1,5 @@
 /*form stuff for the login form*/	
-#formTextHeading {
-	display: flex;
-	justify-content: center;
-	text-align: center;
-	font-family: courier; 
-	font-size:250%; 
-	color: #31B404;
-}
+
 
 .formTextHeadingWrong {
 	font-family: courier;
@@ -14,13 +7,6 @@
 	color:#CC0000;
 }
 	
-#formText {
-	text-align: left;
-	font-weight: 600;
-	color:#31B404;
-	padding: 50px 10px;
-	margin: 15px;
-}
 #loginHeaderText h1 {
 	font-family: Times New Roman;
 	font-size:500%;
@@ -79,6 +65,7 @@
 }
 .formDiv h2{
     font-size: 50px;
+    margin: 50px 0px 25px 0px;
 }
 
 .formDiv label{
