@@ -290,7 +290,7 @@ rows {
 
 @keyframes slideIn {
     from {
-      margin-left: 100%;
+      margin-left: 500%;
       width: 300%;
     }
   
