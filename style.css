@@ -73,6 +73,19 @@ li a {
     background-color:red;
 }
 
+/*leaf at login page*/
+.leaf {
+    width: 100px;
+    height: 100px;
+    animation-name: leaf;
+    animation-duration: 4s;
+  }
+
+@keyframes leaf
+    {
+        0% {transform: rotate(0deg);}
+        100% {transform: rotate(360deg);}
+    }   
 
 /*all the colors*/
 .blue{

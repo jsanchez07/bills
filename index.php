@@ -26,27 +26,29 @@ if(isset($_SESSION['role']))
 <script type="text/javascript" src="scripts.js"></script>
 
 </head>
- <title>Index.php</title>
-      
-<body>
-	<div id="loginHeaderDiv">
-		<div id="loginHeaderContent">
-			<h1>billWarn</h1>
-			<img src="beta.png" alt="leaves" height="55" width="50px" />
+ <title>Index.php
+ </title>
+<html>
+	<body>
+		<div id="loginHeaderDiv">
+			<div id="loginHeaderContent">
+				<h1>billWarn</h1>
 		</div>
-	</div>
+		<div id="loginHeaderImage" class= "leaf">
+				<img src="beta.png" alt="leaves" height="55" width="50px" />
+		</div>
 
-	<div id="loginDiv" style="text-align: center;">
-		<form action="input.php" method="post">
-			<h2>Login</h2>
-			<label for="user">Username:</label>
-			<input type="text" name="user" id="user" /><br>
-			<label for="pass">Password:</label>
-			<input type="password" name="pass" id="pass" /><br>
-			<button type="submit" id="loginSubmitButton">Submit</button>
-		</form>
-		<!-- <a href="registerNew.php" style="color: #C0C0C0">Register New</a> -->
-	</div>
+		<div id="loginDiv" style="text-align: center;">
+			<form action="input.php" method="post">
+				<h2>Login</h2>
+				<label for="user">Username:</label>
+				<input type="text" name="user" id="user" /><br>
+				<label for="pass">Password:</label>
+				<input type="password" name="pass" id="pass" /><br>
+				<button type="submit" id="loginSubmitButton">Submit</button>
+			</form>
+			<!-- <a href="registerNew.php" style="color: #C0C0C0">Register New</a> -->
+		</div>
 
-</body>
+	</body>
 </html>
