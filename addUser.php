@@ -55,7 +55,7 @@ session_start();
 
 
 <div align="center" padding-left = "20px">
-<table width="25%" border="0" background="darkgray.jpg" padding-left = "20 px">
+<table width="25%" border="0" background="images/darkgray.jpg" padding-left = "20 px">
  <formtextheading>Add New</formtextheading>
     <tr>
     <td>

@@ -19,9 +19,6 @@ $mainT="`{$_SESSION['db_num']}`";
 $connection = mysqli_connect($localhost, $DBusername, $DBpassword, $database) 
 or die("Could not connect to database"); 
 
-//mysql_select_db($database, $connection) 
-//or die("Could not select database"); 
-
 
 $query_string = "SELECT $mainT.store, $financesT.amount_owed,
 					$financesT.APR, $financesT.payment, $mainT.last_amount 
@@ -43,7 +40,7 @@ $rows = mysqli_num_rows($result_id)
 <HEAD>
 <style type="text/css">
 
-body{ background-image: url(Gray-background.gif);
+body{ background-image: url(images/Gray-background.gif);
       background-repeat: no repeat;
       background-size: 100%;
       background-color: #0000fa}

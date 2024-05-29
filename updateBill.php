@@ -14,12 +14,7 @@
   header("Location: logout.php"); 
  }
  require('dbConfig.php');
-/*
-$localhost="anaRoot.db.10947084.hostedresource.com";
-$DBusername="anaRoot";
-$DBpassword="Incubus1!";
-$database="anaRoot";
-*/
+
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 $db_num = $_SESSION['db_num'];
 
@@ -69,7 +64,7 @@ if($theStoreChange == $store){
 
 <style type="text/css">
 
-body{ background-image: url(Gray-background.gif);
+body{ background-image: url(images/Gray-background.gif);
       background-repeat: no repeat;
       background-size: 100%;
       background-color: #0000fa}

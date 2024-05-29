@@ -92,7 +92,7 @@ function display_db_table($tablename, $connection, $header_bool, $table_params) 
 <HEAD>
 <style type="text/css">
 
-body{ background-image: url(Gray-background.gif);
+body{ background-image: url(images/Gray-background.gif);
       background-repeat: no repeat;
       background-size: 100%;
       background-color: #0000fa}
