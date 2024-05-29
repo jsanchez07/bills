@@ -557,15 +557,7 @@ $i++;
  $total_amount_formatted = number_format($totalAmount, 2, '.', ',');
  
  
-/*print("<br />");
-echo $year;
-print("<br />");
-echo $month;
-print("<br />");
-echo $day;
-print("<br />");
-print_r($monthArray);
-print_r($lastDayPaid);*/
+
 ?>
 
 <div id="total">

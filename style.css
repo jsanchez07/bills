@@ -482,7 +482,7 @@ rows {
     
 }
 
-.canvas{
+.chartjs-render-monitor{
     width:100%;
     max-width:70%;
     left:15%;
