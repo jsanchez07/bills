@@ -7,17 +7,12 @@
 
 header("Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0");
 header("Cache-Control: private");
-//header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-
  
 
 session_start();
 if(isset($_SESSION['role']))
   unset($_SESSION['role']);
  
-//echo $_SESSION['my_username']."<br />";
-//echo $_SESSION['my_password']."<br />";
-//echo $_SESSION['role']."<br />";
 ?>
 
 
