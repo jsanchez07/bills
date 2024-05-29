@@ -13,7 +13,7 @@
 	color:#31B404;	
 }
 /*leaf at login page*/
-.leaf {
+.loginHeaderImage {
     width: 100px;
     height: 100px;
     animation-name: leaf;
