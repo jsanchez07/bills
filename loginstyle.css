@@ -101,6 +101,19 @@
 }
 
 .falseLoginMessage {
-    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+.falseLoginMessage p {
+    color: red;
+    font-size: 25px;
+}
+
+.falseLoginMessage a {
+    font-size: 15px;
 }
