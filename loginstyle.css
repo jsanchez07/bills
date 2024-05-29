@@ -7,7 +7,7 @@
 	color:#CC0000;
 }
 	
-#loginHeaderText h1 {
+.loginHeaderText h1 {
 	font-family: Times New Roman;
 	font-size:500%;
 	color:#31B404;	
@@ -27,7 +27,7 @@
     }  
 
 /*gray login form page*/
-#loginHeaderDiv {
+.loginHeaderDiv {
     margin: 50px 0px 0px 0px;
     display: flex;
     justify-content: center;
@@ -37,19 +37,11 @@
     margin-right: auto;
 }
 
-#loginDiv {
+.loginDiv {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	width:100%;	
-}
-	 
-#loginTable{
-	display: flex;
-	background-color: #484848;
-	align-items: center;
-	padding: 10px 40px;
-	border-radius: 25px;
 }
 
 .formDiv{
