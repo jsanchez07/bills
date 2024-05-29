@@ -70,19 +70,7 @@ li a {
     background-color:red;
 }
 
-/*leaf at login page*/
-.leaf {
-    width: 100px;
-    height: 100px;
-    animation-name: leaf;
-    animation-duration: 4s;
-  }
-
-@keyframes leaf
-    {
-        0% {transform: rotate(0deg);}
-        100% {transform: rotate(360deg);}
-    }   
+ 
 
 /*all the colors*/
 .blue{
@@ -115,32 +103,6 @@ rows {
 	padding: 15px 5px;
 	margin: 0px 0px;
 	}
-
-
-/*form stuff for the login form*/	
-formTextHeading {
-	display: flex;
-	justify-content: center;
-	text-align: center;
-	font-family: courier; 
-	font-size:250%; 
-	color: #31B404;
-}
-
-formTextHeadingWrong {
-	
-	font-family: courier;
-	font-size:250%;
-	color:#CC0000;
-}
-	
-formText {
-	text-align: left;
-	font-weight: 600;
-	color:#31B404;
-	padding: 50px 10px;
-	margin: 15px;
-}
 
 .center {
 	position: relative;
