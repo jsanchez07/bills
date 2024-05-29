@@ -316,9 +316,11 @@ rows {
     display: block;
     background-color: white;
     position: relative;
-    margin-left: 300px;
+    margin-left: 25%;
     color: black;
-     border-radius: 10px;
+    border-radius: 10px;
+    padding-bottom: 10px;
+    padding-top: 5px;
 }
 
 .link-to-website-button{
