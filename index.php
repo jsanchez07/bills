@@ -29,61 +29,24 @@ if(isset($_SESSION['role']))
  <title>Index.php</title>
       
 <body>
+	<div id="loginHeaderDiv">
+		<div id="loginHeaderContent">
+			<h1>billWarn</h1>
+			<img src="beta.png" alt="leaves" height="55" width="50px" />
+		</div>
+	</div>
 
-	<div id ="loginHeaderDiv">
-	    <table = "loginHeaderTable">
-    		<tr>
-    			<td><h1>billWarn</h1></td>
-    			<td valign = "top" ><img src="beta.png" alt="leaves" height = "55" width="50px" /></td>
-    		</tr>
-    
-    	</table>
-    </div>
+	<div id="loginDiv" style="text-align: center;">
+		<form action="input.php" method="post">
+			<h2>Login</h2>
+			<label for="user">Username:</label>
+			<input type="text" name="user" id="user" /><br>
+			<label for="pass">Password:</label>
+			<input type="password" name="pass" id="pass" /><br>
+			<button type="submit" id="loginSubmitButton">Submit</button>
+		</form>
+		<!-- <a href="registerNew.php" style="color: #C0C0C0">Register New</a> -->
+	</div>
 
-
-	<div id="loginDiv">
-	<table id="loginTable">
-    		<tr>
-    			<td colspan = "2">
-    			<formTextHeading>Login</formTextHeading>
-    			<br />
-    			</td>
-    		</tr>
-    		<tr>
-      			<td> 
-        		    <form action="input.php" method="post">
-       			    <formText> Username:</formText>
-       			</td>
-         		<td> 
-         		    <input type="text" name="user" id="user"  />
-        		</td>
-        	</tr>
-      		<tr>
-         		<td>  
-     			    <formText> Password: </formText>
-     			</td>
-           		<td> 
-           		    <input type="password" name="pass" id="pass"  /> 
-           		</td>
-  		</tr>
-        	<tr>
-        		<td>
-        		<br />
-        		</td>
-        	</tr>
-        	<tr>
-        		<td colspan = "2">
-         	        <button type="submit" id="loginSubmitButton">Submit</button>
-       			</td>
-        	</tr>   </form>    
-        	<tr>
-        		<td align ="center">
-       	<!--	<a href="registerNew.php" style="color: #C0C0C0">Register New</a> -->
-        		</td>
-        	</tr>
-      
-    		</tr>
-  	</table>
-  	</div>
 </body>
 </html>
