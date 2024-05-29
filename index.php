@@ -30,7 +30,7 @@ if(isset($_SESSION['role']))
 				<h1>billWarn</h1>
 			</div>		
 			<div id="loginHeaderImage" class= "leaf">
-				<img src="beta.png" alt="leaves" height="55" width="50px" />
+				<img src="images/beta.png" alt="leaves" height="55" width="50px" />
 			</div>
 		</div>
 		<div id="loginDiv" style="text-align: center;">

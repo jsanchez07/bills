@@ -546,10 +546,11 @@ formText {
 .formDiv{
     display: flex;
     justify-content: center;
+    color: white;
     align-items: center;
-    width: 100%;
-    margin: 0px 0px 0px 0px;
-    background-color: darkgray;
+    width: 35%;
+    margin: 0;
+    background-color: darkslategray;
     border: 2px solid red;
 }
 

@@ -429,19 +429,19 @@ $status = "";
     $statusImg = "";
     if($status == "green")
     {
-        $statusImg = "<img src='icon-green-checkmark.png' style='width:25px;height:25px;'>";
+        $statusImg = "<img src='images/icon-green-checkmark.png' style='width:25px;height:25px;'>";
     }
     else if ($status == "yellow")
     {
-        $statusImg = "<img src='icon-orange-warning.png' style='width:25px;height:25px;'>";
+        $statusImg = "<img src='images/icon-orange-warning.png' style='width:25px;height:25px;'>";
     }
     else if ($status == "red")
     {
-        $statusImg = "<img src='icon-red-x.webp' style='width:25px;height:25px;'>";
+        $statusImg = "<img src='images/icon-red-x.webp' style='width:25px;height:25px;'>";
     }
     else
     {
-       $statusImg = "<img src='icon-gray-question-mark.png' style='width:25px;height:25px;'>"; 
+       $statusImg = "<img src='images/icon-gray-question-mark.png' style='width:25px;height:25px;'>"; 
     }
     
    
