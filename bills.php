@@ -40,22 +40,22 @@
 
 	<nav role ="navigation">
 		<ul class="navBar">
-			<li><a href="addBill.php"/>Add bill</a></li>
-			<li><a href="deleteBill.php"/>Delete bill</a></li>
-			<li><a href="updateBill.php"/>Update bill</a></li>
-			<li><a href="historyBills.php"/>History</a></li>
-			<li><a href="addUser.php"/>Add user</a></li>
-			<li><a href="viewDeleted.php"/>View deleted</a></li>
-			<li><a href="finances.php"/>Finances</a></li>
-			<li><a href="alertManager.php"/>Alert manager</a></li>
+			<li><a href="addBill.php">Add bill</a></li>
+			<li><a href="deleteBill.php">Delete bill</a></li>
+			<li><a href="updateBill.php">Update bill</a></li>
+			<li><a href="historyBills.php">History</a></li>
+			<li><a href="addUser.php">Add user</a></li>
+			<li><a href="viewDeleted.php">View deleted</a></li>
+			<li><a href="finances.php">Finances</a></li>
+			<li><a href="alertManager.php">Alert manager</a></li>
 		</ul>
 	</nav>
 		
-	<nav class="userNav"
+	<nav class="userNav">
     	<div class="dropdown">
             <button onclick="myFunction()" class="dropbtn">Logged in as <uN><?php echo $_SESSION['my_username']?></uN></button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="logout.php"/>Logout</a>
+                <a href="logout.php">Logout</a>
                 
             </div>
         </div>
