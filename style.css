@@ -483,7 +483,12 @@ rows {
 }
 
 .canvas{
-    width: 60%;
+    width:100%;
+    max-width:70%;
+    left:15%;
+    margin: 100px 0px;
+    display:block;
+    position:relative;
 }
 #mychart{
     width: 75%;
