@@ -15,23 +15,9 @@ $_SESSION['role']=0;
 
 require('dbConfig.php');
 
-//I had to come in here and change everything to mysqli instead of mysql for 
-//Everything to work!!!
 
 $con = mysqli_connect($localhost, $DBusername, $DBpassword);
-//$con = mysql_connect($localhost,$DBusername,$DBpassword);
 
-/*
-if(($username =='')||($username ==' ') || ($username =='  ') || (strstr($username, '   '))){
-header("Location: loginFalse.html");  
-}
-
-//if password is 1 space, 2 spaces, or contains 3 spaces, it is false
-if(($password == '')||($password ==' ')){
-    header("Location: loginFalse.html");
-    
-}
-*/
 
 //connect to database using correct login credentials
 
@@ -41,23 +27,18 @@ if (!$con)
 
   }
   else{
-  //echo("Connection successful");
-
+    //echo("Connected to database");
 }
 
 
 //select database
 $db_selected = mysqli_select_db($con, $database);
 
-//$db_selected = mysql_select_db($database, $con);
 
 if (!$db_selected) {
     die ('Could not select databse : ' . mysqli_error($con));
 }
-
-
 $result= mysqli_query($con, "SELECT * FROM user WHERE username = '".mysqli_real_escape_string($con, $_POST['user'])."'"); 
-
 
 
 if (!$result) {
