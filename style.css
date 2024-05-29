@@ -285,7 +285,7 @@ rows {
     min-width: auto;
     border: 2px solid blue;
     animation-name: slideIn;
-    animation-duration: 1s;
+    animation-duration: 2s;
 }
 
 @keyframes slideIn {
