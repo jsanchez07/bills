@@ -525,7 +525,6 @@ formText {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    border: 2px solid black;
 }
 
 #loginDiv {
@@ -551,7 +550,6 @@ formText {
     width: 35%;
     margin: 0;
     background-color: dimgray;
-    border: 2px solid red;
 }
 
 .formDiv label{
@@ -570,19 +568,17 @@ formText {
     color: black;
     font-size: 20px;
     padding: 10px 10px;
-    border-radius: 5px;
+    border-radius: 15px;
     border: 2px solid black;
-
 }
 
 #loginSubmitButton {
-	position: relative;
-    left: 34%;
-	text-align: center;
+	position: flex;
+	text-align: left;
 	background-color: #31B404; 
   	color: white;
   	padding: 10px 25px 10px 25px;
-  	margin: 0px 0px 10px 0px;
+  	margin: 30px 0px 10px 0px;
   	font-size: 15px;
   	border-radius: 25px;
   	border: 2px solid #0469e3;
