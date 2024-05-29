@@ -2,5 +2,5 @@
 
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/example/repositories/bills/
+    - export DEPLOYPATH=/hjsd2000/public_html/bills/
     - /bin/cp * $DEPLOYPATH
