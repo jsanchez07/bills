@@ -484,12 +484,13 @@ rows {
 
 .chartjs-render-monitor{
     width:100%;
-    max-width:70%;
+    max-width:75%;
     left:15%;
     margin: 100px 0px;
     display:block;
     position:relative;
 }
+/*
 #mychart{
     width: 75%;
     max-width: 75%;
@@ -497,5 +498,5 @@ rows {
     position: relative;
     left:15%;
     right: auto;
-}
+}*/
 
