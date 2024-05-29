@@ -112,16 +112,17 @@
 .falseLoginMessage p {
     color: red;
     display: flex;
-    font-size: 100px;
+    font-size: 50px;
     width: 100%;
     justify-content: center;
-    animation-name: grow;
+    animation-name: growAndBack;
     animation-duration: 3s;
 }
 
-@keyframes grow
+@keyframes growAndBack
     {
         0% {transform: scale(0);}
+        50%{transform: scale(2);}
         100% {transform: scale(1);}
     }  
 
