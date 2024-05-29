@@ -550,8 +550,29 @@ formText {
     align-items: center;
     width: 35%;
     margin: 0;
-    background-color: darkslategray;
+    background-color: dimgray;
     border: 2px solid red;
+}
+
+.formDiv label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    padding: 10px 10px;
+}
+
+.formDiv input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-size: 20px;
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: 2px solid black;
+
 }
 
 #loginSubmitButton {
