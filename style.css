@@ -492,10 +492,10 @@ rows {
 }
 #mychart{
     width: 75%;
-    max-width: 80%;
+    max-width: 75%;
     margin: 100px 0px;
     position: relative;
-    left: auto;
+    left:15%;
     right: auto;
 }
 

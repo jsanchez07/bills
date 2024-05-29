@@ -572,7 +572,7 @@ print_r($lastDayPaid);*/
     <h2>Total amount : $<?php echo $total_amount_formatted ?></h2>
 </div>
 
-<canvas id="myChart" style=""></canvas>
+<canvas id="myChart"></canvas>
 
 <script>
     var barColors = [
