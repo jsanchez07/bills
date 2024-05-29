@@ -551,6 +551,10 @@ formText {
     margin: 0;
     background-color: dimgray;
     border-radius: 25px;
+    border: solid 2px black;
+}
+.formDiv h2{
+    font-size: 30px;
 }
 
 .formDiv label{
@@ -567,8 +571,9 @@ formText {
     justify-content: center;
     align-items: center;
     color: black;
-    font-size: 18px;
+    font-size: 15px;
     padding: 10px 10px;
+    margin: 5px;
     border-radius: 15px;
     border: 2px solid black;
 }
