@@ -482,21 +482,15 @@ rows {
     
 }
 
+/*the pie chart of the bills*/
 .chartjs-render-monitor{
     width:100%;
     max-width:75%;
-    left:10%;
+
     margin: 100px 0px;
     display:block;
     position:relative;
 }
-/*
-#mychart{
-    width: 75%;
-    max-width: 75%;
-    margin: 100px 0px;
-    position: relative;
-    left:15%;
-    right: auto;
-}*/
+
+
 
