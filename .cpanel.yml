@@ -3,5 +3,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/example/repositories/bills/
-    - /bin/cp index.html $DEPLOYPATH
-    - /bin/cp style.css $DEPLOYPATH
+    - /bin/cp * $DEPLOYPATH
