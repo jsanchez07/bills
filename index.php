@@ -17,7 +17,7 @@ if(isset($_SESSION['role']))
 
 
 <head>
-<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="stylesheet" type="text/css" href="loginstyle.css"/>
 <script type="text/javascript" src="scripts.js"></script>
 
 </head>
