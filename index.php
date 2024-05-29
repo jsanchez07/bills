@@ -31,13 +31,13 @@ if(isset($_SESSION['role']))
 <html>
 	<body>
 		<div id="loginHeaderDiv">
-			<div id="loginHeaderContent">
+			<div id="loginHeaderText">
 				<h1>billWarn</h1>
-		</div>
-		<div id="loginHeaderImage" class= "leaf">
+			</div>		
+			<div id="loginHeaderImage" class= "leaf">
 				<img src="beta.png" alt="leaves" height="55" width="50px" />
+			</div>
 		</div>
-
 		<div id="loginDiv" style="text-align: center;">
 			<form action="input.php" method="post">
 				<h2>Login</h2>
