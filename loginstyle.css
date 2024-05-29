@@ -21,6 +21,11 @@
 	padding: 50px 10px;
 	margin: 15px;
 }
+#loginHeaderText h1 {
+	font-family: Times New Roman;
+	font-size:500%;
+	color:#31B404;	
+}
 /*leaf at login page*/
 .leaf {
     width: 100px;
