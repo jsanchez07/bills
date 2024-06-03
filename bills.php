@@ -15,6 +15,7 @@
   header("Location: logout.php");
  
  }
+ 
  ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -114,8 +115,19 @@ mysqli_close($con);
 
 
 <table border="0" >
+<div class = "bill1">
+    <image src="images/bill1.jpeg">
+</div>
 
-      
+<div class ="bill2">
+    <image src="images/bill2.jpeg">
+</div>
+
+<div class = "cash">
+    <image src="images/cash.jpeg">
+</div>
+
+
 <?php
    
 $i=0;
