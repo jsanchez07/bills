@@ -95,6 +95,7 @@ li a {
 
 .bill1{
     display: block;
+    position: absolute;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
@@ -106,6 +107,7 @@ li a {
 
 .bill2 {
     display: block;
+    position:fixed;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
@@ -118,15 +120,27 @@ li a {
 .cash{
     display: block;
     position: absolute;
-    left: -500px;
-    width: 50%;
-    height: 50%;
+    left: 0;
+    width: 30%;
+    height: 30%;
     padding: 10px 10px;
     border-radius: 10px;
-    transition: 0.5s;
     z-index: 2;
+    animation-name: slideInCash;
+    animation-duration: 2s;
 }
 
+@keyframes slideInCash {
+    from {
+      margin-right: 100%;
+      width: 300%;
+    }
+  
+    to {
+      margin-left: 0%;
+      width: 100%;
+    }
+}
 /*rows for old table*/
 rows {
 	font-family: Arial, Sans-serif; 
