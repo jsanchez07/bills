@@ -123,7 +123,7 @@ to {
     display: block;
     position:absolute;
     top: 650px;
-    left: -25px;
+    left: -35px;
     width: 200px;
     height: 200px;
     padding: 10px 10px;
@@ -140,7 +140,7 @@ to {
       }
     
       to {
-        left: -25px;
+        left: -35px;
       }
 }
 
