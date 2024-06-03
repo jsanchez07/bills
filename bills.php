@@ -73,22 +73,15 @@ $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 
 $query="SELECT * FROM `{$_SESSION['db_num']}` order by store";
 $result=mysqli_query($con, $query);
-//echo $query;
+
 $num=mysqli_num_rows($result);
-//echo "<br />";
-//echo $num;
+
 
 date_default_timezone_set('America/Chicago');
 $today = date("m-d-Y", time());
-//$dayOfWeek = date('l', strtotime($today));
-//echo $dayOfWeek;
-//$headerToday = date("m-d-Y \a\\t h:i a", time());
+
 
 ?>
-
-
-
-
 
 
     <div id = "timeDisplay">
@@ -121,10 +114,6 @@ mysqli_close($con);
 
 
 <table border="0" >
-
-
-
-
 
       
 <?php
@@ -379,7 +368,7 @@ else{
   $case = 4;
 }
 
-//for(int j=0; j<$num; j++)
+
 $status = "";
 
     if(($newMonthArray - $lastMonthPaid) > 2 ||($newMonthArray - $lastMonthPaid) == 2 && $lastDayPaid<$dueOn || $lastYearPaid == 1983) { 
@@ -397,9 +386,7 @@ $status = "";
         echo '<tr class= "red">';
         $status = "red";
         echo '<style>
-                    .this-row-'.$store_dashed.'{
-                            background-color: #ffcccc;
-                    }
+                    .this-row-'.$store_dashed.'{ background-color: #ffcccc; }
             </style>';
     }
     else if($daysLeftArray < 15 && $daysLeftArray > 9)
@@ -408,9 +395,7 @@ $status = "";
         echo '<tr class = "yellow">';
         $status = "yellow";
         echo '<style>
-                    .this-row-'.$store_dashed.'{
-                            background-color: #ffffcc;
-                    }
+                    .this-row-'.$store_dashed.'{ background-color: #ffffcc; }
             </style>';
     }
     else
@@ -419,9 +404,7 @@ $status = "";
         echo '<tr class = "green">';
         $status = "green";
         echo '<style>
-                    .this-row-'.$store_dashed.'{
-                            background-color: #eeffee;
-                    }
+                    .this-row-'.$store_dashed.'{ background-color: #eeffee; }
             </style>';
         
     }
