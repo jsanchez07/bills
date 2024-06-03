@@ -123,14 +123,14 @@ to {
     display: block;
     position:absolute;
     top: 650px;
-    left: -15px;
+    left: -25px;
     width: 200px;
     height: 200px;
     padding: 10px 10px;
     border-radius: 10px;
     z-index: -3;
     animation: slideInBill2 linear;
-    animation-timeline: view(500px 50px);
+    animation-timeline: view(400px 50px);
 }   
 
 
@@ -140,7 +140,7 @@ to {
       }
     
       to {
-        left: 0;
+        left: -25px;
       }
 }
 
