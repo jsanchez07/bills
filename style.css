@@ -128,7 +128,7 @@ to {
     height: 200px;
     padding: 10px 10px;
     border-radius: 10px;
-    z-index: -2;
+    z-index: -3;
     animation-name: slideInBill2;
     animation-duration: 2s;
 }   
@@ -140,7 +140,7 @@ to {
       }
     
       to {
-        left: 0px;
+        right: -3%;
       }
 }
 
