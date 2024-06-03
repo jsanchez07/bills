@@ -359,22 +359,7 @@ rows {
     white-space: nowrap; 
     min-width: auto;
     border: 2px solid blue;
-    animation-name: slideIn;
-    animation-duration: 2s;
 }
-
-@keyframes slideIn {
-    from {
-      margin-left: 500%;
-      width: 300%;
-    }
-  
-    to {
-      margin-left: 0%;
-      width: 100%;
-    }
-}
-    
 
 
 .paymentButton:hover{
