@@ -132,11 +132,11 @@ li a {
 
 @keyframes slideInCash {
     from {
-      margin-left: 500px;
+      margin-right: 500px;
     }
   
     to {
-      margin-left: 0px;
+      margin-right: 0px;
     }
 }
 /*rows for old table*/
