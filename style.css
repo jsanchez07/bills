@@ -122,8 +122,8 @@ to {
 .bill2 img{
     display: block;
     position:absolute;
-    top: 200px;
-    right: 25;
+    top: 650px;
+    right: 20%;
     width: 100px;
     height: 100px;
     padding: 10px 10px;
@@ -135,13 +135,13 @@ to {
 
 
 @keyframes slideInBill2 {
-from {
-  right: -500px;
-}
-
-to {
-  right: 0px;
-}
+    from {
+        margin-left: 500%;
+      }
+    
+      to {
+        margin-left: 0%;
+      }
 }
 
 .cash img{
