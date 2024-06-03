@@ -96,13 +96,27 @@ li a {
 .bill1 img{
     display: block;
     position: absolute;
-    top: 0;
+    top: 400px;
     left: 0;
     width: 100px;
     height: 100px;
     padding: 10px 10px;
     border-radius: 10px;
     z-index: -2;
+    animation-name: slideInBill1;
+    animation-duration: 2s;
+}   
+
+
+@keyframes slideInBill1 {
+from {
+  left: -500px;
+}
+
+to {
+  left: 0px;
+}
+
 }
 
 .bill2 img{
@@ -115,12 +129,25 @@ li a {
     padding: 10px 10px;
     border-radius: 10px;
     z-index: -3;
+    animation-name: slideInBill2;
+    animation-duration: 2s;
+}   
+
+
+@keyframes slideInBill2 {
+from {
+  right: -500px;
+}
+
+to {
+  right: 0px;
+}
 }
 
 .cash img{
     display: block;
     position: absolute;
-    top: 400px;
+    top: 1000px;
     left: 0;
     width: 150px;
     height: 100px;
