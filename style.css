@@ -123,7 +123,7 @@ to {
     display: block;
     position:absolute;
     top: 75%;
-    left: -40px;
+    left: -45px;
     width: 200px;
     height: 200px;
     padding: 10px 10px;
@@ -140,7 +140,7 @@ to {
       }
     
       to {
-        left: -35px;
+        left: -45px;
       }
 }
 
@@ -148,7 +148,7 @@ to {
     display: block;
     position: absolute;
     top: 130%;
-    left: -15px;
+    left: -20px;
     width: 150px;
     height: 100px;
     padding: 10px 10px;
@@ -164,7 +164,7 @@ to {
     }
   
     to {
-      left: 0px;
+      left: -20px;
     }
 }
 /*rows for old table*/
