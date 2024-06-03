@@ -155,7 +155,7 @@ to {
     border-radius: 10px;
     z-index: -1;
     animation: slideInCash linear;
-    animation-timeline: view(100px);
+    animation-timeline: view(0px 300px);
 }
 
 @keyframes slideInCash {
