@@ -103,8 +103,8 @@ li a {
     padding: 10px 10px;
     border-radius: 10px;
     z-index: -2;
-    animation-name: slideInBill1;
-    animation-duration: 2s;
+    animation: slideInBill1 linear;
+    animation-timeline: scroll();
 }   
 
 
@@ -129,8 +129,8 @@ to {
     padding: 10px 10px;
     border-radius: 10px;
     z-index: -3;
-    animation-name: slideInBill2;
-    animation-duration: 2s;
+    animation: slideInBill2 linear;
+    animation-timeline: scroll();
 }   
 
 
@@ -154,8 +154,8 @@ to {
     padding: 10px 10px;
     border-radius: 10px;
     z-index: -1;
-    animation-name: slideInCash;
-    animation-duration: 2s;
+    animation: slideInCash linear;
+    animation-timeline: scroll();
 }
 
 @keyframes slideInCash {
