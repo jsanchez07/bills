@@ -91,6 +91,41 @@ li a {
     color: black;
 }
 
+/* sliding images */
+
+.bill1{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 50%;
+    padding: 10px 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+.bill2 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 50%;
+    padding: 10px 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+.cash{
+    display: block;
+    position: absolute;
+    left: -500px;
+    width: 50%;
+    height: 50%;
+    padding: 10px 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    z-index: 2;
+}
 
 /*rows for old table*/
 rows {
