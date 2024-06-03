@@ -104,7 +104,7 @@ li a {
     border-radius: 10px;
     z-index: -2;
     animation: slideInBill1 linear;
-    animation-timeline: view();
+    animation-timeline: view(200px);
 }   
 
 
@@ -130,7 +130,7 @@ to {
     border-radius: 10px;
     z-index: -3;
     animation: slideInBill2 linear;
-    animation-timeline: view();
+    animation-timeline: view(300px);
 }   
 
 
@@ -155,7 +155,7 @@ to {
     border-radius: 10px;
     z-index: -1;
     animation: slideInCash linear;
-    animation-timeline: view();
+    animation-timeline: view(300px);
 }
 
 @keyframes slideInCash {
