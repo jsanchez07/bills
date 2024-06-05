@@ -1,12 +1,11 @@
-
+<html>
 <head>
     <link rel="stylesheet" type="text/css" href="groceries.css"/>
     <script src="groceries.js"></script>
 </head>
 
-<html>
-    <body>
 <?php
+    echo "I am here";
     require('dbConfig.php');
     $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 
@@ -29,6 +28,8 @@
     mysqli_close($con);
 
 ?>
+
+    <body>
 
         <p>
             Hello this is a list of groceries
