@@ -14,6 +14,15 @@
     $result=mysqli_query($con, $query);
 
     $num=mysqli_num_rows($result);
+    echo $num;
+    for($i=0; $i<$num; $i++){
+        $row = mysqli_fetch_array($result);
+        echo "row[1]";
+        echo "row[2]";
+        echo "row[0]";
+        echo "row[item]";
+        
+  
 
     mysqli_close($con);
 
@@ -27,7 +36,8 @@
                 <?php
                     for($i=0; $i<$num; $i++){
                         $row = mysqli_fetch_array($result);
-                        echo "<li id = $row[id]><input type="checkbox"> $row[2]</li>";
+                        echo "<li><input type="checkbox"> $row[1]</li>";
+                        //echo "<li id = $row[id]><input type="checkbox"> $row[1]</li>";
                     }
                 ?>
             </ul>
