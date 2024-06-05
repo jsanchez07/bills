@@ -4,3 +4,8 @@ function addToList(newItem){
     li.appendChild(document.createTextNode(newItem));
     ul.appendChild(li);
 }
+
+function removeFromList(){
+    var ul = document.querySelector("#theList");
+    ul.removeChild(ul.lastChild);
+}
