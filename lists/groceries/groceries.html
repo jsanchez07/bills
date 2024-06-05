@@ -20,10 +20,12 @@
         echo "row[1]";
         echo "row[2]";
         echo "row[0]";
+        echo "row['item']";
         echo "row[item]";
         
-  
-
+        $item=mysql_result($result_id,$i,"item")
+        echo $item;
+    }
     mysqli_close($con);
 
 ?>
