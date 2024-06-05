@@ -8,12 +8,15 @@ function addToList(newItem){
     li.appendChild(document.createTextNode(newItem));
     ul.appendChild(li);
     document.querySelector('#item').value = "";
+    reArrangeList();
 }
+
 
 function removeFromList(){
     var ul = document.querySelector("#theList");
     ul.removeChild(ul.lastChild);
 }
+
 function listenToCheckbox() {
     var checkboxes = document.querySelectorAll("input[type='checkbox']");
     checkboxes.forEach(function(checkbox) {
