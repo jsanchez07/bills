@@ -3,6 +3,7 @@ function addToList(newItem){
     var li = document.createElement("li");
     var checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.oninput = listenToCheckbox;
     li.appendChild(checkbox);
     li.appendChild(document.createTextNode(newItem));
     ul.appendChild(li);
