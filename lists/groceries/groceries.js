@@ -11,7 +11,6 @@ function addToList(newItem){
     reArrangeList();
 }
 
-
 function removeFromList(){
     var ul = document.querySelector("#theList");
     ul.removeChild(ul.lastChild);
@@ -30,7 +29,6 @@ function listenToCheckbox() {
         });
     });
 }
-
 
 function reArrangeList(){
     var ul = document.querySelector("#theList");
