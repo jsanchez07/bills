@@ -17,13 +17,13 @@
     echo $num;
     for($i=0; $i<$num; $i++){
         $row = mysqli_fetch_array($result);
-        echo "row[1]";
-        echo "row[2]";
+        echo row[1];
+        echo row[2];
         echo "row[0]";
-        echo "row['item']";
-        echo "row[item]";
+        echo row['item'];
+        echo row[item];
         
-        $item=mysql_result($result_id,$i,"item")
+        $item=mysql_result($result_id,$i,"item");
         echo $item;
     }
     mysqli_close($con);
@@ -38,7 +38,7 @@
                 <?php
                     for($i=0; $i<$num; $i++){
                         $row = mysqli_fetch_array($result);
-                        echo "<li><input type="checkbox"> $row[1]</li>";
+                        //echo "<li><input type='checkbox'>".$row[1]."</li>";
                         //echo "<li id = $row[id]><input type="checkbox"> $row[1]</li>";
                     }
                 ?>
