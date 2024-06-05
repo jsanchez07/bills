@@ -1,13 +1,13 @@
 
 body{
     font-family: Arial, sans-serif;
-    background-color: lavenderblush;
+    background-color: seagreen;
     margin: 0;
     padding: 0;
 }
 p {
     font-size:100%;
-    color: darkgreen;
+    color: darkslategray;
     display: flex;
     justify-content: center;
     align-items: center;
