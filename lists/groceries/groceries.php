@@ -5,16 +5,20 @@
 </head>
 
 <?php
-    echo "I am here";
+    echo "I am here<br />";
     require('dbConfig.php');
-    echo "after require";
+    echo $localhost."<br />";
+    echo $DBusername."<br />";
+    echo $DBpassword."<br />";
+    echo $database."<br />";
+    echo "after require<br /><br />";
     $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
-    echo "after getting con";
+    echo "after getting con<br />";
     $query="SELECT * FROM groceries order by store";
     $result=mysqli_query($con, $query);
-    echo "after getting result";
+    echo "after getting result<br />";
     $num=mysqli_num_rows($result);
-    echo "obvously not getting here";
+    echo "obvously not getting here<br />";
     echo $num;
     for($i=0; $i<$num; $i++){
         $row = mysqli_fetch_array($result);
