@@ -15,6 +15,7 @@
     $query="SELECT * FROM groceries order by store";
     echo $query;
     echo "after query<br />";
+    echo "this is a new change<br />";
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
     echo "after getting con<br />";
     $result=mysqli_query($con, $query);
