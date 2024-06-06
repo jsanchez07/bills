@@ -62,7 +62,7 @@ function display_db_query($query_string, $connection, $header_bool, $table_param
     $result_id = mysqli_query($connection, $query_string);
   
     // find out the number of columns in result 
-    $column_count = mysqli_num_fields($result_id) 
+    $column_count = mysqli_num_fields($result_id);
   
     // Here the table attributes from the $table_params variable are added 
     print("<TABLE $table_params >\n"); 
@@ -76,7 +76,7 @@ function display_db_query($query_string, $connection, $header_bool, $table_param
    
  
 //print_r (mysql_fetch_row($result_id));
- $number = 0;
+  $number = 0;
    // print the body of the table 
     while($row = mysqli_fetch_row($result_id)) { 
       //  print_r ($row);
