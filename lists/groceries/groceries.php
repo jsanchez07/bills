@@ -35,8 +35,8 @@
         //echo $rowrow[item];
         
         
-        $item=mysql_result($result_id,$i,"item");
-        echo $item;
+       // $item=mysql_result($result_id,$i,"item");
+        //echo $item;
     }
     mysqli_close($con);
 
