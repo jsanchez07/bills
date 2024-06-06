@@ -29,6 +29,7 @@
         echo row['item'];
         echo row[item];
         
+        echo "this is a new change";
         $item=mysql_result($result_id,$i,"item");
         echo $item;
     }
