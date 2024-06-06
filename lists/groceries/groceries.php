@@ -15,7 +15,7 @@
     $result=mysqli_query($con, $query);
 
     $num=mysqli_num_rows($result);
-
+    /*
     for($i=0; $i<$num; $i++){
         $row = mysqli_fetch_array($result);
         echo "<br />";
@@ -30,10 +30,21 @@
        // $item=mysql_result($result_id,$i,"item");
         //echo $item;
     }
-    mysqli_close($con);
+        */
+   
 
 ?>
-
+<script>
+    var arrOfItems[]{};
+    
+    for(var i = 0; i < <?php echo $num; ?>; i++){
+        var item = <?php echo $row['item']; ?>;
+        var category = <?php echo $row['category']; ?>;
+        var isChecked = <?php echo $row['isChecked']; ?>;
+        arrOfItems.push({item: item, category: category, isChecked: isChecked});
+    }
+    console.log(arrOfItems);
+</script>
     <body>
 
         <p>
@@ -44,9 +55,14 @@
                 <?php
                     for($i=0; $i<$num; $i++){
                         $row = mysqli_fetch_array($result);
-                        echo "<li><input type='checkbox'>".$row[$i]."</li>";
-                        echo "<li id = $row[$i]><input type='checkbox'>". $row[1]."</li>";
+                        if($row['isChecked'] == 1){
+                            echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."</li>";
+                        }
+                        else{
+                            echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."</li>";
+                        }
                     }
+                    mysqli_close($con);
                 ?>
             </ul>
         </div>
