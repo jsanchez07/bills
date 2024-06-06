@@ -8,11 +8,12 @@
     echo "I am here";
     require('dbConfig.php');
     $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
-
+    echo "after getting con";
     $query="SELECT * FROM groceries order by store";
     $result=mysqli_query($con, $query);
-
+    echo "after getting result";
     $num=mysqli_num_rows($result);
+    echo "obvously not getting here";
     echo $num;
     for($i=0; $i<$num; $i++){
         $row = mysqli_fetch_array($result);
