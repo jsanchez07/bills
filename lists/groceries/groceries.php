@@ -15,7 +15,7 @@
     echo "DBpassword variable: ".$DBpassword."<br />";
     echo "database variable: ".$database."<br />";
     echo "after require<br />";
-    $query="SELECT * FROM groceries order by store";
+    $query="SELECT * FROM Groceries order by store";
     echo $query."<br />";
     echo "after query<br />";
     echo "this is a new change<br />";
