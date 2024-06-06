@@ -8,31 +8,23 @@
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
     echo "the errors are turned on<br />";
-    echo "I am here<br />";
     require('dbConfig.php');
-    echo "localhost variable: ".$localhost."<br />";
-    echo "DBusername variable: ".$DBusername."<br />";
-    echo "DBpassword variable: ".$DBpassword."<br />";
-    echo "database variable: ".$database."<br />";
-    echo "after require<br />";
     $query="SELECT * FROM Groceries order by category";
-    echo $query."<br />";
-    echo "after query<br />";
-    echo "this is a new change<br />";
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
-    echo "after getting con<br />";
+
     $result=mysqli_query($con, $query);
-    echo "after getting result<br />";
+
     $num=mysqli_num_rows($result);
-    echo "obvously not getting here<br />";
-    echo $num;
+
     for($i=0; $i<$num; $i++){
         $row = mysqli_fetch_array($result);
-        echo $row[1];
-        echo $row[2];
-        echo "row[0]";
+        echo "<br />";
         echo $row['item'];
-        //echo $rowrow[item];
+        echo "<br />";
+        echo $row['category'];
+        echo "<br />";
+        echo $row['isChecked'];
+        echo "<br />";
         
         
        // $item=mysql_result($result_id,$i,"item");
