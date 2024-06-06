@@ -11,12 +11,13 @@
     echo $DBusername."<br />";
     echo $DBpassword."<br />";
     echo $database."<br />";
-    echo "after require<br /><br />";
+    echo "after require<br />";
     $query="SELECT * FROM groceries order by store";
+    echo $query;
     echo "after query<br />";
-    $connection = mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
+    $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
     echo "after getting con<br />";
-    $result=mysqli_query($connection, $query);
+    $result=mysqli_query($con, $query);
     echo "after getting result<br />";
     $num=mysqli_num_rows($result);
     echo "obvously not getting here<br />";
@@ -29,7 +30,7 @@
         echo row['item'];
         echo row[item];
         
-        echo "this is a new change";
+        
         $item=mysql_result($result_id,$i,"item");
         echo $item;
     }
