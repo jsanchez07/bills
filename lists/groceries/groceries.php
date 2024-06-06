@@ -7,6 +7,7 @@
 <?php
     echo "I am here";
     require('dbConfig.php');
+    echo "after require";
     $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
     echo "after getting con";
     $query="SELECT * FROM groceries order by store";
