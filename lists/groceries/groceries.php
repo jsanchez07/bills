@@ -7,16 +7,16 @@
 <?php
     echo "I am here<br />";
     require('dbConfig.php');
-    echo $localhost."<br />";
-    echo $DBusername."<br />";
-    echo $DBpassword."<br />";
-    echo $database."<br />";
+    echo "localhost variable: ".$localhost."<br />";
+    echo "DBusername variable: ".$DBusername."<br />";
+    echo "DBpassword variable: ".$DBpassword."<br />";
+    echo "database variable: ".$database."<br />";
     echo "after require<br />";
     $query="SELECT * FROM groceries order by store";
     echo $query."<br />";
     echo "after query<br />";
     echo "this is a new change<br />";
-    $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
+    $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
     echo "after getting con<br />";
     $result=mysqli_query($con, $query);
     echo "after getting result<br />";
