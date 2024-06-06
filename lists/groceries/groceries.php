@@ -13,7 +13,7 @@
     echo $database."<br />";
     echo "after require<br />";
     $query="SELECT * FROM groceries order by store";
-    echo $query;
+    echo $query."<br />";
     echo "after query<br />";
     echo "this is a new change<br />";
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
