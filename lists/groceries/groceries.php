@@ -12,7 +12,7 @@
     echo $DBpassword."<br />";
     echo $database."<br />";
     echo "after require<br /><br />";
-    $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
+    mysqli_connect($localhost, $DBusername, $DBpassword, $database) or die("Could not connect to database");
     echo "after getting con<br />";
     $query="SELECT * FROM groceries order by store";
     $result=mysqli_query($con, $query);
