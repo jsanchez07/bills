@@ -15,7 +15,7 @@
     echo "DBpassword variable: ".$DBpassword."<br />";
     echo "database variable: ".$database."<br />";
     echo "after require<br />";
-    $query="SELECT * FROM Groceries order by store";
+    $query="SELECT * FROM Groceries order by category";
     echo $query."<br />";
     echo "after query<br />";
     echo "this is a new change<br />";
@@ -28,11 +28,11 @@
     echo $num;
     for($i=0; $i<$num; $i++){
         $row = mysqli_fetch_array($result);
-        echo row[1];
-        echo row[2];
+        echo $row[1];
+        echo $row[2];
         echo "row[0]";
-        echo row['item'];
-        echo row[item];
+        echo $row['item'];
+        //echo $rowrow[item];
         
         
         $item=mysql_result($result_id,$i,"item");
@@ -52,8 +52,8 @@
                 <?php
                     for($i=0; $i<$num; $i++){
                         $row = mysqli_fetch_array($result);
-                        //echo "<li><input type='checkbox'>".$row[1]."</li>";
-                        //echo "<li id = $row[id]><input type="checkbox"> $row[1]</li>";
+                        echo "<li><input type='checkbox'>".$row[$i]."</li>";
+                        echo "<li id = $row[$i]><input type='checkbox'>". $row[1]."</li>";
                     }
                 ?>
             </ul>
