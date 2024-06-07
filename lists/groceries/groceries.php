@@ -75,6 +75,7 @@
         </div>
         <div class = "actions">
             <input type="text" id="item" placeholder="Add a grocery item">
+            <input type='select' id="category" placeholder="Add a category">
             <button id="add" onclick="addToList(item.value)">Add</button>
             <button id= "remove" onclick="removeFromList()">Remove</button>
         </div>
