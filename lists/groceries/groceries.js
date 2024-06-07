@@ -1,14 +1,22 @@
 function addToList(newItem){
     var ul = document.querySelector("#theList");
     var li = document.createElement("li");
+    //the three things 
     var checkbox = document.createElement("input");
+    var theItem = document.createTextNode(newItem);
     var removeButton = document.createElement("button");
+    //adding attributes
     checkbox.type = "checkbox";
     checkbox.oninput = listenToCheckbox;
     removeButton.innerHTML = "x";
+    theItem.id = newItem.toString();
+    //appending the three things to the li
     li.appendChild(checkbox);
-    li.appendChild(document.createTextNode(newItem));
+    li.appendChild(theItem);
     li.appendChild(removeButton);
+    removeButton.onclick = function() {
+        removeThisItem(li);
+    }
     ul.appendChild(li);
     document.querySelector('#item').value = "";
     reArrangeList();
