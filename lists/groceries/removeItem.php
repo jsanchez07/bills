@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
 require('dbConfig.php');
 
 //Get the item to remove from the JSON request
