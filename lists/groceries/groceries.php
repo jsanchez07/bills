@@ -63,10 +63,10 @@
                     for($i=0; $i<$num; $i++){
                         $row = mysqli_fetch_array($result);
                         if($row['isChecked'] == 1){
-                            echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'remove' onclick='removeThisItem(".$row['item'].")'>Remove</button></li>";
+                            echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                         }
                         else{
-                            echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."</li>";
+                            echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                         }
                     }
                     mysqli_close($con);
