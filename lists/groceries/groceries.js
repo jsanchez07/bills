@@ -5,6 +5,12 @@ function addToList(newItem){
     var checkbox = document.createElement("input");
     var theItem = document.createTextNode(newItem);
     var removeButton = document.createElement("button");
+    
+    console.log(newItem.toString());
+    console.log(checkbox);
+    console.log(theItem);
+    console.log(removeButton);
+    
     //adding attributes
     checkbox.type = "checkbox";
     checkbox.oninput = listenToCheckbox;
