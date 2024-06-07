@@ -10,7 +10,7 @@ function addToList(newItem){
     console.log(checkbox);
     console.log(theItem);
     console.log(removeButton);
-    
+
     //adding attributes
     checkbox.type = "checkbox";
     checkbox.oninput = listenToCheckbox;
@@ -34,6 +34,14 @@ function removeFromList(){
 }
 
 function removeThisItem(item){
+     // Make an HTTP request to a server-side script
+     fetch('removeItem.php', {
+        method: 'POST',
+        body: JSON.stringify({ item: item })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data));
+
     var ul = document.querySelector("#theList");
     ul.removeChild(item);
 }
