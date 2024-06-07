@@ -7,7 +7,7 @@
 <?php
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
-    echo "the errors are turned on<br />";
+    echo "the errors are turned on <br />";
     require('dbConfig.php');
     $query="SELECT * FROM Groceries order by category";
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
@@ -34,22 +34,24 @@
    
 
 ?>
-<script>
+<!--<script>
     var arrOfItems = [];
 
-    <?php $row = mysqli_fetch_array($result); ?>
     
-    for(var i = 0; i < <?php echo $num; ?>; i++){
-        var item = <?php echo $row['item']; ?>
+
+    for(var i = 0; i < <?php// echo $num; ?>; i++){
+        <?php// $row = mysqli_fetch_array($result); ?>
+        var item = <?php //echo $row['item']; ?>
         console.log(item);
-        var category = <?php echo $row['category']; ?>;
+        var category = <?php //echo $row['category']; ?>;
         console.log(category);
-        var isChecked = <?php echo $row['isChecked']; ?>;
+        var isChecked = <?php //echo $row['isChecked']; ?>;
         console.log(isChecked);
         arrOfItems.push({item: item, category: category, isChecked: isChecked});
     }
     console.log(arrOfItems);
-</script>
+    
+</script>-->
     <body>
 
         <p>
