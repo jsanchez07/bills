@@ -35,6 +35,7 @@ function removeFromList(){
 
 function removeThisItem(item){
      // Make an HTTP request to a server-side script
+     console.log(item);
      fetch('removeItem.php', {
         method: 'POST',
         body: JSON.stringify({ item: item })
