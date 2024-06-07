@@ -38,9 +38,12 @@
     var arrOfItems[]{};
     
     for(var i = 0; i < <?php echo $num; ?>; i++){
-        var item = <?php echo $row['item']; ?>;
+        var item = <?php echo $row['item']; ?>
+        console.log(item);
         var category = <?php echo $row['category']; ?>;
+        console.log(category);
         var isChecked = <?php echo $row['isChecked']; ?>;
+        console.log(isChecked);
         arrOfItems.push({item: item, category: category, isChecked: isChecked});
     }
     console.log(arrOfItems);
