@@ -2,10 +2,13 @@ function addToList(newItem){
     var ul = document.querySelector("#theList");
     var li = document.createElement("li");
     var checkbox = document.createElement("input");
+    var removeButton = document.createElement("button");
     checkbox.type = "checkbox";
     checkbox.oninput = listenToCheckbox;
+    removeButton.innerHTML = "x";
     li.appendChild(checkbox);
     li.appendChild(document.createTextNode(newItem));
+    li.appendChild(removeButton);
     ul.appendChild(li);
     document.querySelector('#item').value = "";
     reArrangeList();
