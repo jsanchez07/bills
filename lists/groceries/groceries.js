@@ -16,6 +16,11 @@ function removeFromList(){
     ul.removeChild(ul.lastChild);
 }
 
+function removeThisItem(item){
+    var ul = document.querySelector("#theList");
+    ul.removeChild(item);
+}
+
 function listenToCheckbox() {
     var checkboxes = document.querySelectorAll("input[type='checkbox']");
     checkboxes.forEach(function(checkbox) {
