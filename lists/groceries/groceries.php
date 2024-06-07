@@ -37,9 +37,9 @@
 <script>
     var arrOfItems = [];
 
+    <?php $row = mysqli_fetch_array($result); ?>
     
     for(var i = 0; i < <?php echo $num; ?>; i++){
-        <?php $row = mysqli_fetch_array($result); ?>
         var item = <?php echo $row['item']; ?>
         console.log(item);
         var category = <?php echo $row['category']; ?>;
