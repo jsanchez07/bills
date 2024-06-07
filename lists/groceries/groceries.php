@@ -35,7 +35,8 @@
 
 ?>
 <script>
-    var arrOfItems[]{};
+    var arrOfItems = [];
+
     
     for(var i = 0; i < <?php echo $num; ?>; i++){
         var item = <?php echo $row['item']; ?>
