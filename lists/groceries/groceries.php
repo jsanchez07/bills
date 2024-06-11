@@ -32,11 +32,11 @@
             
                 <?php
                     for($i=0; $i<$numCategories; $i++){
-                        $row = mysqli_fetch_array($categoriesResult);
-                        $currentCategory =  $row['category_name'];
+                        $catRow = mysqli_fetch_array($categoriesResult);
+                        $currentCategory =  $catRow['category_name'];
                         echo "<div class = 'list'>";
-                        echo "<h2>".$row['category_name']."</h2>";
-                        echo "<ul id ='".$row['category_name']."-list' >";
+                        echo "<h2>".$catRow['category_name']."</h2>";
+                        echo "<ul id ='".$catRow['category_name']."-list' >";
                         for($j=0; $j<$num; $j++){
                             $row = mysqli_fetch_array($result);
                             if($row['isChecked'] == 1 && $row['category'] == $currentCategory){

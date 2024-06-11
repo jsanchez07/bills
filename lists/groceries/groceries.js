@@ -6,10 +6,10 @@ function addToList(newItem){
     var theItem = document.createTextNode(newItem);
     var removeButton = document.createElement("button");
     
-    console.log(newItem.toString());
-    console.log(checkbox);
-    console.log(theItem);
-    console.log(removeButton);
+    //console.log(newItem.toString());
+    //console.log(checkbox);
+    //console.log(theItem);
+    //console.log(removeButton);
 
     //adding attributes
     checkbox.type = "checkbox";
@@ -44,9 +44,9 @@ function removeThisItem(item){
     .then(response => response.json());
     //.then(data => console.log("Is this the data part? " + data));
 
-    var ul = document.querySelector("#theList");
-    console.log("Item from the Javascript file: " + itemID);
-    console.log("The actual Item from the Javascript file: " + item);
+    var ul = document.querySelector("#"+itemID);
+    //console.log("Item from the Javascript file: " + itemID);
+    //console.log("The actual Item from the Javascript file: " + item);
     ul.removeChild(item);
 }
 
