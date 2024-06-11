@@ -46,7 +46,7 @@ function removeThisItem(item){
 
     var ul = document.querySelector("#theList");
     console.log("Item from the Javascript file: " + itemID);
-    connsole.log("The actual Item from the Javascript file: " + item);
+    console.log("The actual Item from the Javascript file: " + item);
     ul.removeChild(item);
 }
 
