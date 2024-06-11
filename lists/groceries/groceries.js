@@ -1,5 +1,6 @@
 function addToList(newItem){
-    var ul = document.querySelector("#theList");
+    var itemID = newItem.id;
+    var ul = document.querySelector("#"+itemID);
     var li = document.createElement("li");
     //the three things 
     var checkbox = document.createElement("input");
@@ -25,7 +26,7 @@ function addToList(newItem){
     }
     ul.appendChild(li);
     document.querySelector('#item').value = "";
-    reArrangeList();
+    reArrangeList(itemID);
 }
 
 function removeFromList(){
@@ -56,7 +57,7 @@ function listenToCheckbox() {
         checkbox.addEventListener('change', function() {
             if (this.checked) {
                 console.log('Checkbox is checked');
-                reArrangeList();
+                reArrangeList(document.querySelector("#" +(this.previousSibling.id)).id.toString());
             } else {
                 console.log('Checkbox is unchecked');
             }
@@ -64,8 +65,9 @@ function listenToCheckbox() {
     });
 }
 
-function reArrangeList(){
-    var ul = document.querySelector("#theList");
+function reArrangeList(itemText){
+    irtext = itemText.toString();
+    var ul = document.querySelector("#"+itemText);
     var items = ul.children;
     for(var i = 0; i < items.length; i++){
         if(items[i].firstChild.checked){
