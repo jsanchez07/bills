@@ -8,6 +8,7 @@
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
     echo "the errors are turned on <br />";
+    echo "i made it to this page, groceries.php <br />";
     require('dbConfig.php');
     $query="SELECT * FROM Groceries order by category";
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
