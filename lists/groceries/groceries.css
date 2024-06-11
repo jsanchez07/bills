@@ -36,7 +36,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
+    margin-bottom: 50px;
     padding: 0;
 }
 
@@ -44,6 +44,6 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 400px;
+    margin-top: 200px;
     padding: 0;
 }
