@@ -35,9 +35,8 @@
                         $query="SELECT isChecked, item, category FROM Groceries WHERE category = '".$currentCategory."'";
                         $result=mysqli_query($con, $query);
                         $num=mysqli_num_rows($result);
-                        $row = mysqli_fetch_array($result);
                         for($j=0; $j<$num; $j++){
-                            
+                            $row = mysqli_fetch_array($result);
                             if($row['isChecked'] == 1 && $row['category'] == $currentCategory){
                                 echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
