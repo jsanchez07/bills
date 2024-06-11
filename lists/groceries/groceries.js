@@ -41,8 +41,8 @@ function removeThisItem(item){
         method: 'POST',
         body: JSON.stringify({ item: itemID })
     })
-    .then(response => response.json())
-    .then(data => console.log("Is this the data part? " + data));
+    .then(response => response.json());
+    //.then(data => console.log("Is this the data part? " + data));
 
     var ul = document.querySelector("#theList");
     console.log("Item from the Javascript file: " + itemID);
