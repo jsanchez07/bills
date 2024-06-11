@@ -11,32 +11,11 @@
     require('dbConfig.php');
     $query="SELECT * FROM Groceries order by category";
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
-
     $result=mysqli_query($con, $query);
-
     $num=mysqli_num_rows($result);
     
-   
 
 ?>
-<!--<script>
-    var arrOfItems = [];
-
-    
-
-    for(var i = 0; i < <?php// echo $num; ?>; i++){
-        <?php// $row = mysqli_fetch_array($result); ?>
-        var item = <?php //echo $row['item']; ?>
-        console.log(item);
-        var category = <?php //echo $row['category']; ?>;
-        console.log(category);
-        var isChecked = <?php //echo $row['isChecked']; ?>;
-        console.log(isChecked);
-        arrOfItems.push({item: item, category: category, isChecked: isChecked});
-    }
-    console.log(arrOfItems);
-    
-</script>-->
     <body>
 
         <p>
