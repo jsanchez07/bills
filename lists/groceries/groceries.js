@@ -36,12 +36,13 @@ function removeFromList(){
 function removeThisItem(item){
      // Make an HTTP request to a server-side script
      var item = item.firstChild.nextSibling.id;
+        console.log("Item from the Javascript file at the beginning: " + item);
      fetch('removeItem.php', {
         method: 'POST',
         body: JSON.stringify({ item: item })
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => console.log("Is this the data part? " + data));
 
     var ul = document.querySelector("#theList");
     console.log("Item from the Javascript file: " + item);
