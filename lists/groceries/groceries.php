@@ -10,11 +10,17 @@
     echo "the errors are turned on <br />";
     echo "i made it to this page, groceries.php <br />";
     require('dbConfig.php');
-    $query="SELECT * FROM Groceries order by category";
+   
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
+    $query="SELECT * FROM Groceries order by category";
     $result=mysqli_query($con, $query);
     $num=mysqli_num_rows($result);
     echo "the number of rows is: ".$num;
+
+    $categoriesQuery = "SELECT * from Categories";
+    $categoriesResult = mysqli_query($con, $categoriesQuery);
+    $numCategories = mysqli_num_rows($categoriesResult);
+
 
 ?>
     <body>
@@ -23,15 +29,21 @@
             Hello this is a list of groceries
         </p>
         <div class = "list">
-            <ul id = "theList">
+            
                 <?php
-                    for($i=0; $i<$num; $i++){
-                        $row = mysqli_fetch_array($result);
-                        if($row['isChecked'] == 1){
-                            echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
-                        }
-                        else{
-                            echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
+                    for($i=0; $i<$numCategories; $i++){
+                        $row = mysqli_fetch_array($categoriesResult);
+                        //echo "<li id = ".$row['category'].">".$row['category']."</li>";
+                        echo "<h2>".$row['category']."</h2>";
+                        echo "<ul id ='".$row['category']."-list' >";
+                        for($j=0; $j<$num; $j++){
+                            $row = mysqli_fetch_array($result);
+                            if($row['isChecked'] == 1){
+                                echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
+                            }
+                            else{
+                                echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
+                            }
                         }
                     }
                     mysqli_close($con);
