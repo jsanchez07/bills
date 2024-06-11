@@ -36,7 +36,7 @@
                         $catRow = mysqli_fetch_array($categoriesResult);
                         $currentCategory =  $catRow['category_name'];
                         echo "<div class = 'list'>";
-                        echo "<h2>".$catRow['category_name']."</h2>";
+                        echo "<div class = 'heading'><h2>".$catRow['category_name']."</h2></div>";
                         echo "<ul id ='".$catRow['category_name']."-list' >";
                         for($j=0; $j<$num; $j++){
                             $row = mysqli_fetch_array($result);
