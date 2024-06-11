@@ -61,7 +61,9 @@
                 ?>
             </ul>
         </div>
-        <input type='select' id="category" placeholder="Add a category">
-        <button id= "remove" onclick="removeFromList()">Remove</button>
+        <div class = "actions">
+            <input type='select' id="category" placeholder="Add a category">
+            <button id= "remove" onclick="removeFromList()">Remove</button>
+        </div>
     </body>
 </html>
