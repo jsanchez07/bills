@@ -44,6 +44,7 @@ function removeThisItem(item){
     .then(data => console.log(data));
 
     var ul = document.querySelector("#theList");
+    console.log("Item from the Javascript file: " + item);
     ul.removeChild(item);
 }
 

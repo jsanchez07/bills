@@ -7,12 +7,12 @@ require('dbConfig.php');
 //Get the item to remove from the JSON request
 $data = json_decode(file_get_contents('php://input'), true);
 $item = $data['item'];
-console.log($item);
+echo("Item from the php file: ". $item);
 
 // Connect to the database
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         if (!$con) {
-            // Handle error
+            echo("Failed to connect to the database");
         }
 $sql = "DELETE FROM Groceries WHERE item = '$item'";
 echo $sql;
