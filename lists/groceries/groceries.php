@@ -8,7 +8,7 @@
     error_reporting(E_ALL);
     ini_set('display_errors', 'on');
     echo "the errors are turned on <br />";
-    echo "i made it to this page, groceries.php <br />";
+    //echo "i made it to this page, groceries.php <br />";
     require('dbConfig.php');
    
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
@@ -20,6 +20,7 @@
     $categoriesQuery = "SELECT * from Categories";
     $categoriesResult = mysqli_query($con, $categoriesQuery);
     $numCategories = mysqli_num_rows($categoriesResult);
+    echo "the number of categories is: ".$numCategories;
 
 
 ?>
@@ -42,7 +43,7 @@
                             if($row['isChecked'] == 1 && $row['category'] == $currentCategory){
                                 echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
-                            else{
+                            elseif($row['category'] == $currentCategory){
                                 echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
                         }
