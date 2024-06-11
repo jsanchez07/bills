@@ -13,7 +13,7 @@
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
     $result=mysqli_query($con, $query);
     $num=mysqli_num_rows($result);
-    
+    echo "the number of rows is: ".$num;
 
 ?>
     <body>
