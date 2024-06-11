@@ -28,12 +28,13 @@
         <p>
             Hello this is a list of groceries
         </p>
-        <div class = "list">
+        
             
                 <?php
                     for($i=0; $i<$numCategories; $i++){
                         $row = mysqli_fetch_array($categoriesResult);
                         $currentCategory =  $row['category_name'];
+                        echo "<div class = 'list'>";
                         echo "<h2>".$row['category_name']."</h2>";
                         echo "<ul id ='".$row['category_name']."-list' >";
                         for($j=0; $j<$num; $j++){
@@ -46,6 +47,7 @@
                             }
                         }
                         echo "</ul>";
+                        echo "</div>";
                     }
                     mysqli_close($con);
                 ?>
