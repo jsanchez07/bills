@@ -12,10 +12,9 @@
     require('dbConfig.php');
    
     $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
-    
-    
-    echo "the number of rows is: ".$num;
-
+    if(!$con){
+        echo("Failed to connect to the database");
+    }
     $categoriesQuery = "SELECT * from Categories";
     $categoriesResult = mysqli_query($con, $categoriesQuery);
     $numCategories = mysqli_num_rows($categoriesResult);
@@ -24,10 +23,7 @@
 
 ?>
     <body>
-
-      
   
-            
                 <?php
                     for($i=0; $i<$numCategories; $i++){
                         $catRow = mysqli_fetch_array($categoriesResult);
