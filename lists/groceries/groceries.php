@@ -15,22 +15,7 @@
     $result=mysqli_query($con, $query);
 
     $num=mysqli_num_rows($result);
-    /*
-    for($i=0; $i<$num; $i++){
-        $row = mysqli_fetch_array($result);
-        echo "<br />";
-        echo $row['item'];
-        echo "<br />";
-        echo $row['category'];
-        echo "<br />";
-        echo $row['isChecked'];
-        echo "<br />";
-        
-        
-       // $item=mysql_result($result_id,$i,"item");
-        //echo $item;
-    }
-        */
+    
    
 
 ?>

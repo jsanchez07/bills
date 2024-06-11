@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
+console.log("i made it to this page, removeItem.php");
 require('dbConfig.php');
 
 //Get the item to remove from the JSON request
@@ -14,13 +15,14 @@ $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
             // Handle error
         }
 $sql = "DELETE FROM Groceries WHERE item = '$item'";
-
+echo $sql;
 // Execute the query
-mysqli_execute_query($con, $sql);
-    if (!mysqli_query($con, $sql))
-        {
-        die('Error in this one:' . mysql_error());
-        }
+if (mysqli_query($con, $sql)) {
+    echo "Message successfully added!";
+} else {
+    echo "Error" . mysqli_error($conn);
+}
+
 // Close the connection
 mysqli_close($con);
 
