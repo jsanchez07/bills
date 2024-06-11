@@ -26,10 +26,8 @@
 ?>
     <body>
 
-        <p>
-            Hello this is a list of groceries
-        </p>
-        
+      
+  
             
                 <?php
                     for($i=0; $i<$numCategories; $i++){
