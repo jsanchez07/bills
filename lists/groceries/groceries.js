@@ -35,17 +35,18 @@ function removeFromList(){
 
 function removeThisItem(item){
      // Make an HTTP request to a server-side script
-     var item = item.id;
+     var itemID = item.id;
         console.log("Item from the Javascript file at the beginning: " + item);
      fetch('removeItem.php', {
         method: 'POST',
-        body: JSON.stringify({ item: item })
+        body: JSON.stringify({ item: itemID })
     })
     .then(response => response.json())
     .then(data => console.log("Is this the data part? " + data));
 
     var ul = document.querySelector("#theList");
-    console.log("Item from the Javascript file: " + item);
+    console.log("Item from the Javascript file: " + itemID);
+    connsole.log("The actual Item from the Javascript file: " + item);
     ul.removeChild(item);
 }
 
