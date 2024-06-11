@@ -44,6 +44,9 @@
                             elseif($row['category'] == $currentCategory){
                                 echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
+                            else{
+                                //do nothing
+                            }
                         }
                         echo "</ul>";
                         echo "</div>";
