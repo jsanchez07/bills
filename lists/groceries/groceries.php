@@ -38,10 +38,10 @@
                         for($j=0; $j<$num; $j++){
                             $row = mysqli_fetch_array($result);
                             if($row['isChecked'] == 1 && $row['category'] == $currentCategory){
-                                echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
+                                echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: "."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
                             elseif($row['category'] == $currentCategory){
-                                echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
+                                echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
                             else{
                                 //do nothing
