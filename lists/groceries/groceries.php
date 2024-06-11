@@ -64,6 +64,7 @@
         <div class = "category_actions">
             <input type='select' id="category" placeholder="Add a category">
             <button id= "remove" onclick="removeFromList()">Remove</button>
+            <script listenToCheckbox();></script>
         </div>
     </body>
 </html>
