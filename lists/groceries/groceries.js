@@ -35,7 +35,7 @@ function removeFromList(){
 
 function removeThisItem(item){
      // Make an HTTP request to a server-side script
-     var item = item.firstChild.nextSibling.id;
+     var item = item.id;
         console.log("Item from the Javascript file at the beginning: " + item);
      fetch('removeItem.php', {
         method: 'POST',
