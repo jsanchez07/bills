@@ -34,8 +34,8 @@
                     for($i=0; $i<$numCategories; $i++){
                         $row = mysqli_fetch_array($categoriesResult);
                         //echo "<li id = ".$row['category'].">".$row['category']."</li>";
-                        echo "<h2>".$row['category']."</h2>";
-                        echo "<ul id ='".$row['category']."-list' >";
+                        echo "<h2>".$row['category_name']."</h2>";
+                        echo "<ul id ='".$row['category_name']."-list' >";
                         for($j=0; $j<$num; $j++){
                             $row = mysqli_fetch_array($result);
                             if($row['isChecked'] == 1){
