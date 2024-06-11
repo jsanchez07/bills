@@ -49,7 +49,7 @@
                         }
                         echo "</ul>";
                         echo "</div>";
-                        echo "<div class = 'category_actions'>";
+                        echo "<div class = 'actions'>";
                         echo "<input type='text' id='item' placeholder='Add a grocery item'>";
                        
                         echo "<button id='add' onclick='addToList(item.value)'>Add</button>";
@@ -61,7 +61,7 @@
                 ?>
             </ul>
         </div>
-        <div class = "actions">
+        <div class = "category_actions">
             <input type='select' id="category" placeholder="Add a category">
             <button id= "remove" onclick="removeFromList()">Remove</button>
         </div>
