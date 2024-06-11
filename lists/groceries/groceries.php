@@ -33,18 +33,19 @@
                 <?php
                     for($i=0; $i<$numCategories; $i++){
                         $row = mysqli_fetch_array($categoriesResult);
-                        //echo "<li id = ".$row['category'].">".$row['category']."</li>";
+                        $currentCategory =  $row['category_name'];
                         echo "<h2>".$row['category_name']."</h2>";
                         echo "<ul id ='".$row['category_name']."-list' >";
                         for($j=0; $j<$num; $j++){
                             $row = mysqli_fetch_array($result);
-                            if($row['isChecked'] == 1){
+                            if($row['isChecked'] == 1 && $row['category'] == $currentCategory){
                                 echo "<li id = ".$row['item']."><input type='checkbox' checked>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
                             else{
                                 echo "<li id = ".$row['item']."><input type='checkbox'>". $row['item']." category: ".$row['category']."<button id= 'removeThis' onclick='removeThisItem(".$row['item'].")'>x</button></li>";
                             }
                         }
+                        echo "</ul>";
                     }
                     mysqli_close($con);
                 ?>
