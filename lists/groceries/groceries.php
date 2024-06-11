@@ -49,7 +49,7 @@
                         }
                         echo "</ul>";
                         echo "</div>";
-                        echo "<div class = 'actions'>";
+                        echo "<div class = 'category_actions'>";
                         echo "<input type='text' id='item' placeholder='Add a grocery item'>";
                        
                         echo "<button id='add' onclick='addToList(item.value)'>Add</button>";
