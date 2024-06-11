@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
-console.log("i made it to this page, removeItem.php");
+echo("i made it to this page, removeItem.php");
 require('dbConfig.php');
 
 //Get the item to remove from the JSON request
