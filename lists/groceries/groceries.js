@@ -115,6 +115,7 @@ function addCategory(){
     var actionsInput = document.createElement("input");
     actionsInput.type = "text";
     actionsInput.id = "item-" + newCategoryID;
+    actionsInput.className = "add-item-textbox";
     actionsInput.innerHTML = "Add an item hoe";
     actionsInput.placeholder = "Add an item hoe";
     var actionsButton = document.createElement("button");

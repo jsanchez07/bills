@@ -50,7 +50,7 @@
                         </ul>
                         </div>
                         <div class = 'actions'>
-                        <input type='text' id='<?php echo $buttonID?>' placeholder='Add an item hoe'>
+                        <input type='text' class = 'add-item-textbox' id='<?php echo $buttonID?>' placeholder='Add an item hoe'>
                         <button class='add-item-button' onclick='addToList(document.querySelector("#<?php echo $buttonID; ?>").value, "<?php echo $buttonID; ?>"); document.querySelector("#<?php echo $buttonID; ?>").focus()'>Add</button>
                         <div class = 'error-message' id = 'error-<?php echo $buttonID?>'></div>
                     </div>

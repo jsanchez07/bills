@@ -62,14 +62,15 @@ p {
 }
 
 .list-checkbox:checked{
-    background-color: grey;
+    background-color: #0469e3;
 }
 
 .remove-item-button{
     display:inline-flex;
     background-color: white;
     border: 1px solid #ddd;
-    font-size: 1em;
+    font-size: 25px;
+    border-radius: 25%;
     text-align: center;
     cursor: pointer;
     margin-left: 20px;
@@ -108,4 +109,23 @@ p {
     margin-top: 50px;
     padding: 0;
    color:red;
+}
+
+.add-item-textbox{
+    height:75px;
+    font-size:26pt;
+    border-radius: 10px;
+}
+
+.add-item-button{
+    display:inline-flex;
+    background-color: #0469e3;
+    color: white;
+    border: 1px solid black;
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 20px;
+    padding: 20px 50px;
+    font-size: 25px;
 }
