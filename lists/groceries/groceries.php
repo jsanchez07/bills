@@ -55,16 +55,26 @@
                         <div class = 'error-message' id = 'error-<?php echo $buttonID?>'></div>
                     </div>
                         
-                    
-                   <?php } mysqli_close($con);
-                ?>
+                    <?php } ?>
+                
                     </ul>
                 </div>
         </div>
         <div class = "category_actions">
             <input type='text' id="newCategory" placeholder="Add a category">
             <button id= "add-category" onclick="addCategory()">Add Category</button>
-            <script listenToCheckbox();></script>
         </div>
+        <div class = "category_actions">
+            <?php
+                $delCatResult = mysqli_query($con, $categoriesQuery);
+                echo "<select id='category-dropdown'>";
+                while ($delCatRow = mysqli_fetch_array($delCatResult)) {
+                    echo "<option id = '".$delCatRow['category_name']."' value='" . $delCatRow['category_name'] . "'>" . $delCatRow['category_name'] . "</option>";
+                }
+                ?>
+            </select>
+            <button id= "delete-category-button" onclick="deleteCategory(category-dropdown.value)">Delete Category</button>
+        </div>
+        <?php mysqli_close($con);?>
     </body>
 </html>

@@ -90,7 +90,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
+    margin-bottom: 150px;
     padding: 0;
 }
 
@@ -106,9 +106,11 @@ p {
     display: flex;
     justify-content: center;
     position: absolute;
-    margin-top: 50px;
+    margin-top: 150px;
+    margin-left: -125;
+    font-size: 2em;
     padding: 0;
-   color:red;
+    color: red;
 }
 
 .add-item-textbox{
