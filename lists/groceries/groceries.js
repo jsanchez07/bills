@@ -23,8 +23,10 @@ function addToList(newItem, itemID){
  
     //adding attributes
     checkbox.type = "checkbox";
+    checkbox.className = "list-checkbox";
     checkbox.oninput = listenToCheckbox();
     removeButton.innerHTML = "x";
+    removeButton.className = "remove-item-button";
     //theItem.id = newItem;
     var forItemID = newItem.replaceAll(" ", "-");
     li.id = forItemID;
@@ -35,7 +37,6 @@ function addToList(newItem, itemID){
     removeButton.onclick = function() {
         removeThisItem(forItemID);
     }
-    
     ul.appendChild(li);
     document.querySelector('#'+itemID).value = "";
 

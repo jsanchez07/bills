@@ -1,7 +1,7 @@
 
 body{
     font-family: Arial, sans-serif;
-    background-color: seagreen;
+    background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
     margin: 0;
     padding: 0;
 }
@@ -19,7 +19,7 @@ p {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin-left: 46%;
+    margin-left: 35%;
     margin-bottom: 30px;
     padding: 0;
 }
@@ -32,6 +32,47 @@ p {
     margin: 0;
     padding: 0;
     list-style-type: none;
+}
+
+.list li{
+    display: block;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 30px;
+    width: 600px;
+    height: 25;
+    font-size: 3em;
+    
+}
+
+.list-checkbox{
+    width: 2.3em;
+    height: 2.3em;
+    background-color: white;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.list-checkbox:checked{
+    background-color: grey;
+}
+
+.remove-item-button{
+    display:inline-flex;
+    background-color: white;
+    border: 1px solid #ddd;
+    font-size: 1em;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 20px;
 }
 
 .heading{

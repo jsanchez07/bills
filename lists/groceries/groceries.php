@@ -18,10 +18,6 @@
     $categoriesQuery = "SELECT * from Categories";
     $categoriesResult = mysqli_query($con, $categoriesQuery);
     $numCategories = mysqli_num_rows($categoriesResult);
-    //echo "the number of categories is: ".$numCategories."<br />";
-    //echo "show me something else";
-
-
 ?>
     <body>
         <div id = "group-of-lists">
@@ -40,10 +36,10 @@
                             $row = mysqli_fetch_array($result);
                             $idForItem = str_replace(" ", "-", $row['item']);
                             if($row['isChecked'] == 1 && $row['category'] == $currentCategory){
-                                echo "<li id = '$idForItem'><input type='checkbox' checked>". $row['item']." category: "."<button id= 'removeThis' onclick='removeThisItem(\"".$idForItem."\")'>x</button></li>";
+                                echo "<li id = '$idForItem'><input class = 'list-checkbox' type='checkbox' checked>". $row['item']." category: "."<button class='remove-item-button' onclick='removeThisItem(\"".$idForItem."\")'>x</button></li>";
                             }
                             elseif($row['category'] == $currentCategory){
-                                echo "<li id = '$idForItem'><input type='checkbox'>". $row['item']."<button id= 'removeThis' onclick='removeThisItem(\"".$idForItem."\")'>x</button></li>"; 
+                                echo "<li id = '$idForItem'><input class = 'list-checkbox' type='checkbox'>". $row['item']."<button class='remove-item-button' onclick='removeThisItem(\"".$idForItem."\")'>x</button></li>"; 
                             }
                             else{
                                 //do nothing

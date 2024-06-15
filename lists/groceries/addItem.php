@@ -9,7 +9,6 @@ $data = json_decode(file_get_contents('php://input'), true);
 $item = $data['item'];
 $category = $data['category'];
 
-
 // Connect to the database
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         if (!$con) {
