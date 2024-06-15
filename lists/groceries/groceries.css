@@ -31,6 +31,7 @@ p {
     flex-wrap: wrap;
     margin: 0;
     padding: 0;
+    list-style-type: none;
 }
 
 .heading{
@@ -57,4 +58,13 @@ p {
     align-items: center;
     margin-top: 200px;
     padding: 0;
+}
+
+.error-message{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    margin-top: 50px;
+    padding: 0;
+   color:red;
 }
