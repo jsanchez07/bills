@@ -26,7 +26,6 @@ p {
     align-items: center;
     flex-wrap: wrap;
     margin-left: 10%;
-    margin-right: 10%;
     margin-bottom: 30px;
     padding: 0;
 }
@@ -47,7 +46,7 @@ p {
     align-items: center;
     margin: 0;
     padding: 30px;
-    width: 75%;
+    width: 90%;
     height: 25;
     font-size: 3em;
     border: 1px solid black;
