@@ -4,6 +4,7 @@ body{
     background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
     margin: 0;
     padding: 0;
+    width: 95%;
 }
 p {
     font-size:100%;
@@ -15,7 +16,7 @@ p {
 }
 
 #group-of-lists{
-    width: 90%;
+    width: 100%;
     padding: 0;
 }
 
