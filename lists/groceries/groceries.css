@@ -35,15 +35,16 @@ p {
 }
 
 .list li{
-    display: block;
-    justify-content: center;
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
-    flex-wrap: wrap;
     margin: 0;
     padding: 30px;
     width: 600px;
     height: 25;
     font-size: 3em;
+    border: 1px solid black;
+    flex-wrap: nowrap;
     
 }
 
@@ -131,3 +132,4 @@ p {
     padding: 20px 50px;
     font-size: 25px;
 }
+
