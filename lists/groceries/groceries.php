@@ -47,9 +47,10 @@
                     for($i=0; $i<$numCategories; $i++){
                         $catRow = mysqli_fetch_array($categoriesResult);
                         $currentCategory =  $catRow['category_name'];
+                        $currentCategoryID = str_replace(" ", "-", $currentCategory);
                         echo "<div class = 'list'>";
                         echo "<h2>".$catRow['category_name']."</h2>";
-                        echo "<ul id ='".$catRow['category_name']."-list' >";
+                        echo "<ul id ='".$currentCategoryID."-list' >";
                         
                         $query="SELECT isChecked, item, category FROM Groceries WHERE category = '".$currentCategory."'";
                         $result=mysqli_query($con, $query);
@@ -67,7 +68,8 @@
                                 //do nothing
                             }
                         }
-                        $buttonID = "item-".$catRow['category_name'];
+
+                        $buttonID = "item-".$currentCategoryID;
                     ?>
                         </ul>
                         </div>
@@ -84,18 +86,15 @@
         </div>
         <div class = "category_actions">
             <input type='text' id="newCategory" placeholder="Add a category">
-            <button id= "add-category" onclick="addCategory()">Add Category</button>
+            <button id= "add-category" onclick="addCategory(newCategory.value)">Add Category</button>
         </div>
         <div class = "category_actions">
-            <?php
-                $delCatResult = mysqli_query($con, $categoriesQuery);
-                echo "<select id='category-dropdown'>";
-                while ($delCatRow = mysqli_fetch_array($delCatResult)) {
-                    echo "<option id = '".$delCatRow['category_name']."' value='" . $delCatRow['category_name'] . "'>" . $delCatRow['category_name'] . "</option>";
-                }
-                ?>
+            <select id='category-dropdown'>
+                <script>
+                    decorateDeleteCategory();
+                </script>
             </select>
-            <button id= "delete-category-button" onclick="deleteCategory(category-dropdown.value)">Delete Category</button>
+            <button id= "delete-category-button" onclick="deleteCategory(document.getElementById('category-dropdown').value)">Delete Category</button>
         </div>
         <?php mysqli_close($con);?>
     </body>
