@@ -15,9 +15,31 @@
     if(!$con){
         echo("Failed to connect to the database");
     }
+    ?>
+    <script>
+        var categories = [];
+    </script>
+    <?php
     $categoriesQuery = "SELECT * from Categories";
     $categoriesResult = mysqli_query($con, $categoriesQuery);
     $numCategories = mysqli_num_rows($categoriesResult);
+
+    $beginningCategoriesResult = mysqli_query($con, $categoriesQuery);
+    $numBeginningCategories = mysqli_num_rows($beginningCategoriesResult);
+    for ($i=0; $i<$numBeginningCategories; $i++){
+        $beginningCategoriesRow = mysqli_fetch_array($beginningCategoriesResult);
+        $beginningCategory = $beginningCategoriesRow['category_name'];
+        ?>
+
+        <script>
+            categories.push("<?php echo $beginningCategory; ?>");
+        </script>
+   <?php    
+    }
+
+
+
+
 ?>
     <body>
         <div id = "group-of-lists">
