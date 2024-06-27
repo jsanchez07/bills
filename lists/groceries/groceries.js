@@ -43,41 +43,9 @@ function addToList(newItem, categoryID, categoryName){
     //trim input to make it less messy
     newItem = newItem.trim();
 
-    //replace the dashes with spaces to get the category name to input to the database
     
-    //get the ul list to append the li to
-    ul = document.querySelector("#"+categoryID);
-    
-    //create the li that will be appended to the ul with the new item
-    var li = document.createElement("li");
-    
-    //the three things in the li
-    var checkbox = document.createElement("input");
-    var theItem = document.createTextNode(newItem);
-    var removeButton = document.createElement("button");
- 
-    //adding attributes to the three elements
-    checkbox.type = "checkbox";
-    checkbox.className = "list-checkbox";
-    checkbox.oninput = listenToCheckbox();
-    removeButton.innerHTML = "x";
-    removeButton.className = "remove-item-button";
-    removeButton.onclick = function() {
-        removeThisItem(itemID);
-    };
-
-    //adding the id to the li
-    li.id = itemID;
-
-    //appending the three things to the li
-    li.appendChild(checkbox);
-    li.appendChild(theItem);
-    li.appendChild(removeButton);
-    
-    //appending the li to the ul
-    ul.appendChild(li);
-    
-
+    document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+                           
 
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
@@ -94,6 +62,7 @@ function addToList(newItem, categoryID, categoryName){
     });
 
     document.querySelector('#add-to-list-'+categoryID).value = "";
+    //location.reload();
     //re-arrange the list
     //reArrangeList(itemID);
 }
@@ -113,8 +82,8 @@ function generateID(){
 
 function removeThisItem(itemID){
     console.log("item to remove: "+itemID);
-    var forTheID = "[id='"+itemID+"']";
-    
+    var forTheID = "#"+itemID;
+    console.log("forTheID: "+forTheID);
     var li = document.querySelector(forTheID);
     li.remove(); 
     
@@ -198,7 +167,6 @@ function addCategory(categoryToAdd){
     actionsButton.innerHTML = "Add Item";
      // Use addEventListener instead of directly assigning to onclick
     actionsButton.addEventListener('click', function() {
-        console.log("actionsInput.value: "+actionsInput.value);
         addToList(actionsInput.value, newCategoryID, newCategory);
         actionsInput.focus();
     });
