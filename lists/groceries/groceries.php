@@ -70,31 +70,35 @@
                         if(categories[i].category_name == groceries[j].category){
                             var itemID  = groceries[j].id;
                             if(groceries[j].isChecked == 1){
-                                //addToList(groceries[j].item, categoryID, true, false);
                                 document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' checked>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                             }
                             else{
-                                //addToList(groceries[j].item, categoryID, false, false);
                                 document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox'>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                             }
-                            console.log("\n");   
                         }
                     }
-                    //write the actions div at the bottom of each list
-                    document.write(`
+            
+                    document.write(`</ul>`);
+                    groupOfLists.innerHTML += `<div class='actions'>
+                        <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
+                        <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + categoryID + `", "`+escapeHTML(categoryName)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
+                        <div class='error-message' id='error-` + categoryID + `'></div>`;
+            
+                    //write the actions div at the bottom of each list to add a new item
+                    
+                    /*document.write(`
                             </ul>
                             <div class='actions'>
                                 <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
-                                <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + categoryID + `", "`+categoryName+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
+                                <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + categoryID + `", "`+replaceSpecialCharacters(categoryName)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
                                 <div class='error-message' id='error-` + categoryID + `'></div>
                             </div>
-                            `);
-                   
-        }
-                </script> 
-                
-                
+                            `);*/
+                    }
+            </script>     
         </div>
+
+        <!-- The categories actions div to add and delete categories -->
         <div class = "category_actions">
             <input type='text' id="newCategory" placeholder="Add a category">
             <button id= "add-category" onclick="addCategory(newCategory.value)">Add Category</button>
@@ -103,8 +107,6 @@
         <div class = "category_actions">
             <select id='category-dropdown'>
                 <script>
-                    //console.log(categories);
-                    //console.log(groceries);
                     decorateDeleteCategoryDropdown();
                 </script>
             </select>

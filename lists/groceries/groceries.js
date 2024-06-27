@@ -1,9 +1,10 @@
 
-function Groceries(id, item, isChecked, category) {
+function Groceries(id, item, isChecked, category, categoryID) {
     this.id = id;
     this.item = item;
     this.isChecked = isChecked;
     this.category = category;
+    this.categoryID = categoryID;
 }
 
 function Categories(id, category_name) {
@@ -26,9 +27,7 @@ function addToList(newItem, categoryID, categoryName){
     }
     
     for(var i = 0; i < groceries.length; i++){
-       // console.log("groceries[i]: "+ groceries[i].item);
-        //console.log("newItem: "+ newItem);
-        if(groceries[i].item == newItem){
+        if(groceries[i].item == newItem && groceries[i].category == categoryName){
             //alert Div for duplicate item
             alertDiv.innerHTML = "This item is already in the list.";
             return;
@@ -46,7 +45,7 @@ function addToList(newItem, categoryID, categoryName){
     
     document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                            
-
+    groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
         method: 'POST',
@@ -62,7 +61,7 @@ function addToList(newItem, categoryID, categoryName){
     });
 
     document.querySelector('#add-to-list-'+categoryID).value = "";
-    //location.reload();
+
     //re-arrange the list
     //reArrangeList(itemID);
 }
@@ -81,11 +80,17 @@ function generateID(){
 //}
 
 function removeThisItem(itemID){
-    console.log("item to remove: "+itemID);
+    //remove it from the html
     var forTheID = "#"+itemID;
-    console.log("forTheID: "+forTheID);
     var li = document.querySelector(forTheID);
     li.remove(); 
+
+    //remove it from the array
+    for(var i = 0; i < groceries.length; i++){
+        if(groceries[i].id == itemID){
+            groceries.splice(i, 1);
+        }
+    }
     
     // Make an HTTP request to a server-side script
      fetch('removeItem.php', {
@@ -134,55 +139,24 @@ function addCategory(categoryToAdd){
 
     categoryAlertDiv = document.querySelector("#error-newCategory");
     categoryAlertDiv.innerHTML = "";
+    
     var newCategory = categoryToAdd;
-    console.log("newCategory in the addCategory function: "+newCategory);
-    
     var newCategoryID = generateID();
-    console.log("newCategoryID in the addCategory function: "+newCategoryID);
-    
-    var newCategoryDiv = document.createElement("div");
-    var newCategoryList = document.createElement("ul");
-    newCategoryList.id = newCategoryID;
+  
 
-    var categoriesList = document.querySelector("#group-of-lists");
-    
-    var newCategoryHeader = document.createElement("h2");
-    newCategoryDiv.className = "list";
-    newCategoryHeader.innerHTML = newCategory;
+    var groupOfLists = document.querySelector("#group-of-lists");
+    var addToListTextboxID = "add-to-list-"+newCategoryID;
+    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul>";
 
-    newCategoryDiv.appendChild(newCategoryHeader);
-    newCategoryDiv.appendChild(newCategoryList);
+    groupOfLists.innerHTML += `
+        <div class='actions'>
+            <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
+            <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + newCategoryID + `", "`+escapeHTML(categoryToAdd)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
+            <div class='error-message' id='error-` + newCategoryID + `'></div>
+        </div>
+        </div>
+        `;
     document.querySelector("#newCategory").value = "";
-
-    var actionsDiv = document.createElement("div");
-    actionsDiv.className = "actions";
-    var actionsInput = document.createElement("input");
-    actionsInput.type = "text";
-    actionsInput.id = "add-to-list-"+newCategoryID;
-    actionsInput.className = "add-item-textbox";
-    
-    actionsInput.placeholder = "Add an item hoe";
-    var actionsButton = document.createElement("button");
-    actionsButton.classList.add("add-item-button");
-    actionsButton.innerHTML = "Add Item";
-     // Use addEventListener instead of directly assigning to onclick
-    actionsButton.addEventListener('click', function() {
-        addToList(actionsInput.value, newCategoryID, newCategory);
-        actionsInput.focus();
-    });
-
-    var errorDiv = document.createElement("div");
-    errorDiv.id = "error-" + newCategoryID;
-    errorDiv.className = "error-message";
-    
-    actionsDiv.appendChild(actionsInput);
-    actionsDiv.appendChild(actionsButton);
-    actionsDiv.appendChild(errorDiv);
-
-    categoriesList.appendChild(newCategoryDiv);
-    categoriesList.appendChild(actionsDiv);
-
-
 
     //put it into the array of categories
     categories.push(new Categories(newCategoryID, newCategory));
