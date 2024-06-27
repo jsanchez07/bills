@@ -1,21 +1,26 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
-//echo "i made it to this page, addItem.php";
+
 require('dbConfig.php');
 
 //Get the item to remove from the JSON request
 $data = json_decode(file_get_contents('php://input'), true);
-$item = $data['item'];
-$category = $data['category'];
 
 // Connect to the database
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         if (!$con) {
             echo("Failed to connect to the database");
         }
-$sql = "INSERT INTO Groceries (isChecked, item, category) VALUES (0, '$item', '$category')";
-//echo $sql;
+//these need an active $con to database
+$item = mysqli_real_escape_string($con, trim($data['item']));
+$category = mysqli_real_escape_string($con, trim($data['categoryName']));
+$id = mysqli_real_escape_string($con, trim($data['id']));
+$categoryID = mysqli_real_escape_string($con, trim($data['categoryID']));
+
+
+$sql = "INSERT INTO Groceries (isChecked, item, category, id, category_id) VALUES (0, '$item', '$category', '$id', '$categoryID')";
+
 // Execute the query
 if (mysqli_query($con, $sql)) {
     //echo "Message successfully added!";

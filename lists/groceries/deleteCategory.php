@@ -6,15 +6,20 @@ require('dbConfig.php');
 
 //Get the item to remove from the JSON request
 $data = json_decode(file_get_contents('php://input'), true);
-$category = $data['category'];
+
 
 // Connect to the database
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         if (!$con) {
             echo("Failed to connect to the database");
         }
-$sqlCat = "DELETE FROM Categories WHERE category_name = '$category'";
-$sqlGro = "DELETE FROM Groceries WHERE category = '$category'";
+
+//mysqli_real_escape_string needs an active connection to the database
+$id = mysqli_real_escape_string($con, trim($data['categoryID']));
+
+
+$sqlCat = "DELETE FROM Categories WHERE id = '$id'";
+$sqlGro = "DELETE FROM Groceries WHERE category_id = '$id'";
 //echo $sql;
 
 // Execute the query

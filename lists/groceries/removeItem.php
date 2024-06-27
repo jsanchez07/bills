@@ -6,22 +6,22 @@ require('dbConfig.php');
 
 //Get the item to remove from the JSON request
 $data = json_decode(file_get_contents('php://input'), true);
-$item = $data['item'];
-$itemWithSpaces = str_replace("-", " ", $item);
-//echo("Item from the php file: ". $item);
 
 // Connect to the database
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         if (!$con) {
             echo("Failed to connect to the database");
         }
-$sql = "DELETE FROM Groceries WHERE item = '$itemWithSpaces'";
-//echo $sql;
+
+$itemID = mysqli_real_escape_string($con, $data['itemID']);
+
+$sql = "DELETE FROM Groceries WHERE id = '$itemID'";
+
 // Execute the query
 if (mysqli_query($con, $sql)) {
     //echo "Message successfully added!";
 } else {
-    echo "Error" . mysqli_error($conn);
+    echo "Error" . mysqli_error($con);
 }
 
 // Close the connection

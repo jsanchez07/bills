@@ -6,15 +6,20 @@ require('dbConfig.php');
 
 //Get the item to remove from the JSON request
 $data = json_decode(file_get_contents('php://input'), true);
-$category = $data['category'];
+
+
 
 // Connect to the database
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         if (!$con) {
             echo("Failed to connect to the database");
         }
-$sql = "INSERT INTO Categories (category_name) VALUES ('$category')";
-//echo $sql;
+//mysqli_real_escape_string needs an active connection to the database
+$category = mysqli_real_escape_string($con, trim($data['category']));
+$id = mysqli_real_escape_string($con, trim($data['id']));
+
+//the sql query
+$sql = "INSERT INTO Categories (category_name, id) VALUES ('$category', '$id')";
 
 // Execute the query
 if (mysqli_query($con, $sql)) {
