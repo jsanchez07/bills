@@ -18,11 +18,13 @@ function addToList(newItem, categoryID, categoryName){
     if (!newItem.trim()) {
         //alert Div for blank item
         alertDiv.innerHTML = "Please do not enter a blank item.";
+        animateAlertDiv(alertDiv);
         return;
     }
     if(newItem.length > 50){
         //alert Div for too long item
         alertDiv.innerHTML = "Please enter an item that is less than 50 characters.";
+        animateAlertDiv(alertDiv);
         return;
     }
     
@@ -30,6 +32,7 @@ function addToList(newItem, categoryID, categoryName){
         if(groceries[i].item.toLowerCase() == newItem.toLowerCase() && groceries[i].category == categoryName){
             //alert Div for duplicate item
             alertDiv.innerHTML = "This item is already in the list.";
+            animateAlertDiv(alertDiv);
             return;
         }    
     }
@@ -120,17 +123,20 @@ function addCategory(categoryToAdd){
 
     if (!categoryToAdd.trim()) {
         categoryAlertDiv.innerHTML = "Please do not enter a blank item.";
+        animateAlertDiv(categoryAlertDiv);
         return;
     }
     if(categoryToAdd.length > 50){
         //alert Div for too long item
         categoryAlertDiv.innerHTML = "Please enter an item that is less than 50 characters.";
+        animateAlertDiv(categoryAlertDiv);
         return;
     }
     for(var i = 0; i < categories.length; i++){
-        if(categories[i].toLowerCase() == categoryToAdd.toLowerCase()){
+        if(categories[i].category_name.toLowerCase() == categoryToAdd.toLowerCase()){
             //alert Div for duplicate item
             categoryAlertDiv.innerHTML = "This category already exists.";
+            animateAlertDiv(categoryAlertDiv);
             return;
         }
     }
@@ -273,6 +279,14 @@ function rearrangeList(listID){
             console.error('Error:', error);
         });
 
+}
+
+function animateAlertDiv(alertDiv){
+    alertDiv.style.animation = "none";
+    // Trigger reflow
+    alertDiv.offsetHeight;
+    // Apply the new animation
+    alertDiv.style.animation = "growAndBack 2s forwards";
 }
 
 function replaceSpecialCharacters(str){

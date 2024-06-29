@@ -120,6 +120,15 @@ p {
     color: red;
 }
 
+@keyframes growAndBack
+    {
+        0% {transform: scale(0);}
+        50%{transform: scale(2);}
+        100% {transform: scale(1);}
+    }  
+
+
+
 .add-item-textbox{
     height:75px;
     font-size:26pt;
