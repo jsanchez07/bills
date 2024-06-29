@@ -49,7 +49,7 @@ p {
     width: 90%;
     height: 25;
     font-size: 3em;
-    border: 1px solid black;
+    border: none;
     flex-wrap: nowrap;
     
 }
