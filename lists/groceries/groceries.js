@@ -27,7 +27,7 @@ function addToList(newItem, categoryID, categoryName){
     }
     
     for(var i = 0; i < groceries.length; i++){
-        if(groceries[i].item == newItem && groceries[i].category == categoryName){
+        if(groceries[i].item.toLowerCase() == newItem.toLowerCase() && groceries[i].category == categoryName){
             //alert Div for duplicate item
             alertDiv.innerHTML = "This item is already in the list.";
             return;
@@ -55,7 +55,7 @@ function addToList(newItem, categoryID, categoryName){
         body: JSON.stringify({ item: newItem, categoryName: categoryName, id: itemID, categoryID: categoryID})
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    //.then(data => console.log(data))
     .catch((error) => {
         console.error('Error:', error);
     });
@@ -128,7 +128,7 @@ function addCategory(categoryToAdd){
         return;
     }
     for(var i = 0; i < categories.length; i++){
-        if(categories[i] == categoryToAdd){
+        if(categories[i].toLowerCase() == categoryToAdd.toLowerCase()){
             //alert Div for duplicate item
             categoryAlertDiv.innerHTML = "This category already exists.";
             return;
@@ -211,7 +211,7 @@ function deleteCategory(categoryID){
         body: JSON.stringify({ categoryID: categoryID})
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    //.then(data => console.log(data))
     .catch((error) => {
         console.error('Error:', error);
     });
@@ -256,8 +256,8 @@ function rearrangeList(listID){
     });
 
     // To log the entire array at once
-    console.log("Checked Items:", checkedItemsText);
-    console.log("Unchecked Items:", uncheckedItemsText);
+    //console.log("Checked Items:", checkedItemsText);
+    //console.log("Unchecked Items:", uncheckedItemsText);
 
     // Make an HTTP request to a server-side script
     fetch('rearrangeList.php', {
@@ -268,7 +268,7 @@ function rearrangeList(listID){
         body: JSON.stringify({ checkedItemsText: checkedItemsText, uncheckedItemsText: uncheckedItemsText})
     })
         .then(response => response.json())
-        .then(data => console.log(data))
+        //.then(data => console.log(data))
         .catch((error) => {
             console.error('Error:', error);
         });

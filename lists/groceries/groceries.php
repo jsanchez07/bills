@@ -57,8 +57,8 @@
     <body>
         <div id = "group-of-lists">
             <script>
-                console.log(categories);
-                console.log(groceries);
+                //console.log(categories);
+                //console.log(groceries);
                 var groupOfLists = document.querySelector("#group-of-lists");
                 for(i=0; i<categories.length; i++){
                     categoryID = categories[i].id;
