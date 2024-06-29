@@ -70,10 +70,10 @@
                         if(categories[i].category_name == groceries[j].category){
                             var itemID  = groceries[j].id;
                             if(groceries[j].isChecked == 1){
-                                document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' checked>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+                                document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")' checked>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                             }
                             else{
-                                document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox'>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+                                document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")'>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                             }
                         }
                     }
@@ -85,15 +85,7 @@
                         <div class='error-message' id='error-` + categoryID + `'></div>`;
             
                     //write the actions div at the bottom of each list to add a new item
-                    
-                    /*document.write(`
-                            </ul>
-                            <div class='actions'>
-                                <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
-                                <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + categoryID + `", "`+replaceSpecialCharacters(categoryName)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
-                                <div class='error-message' id='error-` + categoryID + `'></div>
-                            </div>
-                            `);*/
+                    rearrangeList(categoryID);
                     }
             </script>     
         </div>

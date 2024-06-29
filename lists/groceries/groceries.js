@@ -43,7 +43,7 @@ function addToList(newItem, categoryID, categoryName){
     newItem = newItem.trim();
 
     
-    document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+    document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                            
     groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
     // Make an HTTP request to a server-side script
@@ -63,7 +63,7 @@ function addToList(newItem, categoryID, categoryName){
     document.querySelector('#add-to-list-'+categoryID).value = "";
 
     //re-arrange the list
-    //reArrangeList(itemID);
+    rearrangeList(categoryID);
 }
 
 function generateID(){
@@ -100,7 +100,7 @@ function removeThisItem(itemID){
     .then(response => response.json());
 }
 
-function listenToCheckbox() {
+/*function listenToCheckbox() {
     var checkboxes = document.querySelectorAll("input[type='checkbox']");
     checkboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
@@ -113,6 +113,7 @@ function listenToCheckbox() {
         });
     });
 }
+*/
 
 function addCategory(categoryToAdd){
     categoryAlertDiv = document.querySelector("#error-newCategory");
@@ -225,18 +226,53 @@ function deleteCategory(categoryID){
     decorateDeleteCategoryDropdown();
 }
 
-function reArrangeList(itemText){
-    irtext = itemText.toString();
-    var ul = document.querySelector("#"+itemText);
-    var items = ul.children;
-    for(var i = 0; i < items.length; i++){
-        if(items[i].firstChild.checked){
-            ul.appendChild(items[i]);
+function rearrangeList(listID){
+    var ul = document.querySelector("#" + listID);
+    var items = Array.from(ul.children); // Convert to array for stable iteration
+    var checkedItems = [];
+    var uncheckedItems = [];
+    var checkedItemsText = [];
+    var uncheckedItemsText = [];
+
+    // First, separate items into checked and unchecked without modifying the DOM
+    items.forEach(function(item) {
+        if(item.firstChild.checked){
+            itemText = item.id.replace("#li", "");
+            checkedItemsText.push(itemText);
+            checkedItems.push(item);
+        } else {
+            itemText = item.id.replace("#li", "");
+            uncheckedItemsText.push(itemText);
+            uncheckedItems.push(item);
         }
-        else if (!items[i].firstChild.checked){
-            ul.insertBefore(items[i], items[0]);
-        }
-    }
+    });
+
+    // Then, rearrange the DOM based on checked status
+    uncheckedItems.forEach(function(item) {
+        ul.appendChild(item); // This moves unchecked items to the end
+    });
+    checkedItems.forEach(function(item) {
+        ul.appendChild(item); // This moves checked items to the end, maintaining their order
+    });
+
+    // To log the entire array at once
+    console.log("Checked Items:", checkedItemsText);
+    console.log("Unchecked Items:", uncheckedItemsText);
+
+    // Make an HTTP request to a server-side script
+    fetch('rearrangeList.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ checkedItemsText: checkedItemsText, uncheckedItemsText: uncheckedItemsText})
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
 }
 
 function replaceSpecialCharacters(str){
