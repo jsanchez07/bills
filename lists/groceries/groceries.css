@@ -170,6 +170,7 @@ p {
     height:75px;
     font-size:26pt;
     border-radius: 10px;
+    margin-right: 50px;
 }
 
 body div:last-of-type{
