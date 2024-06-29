@@ -2,6 +2,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="groceries.css"/>
     <script src="groceries.js"></script>
+    <script type="text/javascript" src="https://livejs.com/live.js"></script>
 </head>
 
 <?php
