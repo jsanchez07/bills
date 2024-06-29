@@ -195,7 +195,10 @@ function decorateDeleteCategoryDropdown(){
 }
 
 function deleteCategory(categoryID){
-
+     // Confirmation dialog
+     if (!confirm("Are you sure you want to delete this category?")) {
+        return; // Stop the function if the user does not confirm
+    }
     //find the ul list and get it's parent
     var categoryDiv = document.querySelector("#"+categoryID);
     var listDiv = categoryDiv.parentNode;
