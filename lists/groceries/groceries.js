@@ -138,7 +138,7 @@ function addCategory(categoryToAdd){
 
     var groupOfLists = document.querySelector("#group-of-lists");
     var addToListTextboxID = "add-to-list-"+newCategoryID;
-    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
+    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul>";
 
     groupOfLists.innerHTML += `
         <div class='actions'>

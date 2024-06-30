@@ -55,6 +55,7 @@
         }
     ?>
     <body>
+        <h1>Lists</h1>
         <div id = "group-of-lists">
             <script>
              
@@ -102,6 +103,7 @@
         </div>
 
         <!-- The categories actions div to add and delete categories -->
+        <h1>Categories Section</h1>
         <div class = "category_actions">
             <input type='text' id="newCategory" placeholder="Add a category">
             <button id= "add-category" onclick="addCategory(newCategory.value)">Add Category</button>
