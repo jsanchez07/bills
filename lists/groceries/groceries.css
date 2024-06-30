@@ -72,6 +72,29 @@ p {
     background-color: #0469e3;
 }
 
+.uncheck-all-button{
+    display:inline-flex;
+    background-color: #FFA07A;
+    color: white;
+    border: 1px solid black;
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-bottom: 25px;
+    padding: 15px 20px;
+    font-size: 18px;
+}
+
+.invisible {
+    display: none;
+  }
+  
+.visible {
+    display: inline-flex;
+  }
+
+
 .remove-item-button{
     display:inline-flex;
     background-color: white;

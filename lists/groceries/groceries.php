@@ -57,14 +57,14 @@
     <body>
         <div id = "group-of-lists">
             <script>
-                //console.log(categories);
-                //console.log(groceries);
+             
                 var groupOfLists = document.querySelector("#group-of-lists");
                 for(i=0; i<categories.length; i++){
                     categoryID = categories[i].id;
                     categoryName = categories[i].category_name;
+                    numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
-                    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryName+"</h2><ul id='"+ categoryID+"'>";
+                    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryName+"</h2><ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
                     for(j=0; j<groceries.length; j++){
                         //write each li element for each item in the groceries array                     
                         if(categories[i].category_name == groceries[j].category){
@@ -75,6 +75,7 @@
                             else{
                                 document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")'>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                             }
+                            numItemsinCategory++;
                         }
                     }
             
@@ -86,7 +87,17 @@
             
                     //write the actions div at the bottom of each list to add a new item
                     rearrangeList(categoryID);
+                    if(numItemsinCategory == 0){
+                        //document.querySelector("#"+categoryID).removeClass("visible");
+                        document.querySelector("#"+categoryID+" button").classList.add("invisible");
                     }
+                    else if (numItemsinCategory > 0){
+                        document.querySelector("#"+categoryID+" button").classList.remove("invisible");
+                        //document.querySelector("#"+categoryID).addClass("visible");
+                    }
+                }
+                    console.log(categories);
+                    console.log(groceries);
             </script>     
         </div>
 

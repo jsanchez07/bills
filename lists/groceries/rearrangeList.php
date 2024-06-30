@@ -19,12 +19,6 @@ $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 $checkedItems = $data['checkedItemsText'];
 $uncheckedItems = $data['uncheckedItemsText'];
 
-// Debugging: Output the number of items in each category
-//$echoResponse = array('array1' => $checkedItems, 'array2' => $uncheckedItems);
-//echo json_encode($echoResponse);
-
-//echo "Number of checked items: " . count($checkedItems) . "\n";
-//echo "Number of unchecked items: " . count($uncheckedItems) . "\n";
 
 foreach ($checkedItems as $itemID) {
     $sql = "UPDATE Groceries SET isChecked = 1 WHERE id = '$itemID'";

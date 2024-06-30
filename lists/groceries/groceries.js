@@ -64,29 +64,29 @@ function addToList(newItem, categoryID, categoryName){
     });
 
     document.querySelector('#add-to-list-'+categoryID).value = "";
+   
+    //show the uncheck all button    
+    document.querySelector("#"+categoryID+" button").classList.remove("invisible");
+        
+    
 
+    console.log(groceries);
     //re-arrange the list
     rearrangeList(categoryID);
 }
-
-function generateID(){
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < 12; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-//decorateListAdding(item, itemID, isChecked);{
-
-//}
 
 function removeThisItem(itemID){
     //remove it from the html
     var forTheID = "#"+itemID;
     var li = document.querySelector(forTheID);
+    var parentUl = li.parentNode; // Get the parent <ul> or <ol>
     li.remove(); 
+
+    // Check if there are any <li> elements left in the list and make uncheck button invisible if not
+    if(parentUl.querySelectorAll('li').length === 0) {
+        // No <li> elements left, do something here
+        document.querySelector("#"+parentUl.id+" button").classList.add("invisible");
+    }
 
     //remove it from the array
     for(var i = 0; i < groceries.length; i++){
@@ -102,21 +102,6 @@ function removeThisItem(itemID){
     })
     .then(response => response.json());
 }
-
-/*function listenToCheckbox() {
-    var checkboxes = document.querySelectorAll("input[type='checkbox']");
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            if (this.checked) {
-                console.log('Checkbox is checked');
-                reArrangeList(document.querySelector("#" +(this.previousSibling.id)).id.toString());
-            } else {
-                console.log('Checkbox is unchecked');
-            }
-        });
-    });
-}
-*/
 
 function addCategory(categoryToAdd){
     categoryAlertDiv = document.querySelector("#error-newCategory");
@@ -153,7 +138,7 @@ function addCategory(categoryToAdd){
 
     var groupOfLists = document.querySelector("#group-of-lists");
     var addToListTextboxID = "add-to-list-"+newCategoryID;
-    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul>";
+    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
 
     groupOfLists.innerHTML += `
         <div class='actions'>
@@ -169,7 +154,7 @@ function addCategory(categoryToAdd){
     categories.push(new Categories(newCategoryID, newCategory));
     decorateDeleteCategoryDropdown();
     
-
+    console.log(categories);
     // Make an HTTP request to a server-side script
     fetch('addCategory.php', {
         method: 'POST',
@@ -184,14 +169,6 @@ function addCategory(categoryToAdd){
         console.error('Error:', error);
     });
     
-}
-
-function decorateDeleteCategoryDropdown(){
-    var theSelect = document.getElementById('category-dropdown'); 
-    theSelect.innerHTML = "";
-    for(var i = 0; i<categories.length; i++){
-        theSelect.innerHTML += "<option id = '"+categories[i].id+"' value='"+encodeURIComponent(categories[i].category_name)+"'>"+categories[i].category_name+"</option>";
-    }
 }
 
 function deleteCategory(categoryID){
@@ -235,6 +212,14 @@ function deleteCategory(categoryID){
     decorateDeleteCategoryDropdown();
 }
 
+function decorateDeleteCategoryDropdown(){
+    var theSelect = document.getElementById('category-dropdown'); 
+    theSelect.innerHTML = "";
+    for(var i = 0; i<categories.length; i++){
+        theSelect.innerHTML += "<option id = '"+categories[i].id+"' value='"+encodeURIComponent(categories[i].category_name)+"'>"+categories[i].category_name+"</option>";
+    }
+}
+
 function rearrangeList(listID){
     var ul = document.querySelector("#" + listID);
     var items = Array.from(ul.children); // Convert to array for stable iteration
@@ -264,10 +249,6 @@ function rearrangeList(listID){
         ul.appendChild(item); // This moves checked items to the end, maintaining their order
     });
 
-    // To log the entire array at once
-    //console.log("Checked Items:", checkedItemsText);
-    //console.log("Unchecked Items:", uncheckedItemsText);
-
     // Make an HTTP request to a server-side script
     fetch('rearrangeList.php', {
         method: 'POST',
@@ -284,20 +265,43 @@ function rearrangeList(listID){
 
 }
 
+//helper functions that are used in the main functions
+
+function uncheckAll(categoryID){
+    var ul = document.querySelector("#"+categoryID);
+    var items = Array.from(ul.children); // Convert to array for stable iteration
+    items.forEach(function(item){
+        item.firstChild.checked = false;
+    });
+    rearrangeList(categoryID);
+
+    // Make an HTTP request to a server-side script
+    fetch('uncheckAll.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryID: categoryID})
+    })
+}
+
+function generateID(){
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < 12; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+
 function animateAlertDiv(alertDiv){
     alertDiv.style.animation = "none";
     // Trigger reflow
     alertDiv.offsetHeight;
     // Apply the new animation
     alertDiv.style.animation = "growAndBack 2s forwards";
-}
-
-function replaceSpecialCharacters(str){
-    // Define a regular expression that matches special characters
-    // You might need to add more characters to the regex depending on your needs
-    const regex = /[\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\'\"\@\#]/g;
-    // Replace each special character with an escape character followed by the character itself
-    return str.replace(regex, "\\$&");
 }
 
 function escapeHTML(str) {
@@ -318,4 +322,12 @@ function escapeHTML(str) {
     return str.replace(/[&<>"'`=\/]/g, function(char) {
         return charMap[char] || char;
     });
+}
+
+function replaceSpecialCharacters(str){
+    // Define a regular expression that matches special characters
+    // You might need to add more characters to the regex depending on your needs
+    const regex = /[\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\'\"\@\#]/g;
+    // Replace each special character with an escape character followed by the character itself
+    return str.replace(regex, "\\$&");
 }
