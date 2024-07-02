@@ -65,7 +65,7 @@
                     categoryName = categories[i].category_name;
                     numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
-                    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryName+"</h2><ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
+                    groupOfLists.innerHTML += "<div class = 'list'><div class='heading-and-buttons'><div class='move-list'><button id = '"+categoryID+"-up'></button><button id = '"+categoryID+"-down'></button></div><h2>"+categoryName+"</h2></div><ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
                     for(j=0; j<groceries.length; j++){
                         //write each li element for each item in the groceries array                     
                         if(categories[i].category_name == groceries[j].category){
