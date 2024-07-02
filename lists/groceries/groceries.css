@@ -42,6 +42,8 @@ h1{
 .heading-and-buttons {
     display: flex;
     align-items: start; /* Aligns items at the start of the container */
+    justify-content: space-between;
+    width: 100%;
   }
 
 .move-list {
@@ -53,10 +55,13 @@ h1{
 
   .list > div > div > button:nth-of-type(1), .list > div > div > button:nth-of-type(2) {
     background-image: url('up-arrow.png');
-    width: 25px; 
-    height: 25px;
+    width: 50px; 
+    height: 50px;
     background-size: cover;
     margin-bottom: 18px; /* Adds some space between the buttons */
+    border: none; /* Removes the border */
+    background-color: transparent; /* Removes the background color */
+    
 }
 
 .list > div > div > button:nth-of-type(2){ 
