@@ -45,10 +45,16 @@ function addToList(newItem, categoryID, categoryName){
     //trim input to make it less messy
     newItem = newItem.trim();
 
+    //document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+    const list = document.querySelector("#"+categoryID);
+    let newLi = "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+    list.insertAdjacentHTML("beforeend", newLi);    
     
-    document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
-                           
-    groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
+
+
+
+    groceries.push(new Groceries(itemID, newItem, 0, categoryName, categoryID));
+
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
         method: 'POST',
@@ -70,7 +76,7 @@ function addToList(newItem, categoryID, categoryName){
         
     
 
-    console.log(groceries);
+    console.log("groceries after the fetch: ", groceries);
     //re-arrange the list
     rearrangeList(categoryID);
 }
@@ -234,12 +240,25 @@ function rearrangeList(listID){
             itemText = item.id.replace("#li", "");
             checkedItemsText.push(itemText);
             checkedItems.push(item);
-        } else {
+            for(var i = 0; i < groceries.length; i++){
+                if(groceries[i].id == item.id){
+                    groceries[i].isChecked = 1;
+                }
+            }
+        } else if(!item.firstChild.checked && !item.classList.contains("uncheck-all-button")){
             itemText = item.id.replace("#li", "");
             uncheckedItemsText.push(itemText);
             uncheckedItems.push(item);
+            for(var i = 0; i < groceries.length; i++){
+                if(groceries[i].id == item.id){
+                    groceries[i].isChecked = 0;
+                }
+            }
         }
     });
+
+    console.log("checkedItems: ", checkedItemsText);
+    console.log("uncheckedItems: ", uncheckedItemsText);
 
     // Then, rearrange the DOM based on checked status
     uncheckedItems.forEach(function(item) {
@@ -248,7 +267,7 @@ function rearrangeList(listID){
     checkedItems.forEach(function(item) {
         ul.appendChild(item); // This moves checked items to the end, maintaining their order
     });
-
+    console.log("groceries after rearranging: ", groceries);
     // Make an HTTP request to a server-side script
     fetch('rearrangeList.php', {
         method: 'POST',
