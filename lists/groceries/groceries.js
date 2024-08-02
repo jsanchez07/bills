@@ -144,6 +144,8 @@ function addCategory(categoryToAdd){
 
     var groupOfLists = document.querySelector("#group-of-lists");
     var addToListTextboxID = "add-to-list-"+newCategoryID;
+
+    /*
     groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul>";
 
     groupOfLists.innerHTML += `
@@ -154,6 +156,71 @@ function addCategory(categoryToAdd){
         </div>
         </div>
         `;
+        */
+    var listWrapper = document.createElement("div");
+    listWrapper.classList.add("list-wrapper");
+
+    var headingAndButtons = document.createElement('div');
+    headingAndButtons.className = 'heading-and-buttons';
+
+    var heading = document.createElement('button');
+    heading.textContent = newCategory;
+    heading.id = "heading-"+newCategoryID;
+    heading.className = 'heading';
+
+    var toHideDiv = document.createElement('div');
+    toHideDiv.className = 'to-hide';
+    toHideDiv.id = "toHide-"+newCategoryID;
+
+    var theList = document.createElement('ul');
+    theList.id = newCategoryID;
+
+    heading.onclick = (function(capturedCategoryID) {
+        return function() {
+            hideList(capturedCategoryID);
+        };
+    })(newCategoryID);
+
+    var buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'move-list';
+
+    var upButton = document.createElement('button');
+    upButton.id = newCategoryID + "-up";
+
+    var downButton = document.createElement('button');
+    downButton.id = newCategoryID + "-down";
+
+    buttonsDiv.appendChild(upButton);
+    buttonsDiv.appendChild(downButton);
+    headingAndButtons.appendChild(heading);
+    headingAndButtons.appendChild(buttonsDiv);
+    listWrapper.appendChild(headingAndButtons);
+
+    var uncheckAllButton = document.createElement('button');
+    uncheckAllButton.className = 'uncheck-all-button';
+    uncheckAllButton.classList.add('invisible');
+    uncheckAllButton.innerHTML = 'Uncheck All';
+    uncheckAllButton.onclick = (function(uncheckCapturedCategoryID) {
+        return function() {
+            uncheckAll(uncheckCapturedCategoryID);
+        };
+    })(newCategoryID);
+
+    theList.appendChild(uncheckAllButton);
+    
+    toHideDiv.appendChild(theList);
+    var actionsDiv = document.createElement('div');
+    actionsDiv.className = 'actions';
+    actionsDiv.innerHTML = `<input type='text' class='add-item-textbox' id='${addToListTextboxID}' placeholder='Add an item'>
+                            <button class='add-item-button' onclick='addToList(document.querySelector("#${addToListTextboxID}").value, "${newCategoryID}", "${escapeHTML(categoryName)}"); document.querySelector("#${addToListTextboxID}").focus()'>Add</button>
+                            <div class='error-message' id='error-${newCategoryID}'></div>`;
+    
+    toHideDiv.appendChild(actionsDiv);
+    listWrapper.appendChild(toHideDiv);
+    groupOfLists.appendChild(listWrapper);
+
+
+
     document.querySelector("#newCategory").value = "";
 
     //put it into the array of categories
@@ -187,12 +254,14 @@ function deleteCategory(categoryID){
     var listDiv = categoryDiv.parentNode;
     
     //find the actions textbox and get it's parent
-    var categoryActionsTextbox = document.querySelector("#add-to-list-"+categoryID);
-    var actionsDiv = categoryActionsTextbox.parentNode;
+    var categoryHeading = document.querySelector("#heading-"+categoryID);
+    var headingsAndButtonsDiv = categoryHeading.parentNode;
+    var mainWrapper = headingsAndButtonsDiv.parentNode;
+    mainWrapper.remove();
   
     //remove the main list div and main actions div
-    actionsDiv.remove();
-    listDiv.remove();
+    //actionsDiv.remove();
+    //listDiv.remove();
       
     // Make an HTTP request to a server-side script
     fetch('deleteCategory.php', {
@@ -226,8 +295,15 @@ function decorateDeleteCategoryDropdown(){
     }
 }
 
+function hideList(categoryID){
+    var theListToHide = document.querySelector("#toHide-"+categoryID);
+    theListToHide.classList.toggle("invisible");
+    console.log("theListToHide: ", theListToHide);
+}
+
 function rearrangeList(listID){
     var ul = document.querySelector("#" + listID);
+    //console.log("the UL: ", ul);
     var items = Array.from(ul.children); // Convert to array for stable iteration
     var checkedItems = [];
     var uncheckedItems = [];
@@ -257,8 +333,8 @@ function rearrangeList(listID){
         }
     });
 
-    console.log("checkedItems: ", checkedItemsText);
-    console.log("uncheckedItems: ", uncheckedItemsText);
+    //console.log("checkedItems: ", checkedItemsText);
+    //console.log("uncheckedItems: ", uncheckedItemsText);
 
     // Then, rearrange the DOM based on checked status
     uncheckedItems.forEach(function(item) {
@@ -267,7 +343,7 @@ function rearrangeList(listID){
     checkedItems.forEach(function(item) {
         ul.appendChild(item); // This moves checked items to the end, maintaining their order
     });
-    console.log("groceries after rearranging: ", groceries);
+    //console.log("groceries after rearranging: ", groceries);
     // Make an HTTP request to a server-side script
     fetch('rearrangeList.php', {
         method: 'POST',
