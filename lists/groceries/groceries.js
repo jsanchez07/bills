@@ -7,9 +7,10 @@ function Groceries(id, item, isChecked, category, categoryID) {
     this.categoryID = categoryID;
 }
 
-function Categories(id, category_name) {
+function Categories(id, category_name, order_index) {
     this.id = id;
     this.category_name = category_name;
+    this.order_index = order_index;
 }
 
 function addToList(newItem, categoryID, categoryName){
@@ -45,7 +46,6 @@ function addToList(newItem, categoryID, categoryName){
     //trim input to make it less messy
     newItem = newItem.trim();
 
-    
     document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                            
     groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
@@ -134,6 +134,16 @@ function addCategory(categoryToAdd){
     
     var newCategory = categoryToAdd;
     var newCategoryID = generateID();
+
+    // Extract order_index values from categories
+    let orderIndexes = categories.map(category => category.order_index);
+
+    // Find the highest order_index value
+    let maxOrderIndex = Math.max(...orderIndexes);
+
+    // Calculate the new order_index
+    let newOrderIndex = maxOrderIndex + 1;
+    var stringNewOrderIndex = newOrderIndex.toString();
   
 
     var groupOfLists = document.querySelector("#group-of-lists");
@@ -151,7 +161,7 @@ function addCategory(categoryToAdd){
     document.querySelector("#newCategory").value = "";
 
     //put it into the array of categories
-    categories.push(new Categories(newCategoryID, newCategory));
+    categories.push(new Categories(newCategoryID, newCategory, stringNewOrderIndex));
     decorateDeleteCategoryDropdown();
     
     console.log(categories);
@@ -161,10 +171,10 @@ function addCategory(categoryToAdd){
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ category: newCategory, id: newCategoryID})
+        body: JSON.stringify({ category: newCategory, id: newCategoryID, order_index: newOrderIndex})
     })
     .then(response => response.json())
-    //.then(data => console.log(data))
+    //.then(data => data)
     .catch((error) => {
         console.error('Error:', error);
     });
@@ -187,8 +197,32 @@ function deleteCategory(categoryID){
     //remove the main list div and main actions div
     actionsDiv.remove();
     listDiv.remove();
+
+     // Find the category in the array and get its order_index
+    let orderIndexToRemove;
+    for (var i = 0; i < categories.length; i++) {
+        if (categories[i].id == categoryID) {
+            orderIndexToRemove = categories[i].order_index;
+            categories.splice(i, 1); // Remove the category from the array
+            break;
+        }
+    }
+
+    // Reorder the remaining order_indexes
+    categories.forEach((category, index) => {
+    if (parseInt(category.order_index, 10) > orderIndexToRemove) {
+        category.order_index -= 1;
+    }
+    });
+
+    // Create an array of objects containing category_id and order_index
+    let categoryOrderIndexes = categories.map(category => ({
+        category_id: category.id,
+        order_index: category.order_index
+    }));
+    decorateDeleteCategoryDropdown();
       
-    // Make an HTTP request to a server-side script
+    // Make an HTTP request to a server-side script to delete the given category
     fetch('deleteCategory.php', {
         method: 'POST',
         headers: {
@@ -199,17 +233,30 @@ function deleteCategory(categoryID){
     .then(response => response.json())
     //.then(data => console.log(data))
     .catch((error) => {
-        console.error('Error:', error);
+        console.error(' delete Error:', error);
     });
 
-    //remove the category from the array
-    for(var i = 0; i < categories.length; i++){
-        if(categories[i].id == categoryID){
-            categories.splice(i, 1);
-        }
-    }
+    // Make an HTTP request to a server-side script to update the order_index values of the remaining categories
+    fetch('reorderCategories.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryOrderIndexes: categoryOrderIndexes })
+    })
+    .then(response => response.json())
+    //.then(data => (data))
+    .catch((error) => {
+      console.error('reorder Error:', error);
+    });
+}
 
-    decorateDeleteCategoryDropdown();
+function moveCategoryUp(categoryID){
+    console.log("moveCategoryUp", categoryID);
+}
+
+function moveCategoryDown(categoryID){
+    console.log("moveCategoryDown", categoryID);
 }
 
 function decorateDeleteCategoryDropdown(){
@@ -265,6 +312,10 @@ function rearrangeList(listID){
 
 }
 
+function orderCategories(){
+
+}
+
 //helper functions that are used in the main functions
 
 function uncheckAll(categoryID){
@@ -294,7 +345,6 @@ function generateID(){
     }
     return result;
 }
-
 
 function animateAlertDiv(alertDiv){
     alertDiv.style.animation = "none";

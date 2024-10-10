@@ -17,9 +17,10 @@ $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 //mysqli_real_escape_string needs an active connection to the database
 $category = mysqli_real_escape_string($con, trim($data['category']));
 $id = mysqli_real_escape_string($con, trim($data['id']));
+$order_index = $data['order_index'];
 
 //the sql query
-$sql = "INSERT INTO Categories (category_name, id) VALUES ('$category', '$id')";
+$sql = "INSERT INTO Categories (category_name, id, order_index) VALUES ('$category', '$id', '$order_index')";
 
 // Execute the query
 if (mysqli_query($con, $sql)) {

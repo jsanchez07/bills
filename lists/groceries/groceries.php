@@ -22,7 +22,7 @@
         var groceries = [];
     </script>
     <?php
-    $categoriesQuery = "SELECT id, category_name from Categories";
+    $categoriesQuery = "SELECT id, category_name, order_index from Categories ORDER BY order_index";
     $categoriesResult = mysqli_query($con, $categoriesQuery);
     $numCategories = mysqli_num_rows($categoriesResult);
 
@@ -38,9 +38,10 @@
         $beginningCategoriesRow = mysqli_fetch_array($beginningCategoriesResult);
         $beginningCategoryName = $beginningCategoriesRow['category_name'];
         $beginningCategoryID = $beginningCategoriesRow['id'];
+        $beginningCategoryOrderIndex = $beginningCategoriesRow['order_index'];
         ?>
         <script>
-            categories.push(new Categories("<?php echo $beginningCategoryID ?>", "<?php echo $beginningCategoryName; ?>"));
+            categories.push(new Categories("<?php echo $beginningCategoryID ?>", "<?php echo $beginningCategoryName; ?>", "<?php echo $beginningCategoryOrderIndex; ?>"));
         </script>
    <?php   
     }
@@ -65,7 +66,7 @@
                     categoryName = categories[i].category_name;
                     numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
-                    groupOfLists.innerHTML += "<div class = 'list'><div class='heading-and-buttons'><h2>"+categoryName+"</h2><div class='move-list'><button id = '"+categoryID+"-up'></button><button id = '"+categoryID+"-down'></button></div></div><ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
+                    groupOfLists.innerHTML += "<div class = 'category-wrapper'><div class = 'list'><div class='heading-and-buttons'><h2>"+categoryName+"</h2><div class='move-list'><button id = '"+categoryID+"-up'  onclick='moveCategoryUp(\""+categoryID+"\")'></button><button id = '"+categoryID+"-down'  onclick='moveCategoryDown(\""+categoryID+"\")'></button></div></div><ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
                     for(j=0; j<groceries.length; j++){
                         //write each li element for each item in the groceries array                     
                         if(categories[i].category_name == groceries[j].category){
@@ -81,10 +82,11 @@
                     }
             
                     document.write(`</ul>`);
+                    document.write(`</div></div></div></div>`);
                     groupOfLists.innerHTML += `<div class='actions'>
                         <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
                         <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + categoryID + `", "`+escapeHTML(categoryName)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
-                        <div class='error-message' id='error-` + categoryID + `'></div>`;
+                        <div class='error-message' id='error-` + categoryID + `'></div></div></div></div>`;
             
                     //write the actions div at the bottom of each list to add a new item
                     rearrangeList(categoryID);
@@ -101,6 +103,7 @@
                     console.log(groceries);
             </script>     
         </div>
+       
 
         <!-- The categories actions div to add and delete categories -->
         <h1>Categories Section</h1>
