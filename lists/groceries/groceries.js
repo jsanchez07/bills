@@ -46,9 +46,11 @@ function addToList(newItem, categoryID, categoryName){
     //trim input to make it less messy
     newItem = newItem.trim();
 
+
     document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
                            
     groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
+
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
         method: 'POST',
@@ -70,7 +72,7 @@ function addToList(newItem, categoryID, categoryName){
         
     
 
-    console.log(groceries);
+    console.log("groceries after the fetch: ", groceries);
     //re-arrange the list
     rearrangeList(categoryID);
 }
@@ -174,6 +176,7 @@ function addCategory(categoryToAdd){
     // Append the wrapper div to the group of lists
     groupOfLists.appendChild(wrapperDiv);
    
+
     document.querySelector("#newCategory").value = "";
 
     //put it into the array of categories
@@ -202,6 +205,7 @@ function deleteCategory(categoryID){
      if (!confirm("Are you sure you want to delete this category?")) {
         return; // Stop the function if the user does not confirm
     }
+
    
     // Remove the category from the DOM
     var categoryWrapperDiv = document.querySelector("#category-wrapper-"+categoryID);
@@ -232,6 +236,7 @@ function deleteCategory(categoryID){
 
     console.log('categoryOrderIndexes:', categoryOrderIndexes);
     decorateDeleteCategoryDropdown();
+
       
     // Make an HTTP request to a server-side script to delete the given category
     fetch('deleteCategory.php', {
@@ -463,8 +468,15 @@ function decorateDeleteCategoryDropdown(){
     }
 }
 
+function hideList(categoryID){
+    var theListToHide = document.querySelector("#toHide-"+categoryID);
+    theListToHide.classList.toggle("invisible");
+    console.log("theListToHide: ", theListToHide);
+}
+
 function rearrangeList(listID){
     var ul = document.querySelector("#" + listID);
+    //console.log("the UL: ", ul);
     var items = Array.from(ul.children); // Convert to array for stable iteration
     var checkedItems = [];
     var uncheckedItems = [];
@@ -477,12 +489,25 @@ function rearrangeList(listID){
             itemText = item.id.replace("#li", "");
             checkedItemsText.push(itemText);
             checkedItems.push(item);
-        } else {
+            for(var i = 0; i < groceries.length; i++){
+                if(groceries[i].id == item.id){
+                    groceries[i].isChecked = 1;
+                }
+            }
+        } else if(!item.firstChild.checked && !item.classList.contains("uncheck-all-button")){
             itemText = item.id.replace("#li", "");
             uncheckedItemsText.push(itemText);
             uncheckedItems.push(item);
+            for(var i = 0; i < groceries.length; i++){
+                if(groceries[i].id == item.id){
+                    groceries[i].isChecked = 0;
+                }
+            }
         }
     });
+
+    //console.log("checkedItems: ", checkedItemsText);
+    //console.log("uncheckedItems: ", uncheckedItemsText);
 
     // Then, rearrange the DOM based on checked status
     uncheckedItems.forEach(function(item) {
@@ -491,7 +516,7 @@ function rearrangeList(listID){
     checkedItems.forEach(function(item) {
         ul.appendChild(item); // This moves checked items to the end, maintaining their order
     });
-
+    //console.log("groceries after rearranging: ", groceries);
     // Make an HTTP request to a server-side script
     fetch('rearrangeList.php', {
         method: 'POST',

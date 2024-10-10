@@ -59,13 +59,13 @@
         <h1>Lists</h1>
         <div id = "group-of-lists">
             <script>
-             
                 var groupOfLists = document.querySelector("#group-of-lists");
                 for(i=0; i<categories.length; i++){
                     categoryID = categories[i].id;
                     categoryName = categories[i].category_name;
                     numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
+
 
                      // Create the wrapper div
                      var wrapperDiv = document.createElement('div');
@@ -102,16 +102,16 @@
 
                     //Clean the list up and hide the uncheck all button if there are no items in the category
                     rearrangeList(categoryID);
+
                     if(numItemsinCategory == 0){
                         document.querySelector("#"+categoryID+" button").classList.add("invisible");
                     }
                     else if (numItemsinCategory > 0){
                         document.querySelector("#"+categoryID+" button").classList.remove("invisible");
                     }
+                     rearrangeList(categoryID);
                 }
 
-                    console.log(categories);
-                    console.log(groceries);
             </script>     
         </div>
        
