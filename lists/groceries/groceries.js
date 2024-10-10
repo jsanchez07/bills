@@ -148,16 +148,32 @@ function addCategory(categoryToAdd){
 
     var groupOfLists = document.querySelector("#group-of-lists");
     var addToListTextboxID = "add-to-list-"+newCategoryID;
-    groupOfLists.innerHTML += "<div class = 'list'><h2>"+categoryToAdd+"</h2><ul id='"+ newCategoryID+"'></ul>";
+    
+    // Create the wrapper div
+    var wrapperDiv = document.createElement('div');
+    wrapperDiv.id = 'category-wrapper-' + newCategoryID;
 
-    groupOfLists.innerHTML += `
-        <div class='actions'>
-            <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
-            <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + newCategoryID + `", "`+escapeHTML(categoryToAdd)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
-            <div class='error-message' id='error-` + newCategoryID + `'></div>
-        </div>
-        </div>
-        `;
+    // Create the list div
+    var listDiv = document.createElement('div');
+    listDiv.className = 'list';
+    listDiv.innerHTML = "<h2>" + categoryToAdd + "</h2><ul id='" + newCategoryID + "'></ul>";
+
+    // Create the actions div
+    var actionsDiv = document.createElement('div');
+    actionsDiv.className = 'actions';
+    actionsDiv.innerHTML = `
+        <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
+        <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + newCategoryID + `", "` + escapeHTML(categoryToAdd) + `"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
+        <div class='error-message' id='error-` + newCategoryID + `'></div>
+    `;
+
+    // Append the list and actions divs to the wrapper div
+    wrapperDiv.appendChild(listDiv);
+    wrapperDiv.appendChild(actionsDiv);
+
+    // Append the wrapper div to the group of lists
+    groupOfLists.appendChild(wrapperDiv);
+   
     document.querySelector("#newCategory").value = "";
 
     //put it into the array of categories
@@ -186,17 +202,10 @@ function deleteCategory(categoryID){
      if (!confirm("Are you sure you want to delete this category?")) {
         return; // Stop the function if the user does not confirm
     }
-    //find the ul list and get it's parent
-    var categoryDiv = document.querySelector("#"+categoryID);
-    var listDiv = categoryDiv.parentNode;
-    
-    //find the actions textbox and get it's parent
-    var categoryActionsTextbox = document.querySelector("#add-to-list-"+categoryID);
-    var actionsDiv = categoryActionsTextbox.parentNode;
-  
-    //remove the main list div and main actions div
-    actionsDiv.remove();
-    listDiv.remove();
+   
+    // Remove the category from the DOM
+    var categoryWrapperDiv = document.querySelector("#category-wrapper-"+categoryID);
+    categoryWrapperDiv.remove();
 
      // Find the category in the array and get its order_index
     let orderIndexToRemove;
@@ -220,6 +229,8 @@ function deleteCategory(categoryID){
         category_id: category.id,
         order_index: category.order_index
     }));
+
+    console.log('categoryOrderIndexes:', categoryOrderIndexes);
     decorateDeleteCategoryDropdown();
       
     // Make an HTTP request to a server-side script to delete the given category
@@ -253,10 +264,195 @@ function deleteCategory(categoryID){
 
 function moveCategoryUp(categoryID){
     console.log("moveCategoryUp", categoryID);
+    
+    // Find the category and its order_index
+    let currentCategory = categories.find(category => category.id === categoryID);
+    let currentIndex = categories.indexOf(currentCategory);
+
+    // Check if the category is already at the top
+    if (currentIndex === 0) {
+        console.log("Category is already at the top.");
+        return;
+    }
+
+    // Swap the order_index with the category above it
+    let aboveCategory = categories[currentIndex - 1];
+    let tempOrderIndex = currentCategory.order_index;
+    currentCategory.order_index = aboveCategory.order_index;
+    aboveCategory.order_index = tempOrderIndex;
+
+    // Sort categories by order_index
+    categories.sort((a, b) => a.order_index - b.order_index);
+
+    // Create an array of objects containing category_id and order_index
+    let categoryOrderIndexes = categories.map(category => ({
+        category_id: category.id,
+        category_name: category.category_name,
+        order_index: category.order_index
+    }));
+
+    console.log('categoryOrderIndexes:', categoryOrderIndexes);
+
+    // Make an HTTP request to a server-side script to update the order_index values of the categories
+    fetch('reorderCategories.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryOrderIndexes: categoryOrderIndexes })
+    })
+    .then(response => response.json())
+    .catch((error) => {
+        console.error('reorder Error:', error);
+    });
+
+    // Reorder the categories in the DOM
+    let groupOfLists = document.querySelector("#group-of-lists");
+    let categoryWrapperDivs = Array.from(groupOfLists.children);
+
+    // Create a map of category IDs to order indexes
+    let categoryOrderMap = {};
+    categories.forEach(category => {
+        categoryOrderMap[category.id] = category.order_index;
+    });
+    // Log the categoryOrderMap for debugging
+    console.log("Category Order Map:", categoryOrderMap);
+    //console.log("Category Order Map Keys:", Object.keys(categoryOrderMap));
+    //console.log("Category Order Map Values:", Object.values(categoryOrderMap));
+    
+
+   // Check if the id attributes of the categoryWrapperDivs match the keys in the categoryOrderMap
+    categoryWrapperDivs.forEach(div => {
+        let id = div.getAttribute('id');
+        if (id) {
+            id = id.replace('category-wrapper-', '');
+            if (!(id in categoryOrderMap)) {
+                console.error(`ID ${id} not found in categoryOrderMap`);
+            } else {
+                console.log(`ID ${id} found in categoryOrderMap with order ${categoryOrderMap[id]}`);
+            }
+        } else {
+            console.error('ID attribute is missing or null');
+        }
+    });
+
+    // Sort the categoryWrapperDivs array based on the order index from the categories object
+    categoryWrapperDivs.sort((a, b) => {
+        let idA = a.getAttribute('id') ? a.getAttribute('id').replace('category-wrapper-', '') : null;
+        let idB = b.getAttribute('id') ? b.getAttribute('id').replace('category-wrapper-', '') : null;
+        let orderA = idA ? categoryOrderMap[idA] : Infinity;
+        let orderB = idB ? categoryOrderMap[idB] : Infinity;
+
+        // Log the order values for debugging
+        console.log(`Comparing ${idA} (order: ${orderA}) with ${idB} (order: ${orderB})`);
+
+        return orderA - orderB;
+    });
+
+    // Append the sorted elements back to the groupOfLists
+    categoryWrapperDivs.forEach((categoryWrapperDiv) => {
+        groupOfLists.appendChild(categoryWrapperDiv);
+        // Log the appended element for debugging
+        let id = categoryWrapperDiv.getAttribute('id') ? categoryWrapperDiv.getAttribute('id').replace('category-wrapper-', '') : null;
+        console.log(`Appended ${id} to groupOfLists`);
+    });
+    decorateDeleteCategoryDropdown()
+
 }
 
 function moveCategoryDown(categoryID){
     console.log("moveCategoryDown", categoryID);
+    
+    // Find the category and its order_index
+    let currentCategory = categories.find(category => category.id === categoryID);
+    let currentIndex = categories.indexOf(currentCategory);
+
+    // Check if the category is already at the bottom
+    if (currentIndex === categories.length - 1) {
+        console.log("Category is already at the bottom.");
+        return;
+    }
+
+    // Swap the order_index with the category below it
+    let belowCategory = categories[currentIndex + 1];
+    let tempOrderIndex = currentCategory.order_index;
+    currentCategory.order_index = belowCategory.order_index;
+    belowCategory.order_index = tempOrderIndex;
+
+    // Sort categories by order_index
+    categories.sort((a, b) => a.order_index - b.order_index);
+
+    // Create an array of objects containing category_id and order_index
+    let categoryOrderIndexes = categories.map(category => ({
+        category_id: category.id,
+        category_name: category.category_name,
+        order_index: category.order_index
+    }));
+
+    console.log('categoryOrderIndexes:', categoryOrderIndexes);
+
+    // Make an HTTP request to a server-side script to update the order_index values of the categories
+    fetch('reorderCategories.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryOrderIndexes: categoryOrderIndexes })
+    })
+    .then(response => response.json())
+    .catch((error) => {
+        console.error('reorder Error:', error);
+    });
+
+    // Reorder the categories in the DOM
+    let groupOfLists = document.querySelector("#group-of-lists");
+    let categoryWrapperDivs = Array.from(groupOfLists.children);
+
+    // Create a map of category IDs to order indexes
+    let categoryOrderMap = {};
+    categories.forEach(category => {
+        categoryOrderMap[category.id] = category.order_index;
+    });
+    // Log the categoryOrderMap for debugging
+    console.log("Category Order Map:", categoryOrderMap);
+
+    // Check if the id attributes of the categoryWrapperDivs match the keys in the categoryOrderMap
+    categoryWrapperDivs.forEach(div => {
+        let id = div.getAttribute('id');
+        if (id) {
+            id = id.replace('category-wrapper-', '');
+            if (!(id in categoryOrderMap)) {
+                console.error(`ID ${id} not found in categoryOrderMap`);
+            } else {
+                console.log(`ID ${id} found in categoryOrderMap with order ${categoryOrderMap[id]}`);
+            }
+        } else {
+            console.error('ID attribute is missing or null');
+        }
+    });
+
+    // Sort the categoryWrapperDivs array based on the order index from the categories object
+    categoryWrapperDivs.sort((a, b) => {
+        let idA = a.getAttribute('id') ? a.getAttribute('id').replace('category-wrapper-', '') : null;
+        let idB = b.getAttribute('id') ? b.getAttribute('id').replace('category-wrapper-', '') : null;
+        let orderA = idA ? categoryOrderMap[idA] : Infinity;
+        let orderB = idB ? categoryOrderMap[idB] : Infinity;
+
+        // Log the order values for debugging
+        console.log(`Comparing ${idA} (order: ${orderA}) with ${idB} (order: ${orderB})`);
+
+        return orderA - orderB;
+    });
+
+    // Append the sorted elements back to the groupOfLists
+    categoryWrapperDivs.forEach((categoryWrapperDiv) => {
+        groupOfLists.appendChild(categoryWrapperDiv);
+        // Log the appended element for debugging
+        let id = categoryWrapperDiv.getAttribute('id') ? categoryWrapperDiv.getAttribute('id').replace('category-wrapper-', '') : null;
+        console.log(`Appended ${id} to groupOfLists`);
+    });
+    decorateDeleteCategoryDropdown()
+   
 }
 
 function decorateDeleteCategoryDropdown(){
@@ -309,10 +505,6 @@ function rearrangeList(listID){
         .catch((error) => {
             console.error('Error:', error);
         });
-
-}
-
-function orderCategories(){
 
 }
 

@@ -66,39 +66,50 @@
                     categoryName = categories[i].category_name;
                     numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
-                    groupOfLists.innerHTML += "<div class = 'category-wrapper'><div class = 'list'><div class='heading-and-buttons'><h2>"+categoryName+"</h2><div class='move-list'><button id = '"+categoryID+"-up'  onclick='moveCategoryUp(\""+categoryID+"\")'></button><button id = '"+categoryID+"-down'  onclick='moveCategoryDown(\""+categoryID+"\")'></button></div></div><ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>";
-                    for(j=0; j<groceries.length; j++){
-                        //write each li element for each item in the groceries array                     
-                        if(categories[i].category_name == groceries[j].category){
-                            var itemID  = groceries[j].id;
-                            if(groceries[j].isChecked == 1){
-                                document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")' checked>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
-                            }
-                            else{
-                                document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")'>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
-                            }
+
+                     // Create the wrapper div
+                     var wrapperDiv = document.createElement('div');
+                    wrapperDiv.id = 'category-wrapper-'+categoryID;
+
+                    // Create the list div
+                    var listDiv = document.createElement('div');
+                    listDiv.className = 'list';
+                    listDiv.innerHTML = "<div class='heading-and-buttons'><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button></ul>";
+
+                    // Append list items to the list div
+                    for (j = 0; j < groceries.length; j++) {
+                        if (categories[i].category_name == groceries[j].category) {
+                            var itemID = groceries[j].id;
+                            var listItem = document.createElement('li');
+                            listItem.id = itemID;
+                            listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onchange='rearrangeList(\"" + categoryID + "\")'" + (groceries[j].isChecked == 1 ? " checked" : "") + ">" + groceries[j].item + "<button class='remove-item-button' onclick='removeThisItem(\"" + itemID + "\")'>x</button>";
+                            listDiv.querySelector('ul').appendChild(listItem);
                             numItemsinCategory++;
                         }
                     }
-            
-                    document.write(`</ul>`);
-                    document.write(`</div></div></div></div>`);
-                    groupOfLists.innerHTML += `<div class='actions'>
-                        <input type='text' class='add-item-textbox' id='` + addToListTextboxID + `' placeholder='Add an item'>
-                        <button class='add-item-button' onclick='addToList(document.querySelector("#` + addToListTextboxID + `").value, "` + categoryID + `", "`+escapeHTML(categoryName)+`"); document.querySelector("#` + addToListTextboxID + `").focus()'>Add</button>
-                        <div class='error-message' id='error-` + categoryID + `'></div></div></div></div>`;
-            
-                    //write the actions div at the bottom of each list to add a new item
+                    
+               // Create the actions div
+               var actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'actions';
+                    actionsDiv.innerHTML = "<input type='text' class='add-item-textbox' id='" + addToListTextboxID + "' placeholder='Add an item'><button class='add-item-button' onclick='addToList(document.querySelector(\"#" + addToListTextboxID + "\").value, \"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\"); document.querySelector(\"#" + addToListTextboxID + "\").focus()'>Add</button><div class='error-message' id='error-" + categoryID + "'></div>";
+
+                    // Append the list and actions divs to the wrapper div
+                    wrapperDiv.appendChild(listDiv);
+                    wrapperDiv.appendChild(actionsDiv);
+
+                    // Append the wrapper div to the group of lists
+                    groupOfLists.appendChild(wrapperDiv);
+
+                    //Clean the list up and hide the uncheck all button if there are no items in the category
                     rearrangeList(categoryID);
                     if(numItemsinCategory == 0){
-                        //document.querySelector("#"+categoryID).removeClass("visible");
                         document.querySelector("#"+categoryID+" button").classList.add("invisible");
                     }
                     else if (numItemsinCategory > 0){
                         document.querySelector("#"+categoryID+" button").classList.remove("invisible");
-                        //document.querySelector("#"+categoryID).addClass("visible");
                     }
                 }
+
                     console.log(categories);
                     console.log(groceries);
             </script>     
