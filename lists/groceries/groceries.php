@@ -22,7 +22,7 @@
         var groceries = [];
     </script>
     <?php
-    $categoriesQuery = "SELECT id, category_name from Categories";
+    $categoriesQuery = "SELECT id, category_name, order_index from Categories ORDER BY order_index";
     $categoriesResult = mysqli_query($con, $categoriesQuery);
     $numCategories = mysqli_num_rows($categoriesResult);
 
@@ -38,9 +38,10 @@
         $beginningCategoriesRow = mysqli_fetch_array($beginningCategoriesResult);
         $beginningCategoryName = $beginningCategoriesRow['category_name'];
         $beginningCategoryID = $beginningCategoriesRow['id'];
+        $beginningCategoryOrderIndex = $beginningCategoriesRow['order_index'];
         ?>
         <script>
-            categories.push(new Categories("<?php echo $beginningCategoryID ?>", "<?php echo $beginningCategoryName; ?>"));
+            categories.push(new Categories("<?php echo $beginningCategoryID ?>", "<?php echo $beginningCategoryName; ?>", "<?php echo $beginningCategoryOrderIndex; ?>"));
         </script>
    <?php   
     }
@@ -65,129 +66,55 @@
                     numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
 
-                    // Create a new div element with class 'list-wrapper'
-                    var listWrapper = document.createElement("div");
-                    listWrapper.classList.add("list-wrapper");
-                   
-                    // Create the list div and append it to the listWrapper
-                    //var listDiv = document.createElement('div');
-                    //listDiv.className = 'list';
-                     // Assuming you have a unique ID for each category
 
-                    //listDiv.innerHTML += "<div class='heading-and-buttons'><h2>"+categoryName+"</h2><div class='move-list'><button id = '"+categoryID+"-up'></button><button id = '"+categoryID+"-down'></button></div></div>";
-                    var headingAndButtons = document.createElement('div');
-                    headingAndButtons.className = 'heading-and-buttons';
+                     // Create the wrapper div
+                     var wrapperDiv = document.createElement('div');
+                    wrapperDiv.id = 'category-wrapper-'+categoryID;
 
-                    var heading = document.createElement('button');
-                    heading.textContent = categoryName;
-                    heading.id = "heading-"+categoryID;
-                    heading.className = 'heading';
-                    
-                    var toHideDiv = document.createElement('div');
-                    toHideDiv.className = 'to-hide';
-                    toHideDiv.id = "toHide-"+categoryID;
+                    // Create the list div
+                    var listDiv = document.createElement('div');
+                    listDiv.className = 'list';
+                    listDiv.innerHTML = "<div class='heading-and-buttons'><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button></ul>";
 
-                    var theList = document.createElement('ul');
-                    theList.id = categoryID;
-
-                    // Add click event listener to the heading
-                   // heading.onclick= function() {
-                    //    hideList(categoryID);
-                    //};
-                    heading.onclick = (function(capturedCategoryID) {
-                        return function() {
-                            hideList(capturedCategoryID);
-                        };
-                    })(categoryID);
-
-                    var buttonsDiv = document.createElement('div');
-                    buttonsDiv.className = 'move-list';
-
-                    var upButton = document.createElement('button');
-                    upButton.id = categoryID + "-up";
-
-                    var downButton = document.createElement('button');
-                    downButton.id = categoryID + "-down";
-
-                    buttonsDiv.appendChild(upButton);
-                    buttonsDiv.appendChild(downButton);
-                    headingAndButtons.appendChild(heading);
-                    headingAndButtons.appendChild(buttonsDiv);
-                    listWrapper.appendChild(headingAndButtons);
-
-
-                    //listWrapper.appendChild(listDiv);
-                    //<ul id='"+ categoryID+"'><button class='uncheck-all-button' onclick='uncheckAll(\""+categoryID+"\")'>Uncheck All</button>
-                    
-                    var uncheckAllButton = document.createElement('button');
-                    uncheckAllButton.className = 'uncheck-all-button';
-                    uncheckAllButton.innerHTML = 'Uncheck All';
-                    uncheckAllButton.onclick = (function(uncheckCapturedCategoryID) {
-                        return function() {
-                            uncheckAll(uncheckCapturedCategoryID);
-                        };
-                    })(categoryID);
-
-                    theList.appendChild(uncheckAllButton);
-                    
-                    toHideDiv.appendChild(theList);
-
-
-                    for(j=0; j<groceries.length; j++){
-                        //write each li element for each item in the groceries array                     
-                        if(categories[i].category_name == groceries[j].category){
-                            var itemID  = groceries[j].id;
-                            if(groceries[j].isChecked == 1){
-                                var listItem = document.createElement('li');
-                                listItem.id = itemID;
-                                listItem.innerHTML = `<input class='list-checkbox' type='checkbox' onchange='rearrangeList("${categoryID}")' checked>${groceries[j].item}<button class='remove-item-button' onclick='removeThisItem("${itemID}")'>x</button>`;
-                                theList.appendChild(listItem);
-
-                                //document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")' checked>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
-                            }
-                            else{
-                                var listItem = document.createElement('li');
-                                listItem.id = itemID;
-                                listItem.innerHTML = `<input class='list-checkbox' type='checkbox' onchange='rearrangeList("${categoryID}")'>${groceries[j].item}<button class='remove-item-button' onclick='removeThisItem("${itemID}")'>x</button>`;
-                                theList.appendChild(listItem);
-
-                                //document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' type='checkbox' onchange='rearrangeList(\""+categoryID+ "\")'>"+groceries[j].item+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
-                            }
+                    // Append list items to the list div
+                    for (j = 0; j < groceries.length; j++) {
+                        if (categories[i].category_name == groceries[j].category) {
+                            var itemID = groceries[j].id;
+                            var listItem = document.createElement('li');
+                            listItem.id = itemID;
+                            listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onchange='rearrangeList(\"" + categoryID + "\")'" + (groceries[j].isChecked == 1 ? " checked" : "") + ">" + groceries[j].item + "<button class='remove-item-button' onclick='removeThisItem(\"" + itemID + "\")'>x</button>";
+                            listDiv.querySelector('ul').appendChild(listItem);
                             numItemsinCategory++;
                         }
                     }
-            
-                    document.write(`</ul>`);
-
-                     // Create the actions div and append it to the listWrapper
-                    var actionsDiv = document.createElement('div');
-                    actionsDiv.className = 'actions';
-                    actionsDiv.innerHTML = `<input type='text' class='add-item-textbox' id='${addToListTextboxID}' placeholder='Add an item'>
-                                            <button class='add-item-button' onclick='addToList(document.querySelector("#${addToListTextboxID}").value, "${categoryID}", "${escapeHTML(categoryName)}"); document.querySelector("#${addToListTextboxID}").focus()'>Add</button>
-                                            <div class='error-message' id='error-${categoryID}'></div>`;
                     
-                    toHideDiv.appendChild(actionsDiv);
-                    listWrapper.appendChild(toHideDiv);
+               // Create the actions div
+               var actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'actions';
+                    actionsDiv.innerHTML = "<input type='text' class='add-item-textbox' id='" + addToListTextboxID + "' placeholder='Add an item'><button class='add-item-button' onclick='addToList(document.querySelector(\"#" + addToListTextboxID + "\").value, \"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\"); document.querySelector(\"#" + addToListTextboxID + "\").focus()'>Add</button><div class='error-message' id='error-" + categoryID + "'></div>";
 
-                    // Append the listWrapper to the groupOfLists container
-                    document.querySelector('#group-of-lists').appendChild(listWrapper);
-            
-                    //write the actions div at the bottom of each list to add a new item
-                   
+                    // Append the list and actions divs to the wrapper div
+                    wrapperDiv.appendChild(listDiv);
+                    wrapperDiv.appendChild(actionsDiv);
+
+                    // Append the wrapper div to the group of lists
+                    groupOfLists.appendChild(wrapperDiv);
+
+                    //Clean the list up and hide the uncheck all button if there are no items in the category
+                    rearrangeList(categoryID);
+
                     if(numItemsinCategory == 0){
-                        //document.querySelector("#"+categoryID).removeClass("visible");
                         document.querySelector("#"+categoryID+" button").classList.add("invisible");
                     }
                     else if (numItemsinCategory > 0){
                         document.querySelector("#"+categoryID+" button").classList.remove("invisible");
-                        //document.querySelector("#"+categoryID).addClass("visible");
                     }
                      rearrangeList(categoryID);
                 }
-                    //console.log(categories);
-                    //console.log(groceries);
+
             </script>     
         </div>
+       
 
         <!-- The categories actions div to add and delete categories -->
         <h1>Categories Section</h1>
