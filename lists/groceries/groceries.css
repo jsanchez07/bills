@@ -255,9 +255,7 @@ h1{
     margin-right: 50px;
 }
 
-body div:last-of-type{
-   /* margin-bottom: 250px;*/
-}
+
 
 .hidden {
     display: none;
