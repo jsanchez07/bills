@@ -1,5 +1,6 @@
 <html>
 <head>
+     
     <link rel="stylesheet" type="text/css" href="groceries.css"/>
     <script src="groceries.js"></script>
 </head>
@@ -66,15 +67,16 @@
                     numItemsinCategory = 0;
                     var addToListTextboxID = "add-to-list-"+categoryID;
 
-
-                     // Create the wrapper div
-                     var wrapperDiv = document.createElement('div');
+                    
+                    // Create the wrapper div
+                    var wrapperDiv = document.createElement('div');
                     wrapperDiv.id = 'category-wrapper-'+categoryID;
-
+                    
                     // Create the list div
                     var listDiv = document.createElement('div');
                     listDiv.className = 'list';
                     listDiv.innerHTML = "<div class='heading-and-buttons'><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button></ul>";
+                    
 
                     // Append list items to the list div
                     for (j = 0; j < groceries.length; j++) {

@@ -1,11 +1,12 @@
 
-body{
+body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
     margin: 0;
     padding: 0;
     width: 95%;
 }
+
 p {
     font-size:100%;
     color: darkslategray;
@@ -15,7 +16,7 @@ p {
     margin: 0;
 }
 
-h1{
+h1 {
     font-size: 100%;
     color: black;
     display: flex;
@@ -25,12 +26,12 @@ h1{
     font-size: 90px;
 }
 
-#group-of-lists{
-    width: 100%;
+#group-of-lists {
+    width: 95%;
     padding: 0;
 }
 
-.to-hide{
+.to-hide {
     display: block;
     justify-content: center;
     align-items: center;
@@ -39,6 +40,7 @@ h1{
     margin-bottom: 30px;
     padding: 0;
 }
+
 .heading-and-buttons {
     display: flex;
     align-items: start; /* Aligns items at the start of the container */
@@ -46,15 +48,14 @@ h1{
     width: 100%;
   }
 
-
 .move-list {
     display: flex;
     flex-direction: column; /* Stacks buttons vertically */
     padding-top: 30px; /* Adds some space above the buttons */
     margin-right: 10px; /* Adds some space between the heading and the buttons */
-  }
+}
 
-  .heading-and-buttons> div > button:nth-of-type(1), .heading-and-buttons > div > button:nth-of-type(2) {
+.heading-and-buttons> div > button:nth-of-type(1), .heading-and-buttons > div > button:nth-of-type(2) {
     background-image: url('up-arrow.png');
     width: 50px; 
     height: 50px;
@@ -65,17 +66,63 @@ h1{
     
 }
 
-.heading-and-buttons > div > button:nth-of-type(2){ 
+.heading-and-buttons > div > button:nth-of-type(2) { 
     transform: rotate(180deg);
 }
 
 .heading-and-buttons > div > button:nth-of-type(1):hover, .heading-and-buttons > div > button:nth-of-type(2):hover {
     background-image: url('up-arrow-blue.webp');
 }
-    
-.to-hide ul{
+
+.list {
     display: block;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-left: 10%;
+    margin-bottom: 30px;
+    padding: 0;
+}
+
+.list h2 {
+    display: block;
+    font-size: 60px;
+    margin: 30px 0px 20px 0px;
+}
+
+.list ul {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start; /* Align items to the start */
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.list li {
+    display: flex;
+    flex-direction: row; /* Allow items to grow vertically */
+    justify-content: flex-start;
+    align-items: flex-start; /* Align items to the start */
+    margin: 0;
+    padding: 10px;
+    width: 90%;
+    font-size: 3em;
+    border: none;
+    flex-wrap: nowrap; /* Ensure items wrap properly */
+    word-break: break-word; /* Break words if necessary */
+    cursor: move;
+}
+
+.list li.dragging {
+    opacity: 0.5;
+}
+
+/*
+.list ul {
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
     margin: 0;
@@ -83,8 +130,9 @@ h1{
     list-style-type: none;
 }
 
-.to-hide li{
-    display: flex;
+.list li {
+    display: flex
+;
     justify-content: flex-start;
     align-items: center;
     margin: 0;
@@ -94,12 +142,36 @@ h1{
     font-size: 3em;
     border: none;
     flex-wrap: nowrap;
+}
+*/
+.to-hide ul {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.to-hide li {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 30px 0;
+    padding: 10px;
+    width: 90%;
+    height: 25;
+    font-size: 2.5rem;
+    border: none;
+    flex-wrap: nowrap;
     
 }
 
-.list-checkbox{
+.list-checkbox {
     width: 5em;
     height: 5em;
+    flex-shrink: 0;
     background-color: white;
     border-radius: 50%;
     vertical-align: middle;
@@ -111,11 +183,11 @@ h1{
     margin-right: 20px;
 }
 
-.list-checkbox:checked{
+.list-checkbox:checked {
     background-color: #0469e3;
 }
 
-.uncheck-all-button{
+.uncheck-all-button {
     display:inline-flex;
     background-color: white;
     color: black;
@@ -137,8 +209,7 @@ h1{
     display: inline-flex;
   }
 
-
-.remove-item-button{
+.remove-item-button {
     display:inline-flex;
     background-color: white;
     border: 1px solid #ddd;
@@ -149,11 +220,11 @@ h1{
     margin-left: 20px;
 }
 
-.heading{
+.heading {
     padding: 0;
 }
 
-.heading{
+.heading {
     display: block;
     font-size: 60px;
     margin: 30px 0px 20px 0px;
@@ -166,7 +237,7 @@ h1{
 
 }
 
-.actions{
+.actions {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -174,7 +245,7 @@ h1{
     padding: 0;
 }
 
-.category_actions{
+.category_actions {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -182,7 +253,7 @@ h1{
     padding: 0 0 50px 0;
 }
 
-.error-message{
+.error-message {
     display: flex;
     justify-content: center;
     position: absolute;
@@ -198,17 +269,15 @@ h1{
         0% {transform: scale(0);}
         50%{transform: scale(2);}
         100% {transform: scale(1);}
-    }  
+    }
 
-
-
-.add-item-textbox{
+.add-item-textbox {
     height:75px;
     font-size:26pt;
     border-radius: 10px;
 }
 
-.add-item-button{
+.add-item-button {
     display:inline-flex;
     background-color: #4169E1;
     color: white;
@@ -221,17 +290,17 @@ h1{
     font-size: 25px;
 }
 
-.add-item-button:hover{
+.add-item-button:hover {
     background-color: #0469e3;
 }
 
-.category_actions input{
+.category_actions input {
     height:75px;
     font-size:26pt;
     border-radius: 10px;
 }
 
-.category_actions button{
+.category_actions button {
     display:inline-flex;
     background-color: #31B404;
     color: white;
@@ -244,18 +313,16 @@ h1{
     font-size: 25px;
 }
 
-.category_actions button:hover{
+.category_actions button:hover {
     background-color: #0469e3;
 }
 
-.category_actions select{
+.category_actions select {
     height:75px;
     font-size:26pt;
     border-radius: 10px;
     margin-right: 50px;
 }
-
-
 
 .hidden {
     display: none;

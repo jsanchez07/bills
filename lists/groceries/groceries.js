@@ -77,6 +77,72 @@ function addToList(newItem, categoryID, categoryName){
     rearrangeList(categoryID);
 }
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    enableDragAndDrop();
+});
+
+function enableDragAndDrop() {
+    const listItems = document.querySelectorAll('.list li');
+    listItems.forEach(item => {
+        item.setAttribute('draggable', true);
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        item.addEventListener('dragend', handleDragEnd);
+    });
+}
+
+let draggedItem = null;
+
+function handleDragStart(event) {
+    if (this.querySelector('input[type="checkbox"]').checked) {
+        event.preventDefault(); // Prevent dragging if the item is checked
+        return;
+    }
+    draggedItem = this;
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/html', this.innerHTML);
+    this.classList.add('dragging');
+}
+
+function handleDragOver(event) {
+    if (event.preventDefault) {
+        event.preventDefault(); // Necessary. Allows us to drop.
+    }
+    event.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+    return false;
+}
+
+function handleDrop(event) {
+    if (event.stopPropagation) {
+        event.stopPropagation(); // Stops some browsers from redirecting.
+    }
+
+    // Check if the drop target is within the allowed area
+    if (isDropAllowed(this)) {
+        if (draggedItem !== this) {
+            draggedItem.innerHTML = this.innerHTML;
+            this.innerHTML = event.dataTransfer.getData('text/html');
+        }
+    } else {
+        console.error('Drop not allowed in this area.');
+    }
+
+    return false;
+}
+
+function handleDragEnd(event) {
+    this.classList.remove('dragging');
+    enableDragAndDrop(); // Re-enable drag and drop to update event listeners
+}
+
+function isDropAllowed(target) {
+    // Check if the target is not in the bottom area where checked checkboxes are moved
+    const checkedItems = document.querySelectorAll('.list li input[type="checkbox"]:checked');
+    const checkedItemsArray = Array.from(checkedItems).map(item => item.closest('li'));
+    return !checkedItemsArray.includes(target);
+}
+
 function removeThisItem(itemID){
     //remove it from the html
     var forTheID = "#"+itemID;
