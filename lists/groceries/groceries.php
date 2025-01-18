@@ -1,6 +1,6 @@
 <html>
 <head>
-     
+    <meta name="viewport" content="width=device-width, initial-scale=0.4, user-scalable=no">  
     <link rel="stylesheet" type="text/css" href="groceries.css"/>
     <script src="groceries.js"></script>
 </head>
