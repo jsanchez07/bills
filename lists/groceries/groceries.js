@@ -1,10 +1,11 @@
 
-function Groceries(id, item, isChecked, category, categoryID) {
+function Groceries(id, item, isChecked, category, categoryID, order_index) {
     this.id = id;
     this.item = item;
     this.isChecked = isChecked;
     this.category = category;
     this.categoryID = categoryID;
+    this.order_index = order_index;
 }
 
 function Categories(id, category_name, order_index) {
@@ -46,18 +47,55 @@ function addToList(newItem, categoryID, categoryName){
     //trim input to make it less messy
     newItem = newItem.trim();
 
+     // Determine the order_index for the new item
+    const uncheckedItems = groceries.filter(item => item.categoryID === categoryID && !item.isChecked);
+    console.log('Unchecked items:', uncheckedItems);
 
-    document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
-                           
-    groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
+    const orderIndexes = uncheckedItems.map(item => item.order_index);
+    console.log('Order indexes:', orderIndexes);
 
+    const order_index = uncheckedItems.length > 0 ? Math.max(...orderIndexes) + 1 : 0;
+    console.log('Order index:', order_index);
+
+     // Add the new item to the groceries array
+     groceries.push(new Groceries(itemID, newItem, 0, categoryName, categoryID, order_index));
+ 
+     // Create the new list item element
+     var li = document.createElement('li');
+     li.setAttribute('id', itemID);
+     li.innerHTML = `<input type='checkbox' class='list-checkbox' onclick="rearrangeList('${categoryID}')"> ${newItem}<button class='remove-item-button' onclick="removeThisItem('${itemID}')">x</button>`;
+ 
+     // Append the new item to the bottom of the unchecked items list
+     var ul = document.querySelector("#" + categoryID);
+     ul.appendChild(li);
+    
+     //console.log("ul: ", ul);
+     // Update the indexes of all items in the list
+      //re-arrange the list
+    rearrangeList(categoryID);
+
+    updateIndexes(ul);
+
+    // Create a variable with the index of all items inside the list along with the item ID
+    const listItems = Array.from(ul.children).filter(item => item.tagName.toLowerCase() === 'li');
+    const itemsWithIndex = listItems.map((item, index) => ({
+        id: item.getAttribute('id'),
+        index: index
+       
+    }));
+
+    console.log('listItems:', listItems);   
+
+    console.log('Items with index in the add:', itemsWithIndex);
+     
+     
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ item: newItem, categoryName: categoryName, id: itemID, categoryID: categoryID})
+        body: JSON.stringify({ item: newItem, categoryName: categoryName, id: itemID, categoryID: categoryID, itemsWithIndex: itemsWithIndex})
     })
     .then(response => response.json())
     //.then(data => console.log(data))
@@ -69,12 +107,6 @@ function addToList(newItem, categoryID, categoryName){
    
     //show the uncheck all button    
     document.querySelector("#"+categoryID+" button").classList.remove("invisible");
-        
-    
-
-    console.log("groceries after the fetch: ", groceries);
-    //re-arrange the list
-    rearrangeList(categoryID);
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -82,65 +114,90 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function enableDragAndDrop() {
-    const listItems = document.querySelectorAll('.list li');
-    listItems.forEach(item => {
-        item.setAttribute('draggable', true);
-        item.addEventListener('dragstart', handleDragStart);
-        item.addEventListener('dragover', handleDragOver);
-        item.addEventListener('drop', handleDrop);
-        item.addEventListener('dragend', handleDragEnd);
+    const lists = document.querySelectorAll('.list ul');
+    lists.forEach(list => {
+        new Sortable(list, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            filter: '.checked', // Prevent dragging of checked items
+            onMove: function (evt) {
+                const target = evt.related;
+                // Prevent moving checked items and dropping on checked items
+                return !target.classList.contains('checked') && !evt.dragged.classList.contains('checked');
+            },
+            onEnd: function (evt) {
+                const itemEl = evt.item;  // dragged HTMLElement
+                console.log("itemEl: ", itemEl);
+                const fromIndex = Array.from(evt.from.children).filter(item => item.tagName.toLowerCase() === 'li').indexOf(itemEl);
+                const toIndex = Array.from(evt.to.children).filter(item => item.tagName.toLowerCase() === 'li').indexOf(itemEl);
+
+
+                // Check if the drop target is within the allowed area
+                if (!isDropAllowed(itemEl, toIndex)) {
+                  
+                    evt.from.insertBefore(itemEl, fromIndex); // Revert the change
+                    return;
+                }
+
+                // Update the order in the groceries array
+                updateOrder(itemEl, fromIndex, toIndex);
+            }
+        });
     });
 }
 
-let draggedItem = null;
+function updateOrder(itemEl, fromIndex, toIndex) {
+    // Update the order in the groceries array based on the new positions
+    const itemID = itemEl.getAttribute('id');
+    const itemIndex = groceries.findIndex(item => item.id === itemID);
+    const [movedItem] = groceries.splice(itemIndex, 1);
+    groceries.splice(toIndex, 0, movedItem);
 
-function handleDragStart(event) {
-    if (this.querySelector('input[type="checkbox"]').checked) {
-        event.preventDefault(); // Prevent dragging if the item is checked
-        return;
-    }
-    draggedItem = this;
-    event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/html', this.innerHTML);
-    this.classList.add('dragging');
+    // Create a variable with the index of all items inside the list along with the item ID
+    const listItems = Array.from(itemEl.parentNode.children).filter(item => item.tagName.toLowerCase() === 'li');
+    const itemsWithIndex = listItems.map((item, index) => ({
+        id: item.getAttribute('id'),
+        index: index
+    }));
+
+
+    // Update the indexes of all items in the list
+    updateIndexes(itemEl.parentNode);
+
+    // Optionally, update the order on the server
+     fetch('updateOrder.php', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ itemsWithIndex: itemsWithIndex })
+     })
+     //.then(response => response.json())
+    //.then(data => console.log(data))
+    .catch((error) => {
+       // console.error('Update order error:', error);
+    });
 }
 
-function handleDragOver(event) {
-    if (event.preventDefault) {
-        event.preventDefault(); // Necessary. Allows us to drop.
-    }
-    event.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
-    return false;
-}
-
-function handleDrop(event) {
-    if (event.stopPropagation) {
-        event.stopPropagation(); // Stops some browsers from redirecting.
-    }
-
-    // Check if the drop target is within the allowed area
-    if (isDropAllowed(this)) {
-        if (draggedItem !== this) {
-            draggedItem.innerHTML = this.innerHTML;
-            this.innerHTML = event.dataTransfer.getData('text/html');
-        }
-    } else {
-        console.error('Drop not allowed in this area.');
-    }
-
-    return false;
-}
-
-function handleDragEnd(event) {
-    this.classList.remove('dragging');
-    enableDragAndDrop(); // Re-enable drag and drop to update event listeners
-}
-
-function isDropAllowed(target) {
-    // Check if the target is not in the bottom area where checked checkboxes are moved
+function isDropAllowed(itemEl, toIndex) {
+    // Check if the drop target is not in the bottom area where checked checkboxes are moved
     const checkedItems = document.querySelectorAll('.list li input[type="checkbox"]:checked');
     const checkedItemsArray = Array.from(checkedItems).map(item => item.closest('li'));
-    return !checkedItemsArray.includes(target);
+    const listItems = Array.from(itemEl.parentNode.children).filter(item => item.tagName.toLowerCase() === 'li');
+    let checkedItemsStartIndex = listItems.findIndex(item => checkedItemsArray.includes(item));
+    // If no checked items are found, set checkedItemsStartIndex to a large number
+    if (checkedItemsStartIndex === -1) {
+        checkedItemsStartIndex = 10000;
+    }
+
+    console.log('Checked items:', checkedItems);
+    console.log('CheckedItemsArray:', checkedItemsArray);
+    console.log('List items:', listItems);
+    console.log('Checked items start index:', checkedItemsStartIndex);
+    console.log("toIndex: ", toIndex);
+    console.log('result: ', toIndex < checkedItemsStartIndex);
+    // Allow drop if the target index is before the first checked item
+    return toIndex < checkedItemsStartIndex;
 }
 
 function removeThisItem(itemID){
@@ -162,13 +219,43 @@ function removeThisItem(itemID){
             groceries.splice(i, 1);
         }
     }
+
+     // Update the indexes of all items in the list
+     updateIndexes(parentUl);
+
+     // Create a variable with the index of all items inside the list along with the item ID
+    const listItems = Array.from(parentUl.children).filter(item => item.tagName.toLowerCase() === 'li');
+    const itemsWithIndex = listItems.map((item, index) => ({
+        id: item.getAttribute('id'),
+        index: index
+    }));
+
     
     // Make an HTTP request to a server-side script
      fetch('removeItem.php', {
         method: 'POST',
-        body: JSON.stringify({ itemID: itemID })
+        body: JSON.stringify({ itemID: itemID, itemsWithIndex: itemsWithIndex }),
     })
     .then(response => response.json());
+}
+
+function updateIndexes(ul) {
+    
+    // Convert HTMLCollection to Array and log the unfiltered list
+    const unfilteredListItems = Array.from(ul.children);
+
+    // Filter to include only 'li' elements and log the filtered list
+    const listItems = unfilteredListItems.filter(item => item.tagName.toLowerCase() === 'li');
+
+    listItems.forEach((item, index) => {
+        const itemID = item.getAttribute('id');
+        const groceryItem = groceries.find(grocery => grocery.id === itemID);
+        if (groceryItem) {
+            groceryItem.order_index = index;
+        }
+    });
+
+    //console.log('Updated indexes:', groceries);
 }
 
 function addCategory(categoryToAdd){
@@ -249,7 +336,7 @@ function addCategory(categoryToAdd){
     categories.push(new Categories(newCategoryID, newCategory, stringNewOrderIndex));
     decorateDeleteCategoryDropdown();
     
-    console.log(categories);
+    //console.log(categories);
     // Make an HTTP request to a server-side script
     fetch('addCategory.php', {
         method: 'POST',
@@ -300,7 +387,7 @@ function deleteCategory(categoryID){
         order_index: category.order_index
     }));
 
-    console.log('categoryOrderIndexes:', categoryOrderIndexes);
+    //console.log('categoryOrderIndexes:', categoryOrderIndexes);
     decorateDeleteCategoryDropdown();
 
       
@@ -334,7 +421,7 @@ function deleteCategory(categoryID){
 }
 
 function moveCategoryUp(categoryID){
-    console.log("moveCategoryUp", categoryID);
+   // console.log("moveCategoryUp", categoryID);
     
     // Find the category and its order_index
     let currentCategory = categories.find(category => category.id === categoryID);
@@ -362,7 +449,7 @@ function moveCategoryUp(categoryID){
         order_index: category.order_index
     }));
 
-    console.log('categoryOrderIndexes:', categoryOrderIndexes);
+    //console.log('categoryOrderIndexes:', categoryOrderIndexes);
 
     // Make an HTTP request to a server-side script to update the order_index values of the categories
     fetch('reorderCategories.php', {
@@ -387,7 +474,7 @@ function moveCategoryUp(categoryID){
         categoryOrderMap[category.id] = category.order_index;
     });
     // Log the categoryOrderMap for debugging
-    console.log("Category Order Map:", categoryOrderMap);
+    //console.log("Category Order Map:", categoryOrderMap);
     //console.log("Category Order Map Keys:", Object.keys(categoryOrderMap));
     //console.log("Category Order Map Values:", Object.values(categoryOrderMap));
     
@@ -415,7 +502,7 @@ function moveCategoryUp(categoryID){
         let orderB = idB ? categoryOrderMap[idB] : Infinity;
 
         // Log the order values for debugging
-        console.log(`Comparing ${idA} (order: ${orderA}) with ${idB} (order: ${orderB})`);
+        //console.log(`Comparing ${idA} (order: ${orderA}) with ${idB} (order: ${orderB})`);
 
         return orderA - orderB;
     });
@@ -425,14 +512,14 @@ function moveCategoryUp(categoryID){
         groupOfLists.appendChild(categoryWrapperDiv);
         // Log the appended element for debugging
         let id = categoryWrapperDiv.getAttribute('id') ? categoryWrapperDiv.getAttribute('id').replace('category-wrapper-', '') : null;
-        console.log(`Appended ${id} to groupOfLists`);
+        //console.log(`Appended ${id} to groupOfLists`);
     });
     decorateDeleteCategoryDropdown()
 
 }
 
 function moveCategoryDown(categoryID){
-    console.log("moveCategoryDown", categoryID);
+    //console.log("moveCategoryDown", categoryID);
     
     // Find the category and its order_index
     let currentCategory = categories.find(category => category.id === categoryID);
@@ -460,7 +547,7 @@ function moveCategoryDown(categoryID){
         order_index: category.order_index
     }));
 
-    console.log('categoryOrderIndexes:', categoryOrderIndexes);
+    //console.log('categoryOrderIndexes:', categoryOrderIndexes);
 
     // Make an HTTP request to a server-side script to update the order_index values of the categories
     fetch('reorderCategories.php', {
@@ -510,7 +597,7 @@ function moveCategoryDown(categoryID){
         let orderB = idB ? categoryOrderMap[idB] : Infinity;
 
         // Log the order values for debugging
-        console.log(`Comparing ${idA} (order: ${orderA}) with ${idB} (order: ${orderB})`);
+        //console.log(`Comparing ${idA} (order: ${orderA}) with ${idB} (order: ${orderB})`);
 
         return orderA - orderB;
     });
@@ -540,49 +627,60 @@ function hideList(categoryID){
     console.log("theListToHide: ", theListToHide);
 }
 
-function rearrangeList(listID){
-    var ul = document.querySelector("#" + listID);
-    //console.log("the UL: ", ul);
-    var items = Array.from(ul.children); // Convert to array for stable iteration
-    var checkedItems = [];
-    var uncheckedItems = [];
-    var checkedItemsText = [];
-    var uncheckedItemsText = [];
+function rearrangeList(listID) {
+    let ul = document.querySelector("#" + listID);
+    let items = Array.from(ul.children).filter(item => item.tagName.toLowerCase() === 'li'); // Convert to array and filter for only li items
+    let checkedItems = [];
+    let uncheckedItems = [];
+    let checkedItemsText = [];
+    let uncheckedItemsText = [];
 
     // First, separate items into checked and unchecked without modifying the DOM
     items.forEach(function(item) {
-        if(item.firstChild.checked){
+        var checkbox = item.querySelector('input[type="checkbox"]');
+        
+        console.log("item: ", item);
+        console.log("checkbox: ", checkbox);
+        console.log("checkbox.checked: ", checkbox.checked);
+
+        if (checkbox && checkbox.checked) {
+            item.classList.remove("unchecked");
+            item.classList.add("checked");
+            item.setAttribute('draggable', false); // Ensure draggable is set to false for checked items
             itemText = item.id.replace("#li", "");
             checkedItemsText.push(itemText);
             checkedItems.push(item);
-            for(var i = 0; i < groceries.length; i++){
-                if(groceries[i].id == item.id){
+            for (var i = 0; i < groceries.length; i++) {
+                if (groceries[i].id == item.id) {
                     groceries[i].isChecked = 1;
                 }
             }
-        } else if(!item.firstChild.checked && !item.classList.contains("uncheck-all-button")){
+        } else if (checkbox && !checkbox.checked) {
+            item.classList.add("unchecked");
+            item.classList.remove("checked");
+            item.setAttribute('draggable', true); // Ensure draggable is set to true for unchecked items
             itemText = item.id.replace("#li", "");
             uncheckedItemsText.push(itemText);
             uncheckedItems.push(item);
-            for(var i = 0; i < groceries.length; i++){
-                if(groceries[i].id == item.id){
+            for (var i = 0; i < groceries.length; i++) {
+                if (groceries[i].id == item.id) {
                     groceries[i].isChecked = 0;
                 }
             }
         }
     });
 
-    //console.log("checkedItems: ", checkedItemsText);
-    //console.log("uncheckedItems: ", uncheckedItemsText);
-
-    // Then, rearrange the DOM based on checked status
+    // Now, append unchecked items first, then checked items
     uncheckedItems.forEach(function(item) {
-        ul.appendChild(item); // This moves unchecked items to the end
+        ul.appendChild(item);
     });
     checkedItems.forEach(function(item) {
-        ul.appendChild(item); // This moves checked items to the end, maintaining their order
+        ul.appendChild(item);
     });
-    //console.log("groceries after rearranging: ", groceries);
+
+    // Optionally, update the order in the groceries array
+    updateIndexes(ul);
+
     // Make an HTTP request to a server-side script
     fetch('rearrangeList.php', {
         method: 'POST',

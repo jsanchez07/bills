@@ -115,7 +115,11 @@ h1 {
     cursor: move;
 }
 
-.list li.dragging {
+.list li.checked {
+    cursor: not-allowed;
+}
+
+.sortable-ghost {
     opacity: 0.5;
 }
 
