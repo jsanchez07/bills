@@ -160,22 +160,31 @@ function updateOrder(itemEl, fromIndex, toIndex) {
         index: index
     }));
 
-
     // Update the indexes of all items in the list
     updateIndexes(itemEl.parentNode);
 
     // Optionally, update the order on the server
-     fetch('updateOrder.php', {
-         method: 'POST',
-         headers: {
-             'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({ itemsWithIndex: itemsWithIndex })
-     })
-     //.then(response => response.json())
+    fetch('updateOrder.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itemsWithIndex: itemsWithIndex })
+    })
+    //.then(response => response.json())
     //.then(data => console.log(data))
     .catch((error) => {
-       // console.error('Update order error:', error);
+        console.error('Update order error:', error);
+    });
+
+    // Ensure draggable attribute is set correctly based on checkbox state
+    listItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox && checkbox.checked) {
+            item.setAttribute('draggable', false);
+        } else {
+            item.setAttribute('draggable', true);
+        }
     });
 }
 
@@ -638,15 +647,11 @@ function rearrangeList(listID) {
     // First, separate items into checked and unchecked without modifying the DOM
     items.forEach(function(item) {
         var checkbox = item.querySelector('input[type="checkbox"]');
-        
-        console.log("item: ", item);
-        console.log("checkbox: ", checkbox);
-        console.log("checkbox.checked: ", checkbox.checked);
-
         if (checkbox && checkbox.checked) {
             item.classList.remove("unchecked");
             item.classList.add("checked");
             item.setAttribute('draggable', false); // Ensure draggable is set to false for checked items
+            console.log(`Item ${item.id} set to draggable=false`);
             itemText = item.id.replace("#li", "");
             checkedItemsText.push(itemText);
             checkedItems.push(item);
@@ -659,6 +664,7 @@ function rearrangeList(listID) {
             item.classList.add("unchecked");
             item.classList.remove("checked");
             item.setAttribute('draggable', true); // Ensure draggable is set to true for unchecked items
+            console.log(`Item ${item.id} set to draggable=true`);
             itemText = item.id.replace("#li", "");
             uncheckedItemsText.push(itemText);
             uncheckedItems.push(item);
@@ -687,14 +693,13 @@ function rearrangeList(listID) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ checkedItemsText: checkedItemsText, uncheckedItemsText: uncheckedItemsText})
+        body: JSON.stringify({ checkedItemsText: checkedItemsText, uncheckedItemsText: uncheckedItemsText })
     })
         .then(response => response.json())
         //.then(data => console.log(data))
         .catch((error) => {
             console.error('Error:', error);
         });
-
 }
 
 //helper functions that are used in the main functions
