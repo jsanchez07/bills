@@ -1,9 +1,8 @@
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.4, user-scalable=no">  
     <link rel="stylesheet" type="text/css" href="groceries.css"/>
     <script src="groceries.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-
 </head>
 
 <?php
@@ -31,7 +30,7 @@
     $beginningCategoriesResult = mysqli_query($con, $categoriesQuery);
     $numBeginningCategories = mysqli_num_rows($beginningCategoriesResult);
 
-    $groceriesQuery="SELECT id, isChecked, item, category, category_id FROM Groceries ORDER BY order_index";
+    $groceriesQuery="SELECT id, isChecked, item, category, category_id FROM Groceries";
     $objectGroceriesListResult = mysqli_query($con, $groceriesQuery);
     $numObjectGroceriesList = mysqli_num_rows($objectGroceriesListResult);
     
@@ -86,7 +85,7 @@
                             var itemID = groceries[j].id;
                             var listItem = document.createElement('li');
                             listItem.id = itemID;
-                            listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onclick='rearrangeList(\"" + categoryID + "\")'" + (groceries[j].isChecked == 1 ? 'checked' : 'unchecked') + ">" + groceries[j].item + "<button class='remove-item-button' onclick='removeThisItem(\"" + itemID + "\")'>x</button>";
+                            listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onchange='rearrangeList(\"" + categoryID + "\")'" + (groceries[j].isChecked == 1 ? " checked" : "") + ">" + groceries[j].item + "<button class='remove-item-button' onclick='removeThisItem(\"" + itemID + "\")'>x</button>";
                             listDiv.querySelector('ul').appendChild(listItem);
                             numItemsinCategory++;
                         }

@@ -14,7 +14,6 @@ $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
         }
 
 $itemID = mysqli_real_escape_string($con, $data['itemID']);
-$items = $data['itemsWithIndex'];
 
 $sql = "DELETE FROM Groceries WHERE id = '$itemID'";
 
@@ -24,21 +23,6 @@ if (mysqli_query($con, $sql)) {
 } else {
     echo "Error" . mysqli_error($con);
 }
-
-foreach ($items as $item) {
-    $itemID = mysqli_real_escape_string($con, $item['id']);
-    $index = mysqli_real_escape_string($con, $item['index']);
-    $sql = "UPDATE Groceries SET order_index = '$index' WHERE id = '$itemID'";
-
-    // Execute the query
-    if (mysqli_query($con, $sql)) {
-        //$response["updatedItems"][] = ["id" => $itemID, "index" => $index];
-    } else {
-        //$response["errors"][] = ["id" => $itemID, "error" => mysqli_error($con)];
-    }
-}
-
-
 
 // Close the connection
 mysqli_close($con);

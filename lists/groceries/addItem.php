@@ -18,9 +18,6 @@ $category = mysqli_real_escape_string($con, trim($data['categoryName']));
 $id = mysqli_real_escape_string($con, trim($data['id']));
 $categoryID = mysqli_real_escape_string($con, trim($data['categoryID']));
 
-//for the indexes
-$items = $data['itemsWithIndex'];
-
 
 $sql = "INSERT INTO Groceries (isChecked, item, category, id, category_id) VALUES (0, '$item', '$category', '$id', '$categoryID')";
 
@@ -29,19 +26,6 @@ if (mysqli_query($con, $sql)) {
     //echo "Message successfully added!";
 } else {
     echo "Error" . mysqli_error($conn);
-}
-
-foreach ($items as $item) {
-    $itemID = mysqli_real_escape_string($con, $item['id']);
-    $index = mysqli_real_escape_string($con, $item['index']);
-    $sql = "UPDATE Groceries SET order_index = '$index' WHERE id = '$itemID'";
-
-    // Execute the query
-    if (mysqli_query($con, $sql)) {
-        //$response["updatedItems"][] = ["id" => $itemID, "index" => $index];
-    } else {
-        //$response["errors"][] = ["id" => $itemID, "error" => mysqli_error($con)];
-    }
 }
 
 // Close the connection
