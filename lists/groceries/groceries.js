@@ -14,7 +14,107 @@ function Categories(id, category_name, order_index) {
     this.order_index = order_index;
 }
 
+function populateAllLists() {
+    var groupOfLists = document.querySelector("#group-of-lists");
+
+    // Iterate through the categories array to create the ul elements for each category
+    categories.forEach(category => {
+        var categoryID = category.id;
+        var categoryName = category.category_name;
+        var addToListTextboxID = "add-to-list-" + categoryID;
+
+        // Create the wrapper div
+        var wrapperDiv = document.createElement('div');
+        wrapperDiv.id = 'category-wrapper-' + categoryID;
+
+        // Create the list div
+        var listDiv = document.createElement('div');
+        listDiv.className = 'list';
+        listDiv.innerHTML = "<div class='heading-and-buttons'><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button></ul>";
+
+        // Append list items to the list div
+        var numItemsinCategory = 0;
+        groceries.forEach(grocery => {
+            if (category.category_name == grocery.category) {
+                var itemID = grocery.id;
+                var listItem = document.createElement('li');
+                listItem.id = itemID;
+                listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onclick='rearrangeList(\"" + categoryID + "\")'" + (grocery.isChecked == 1 ? 'checked' : '') + ">" + grocery.item + "<button class='remove-item-button' onclick='removeThisItem(\"" + itemID + "\")'>x</button>";
+                listDiv.querySelector('ul').appendChild(listItem);
+                numItemsinCategory++;
+            }
+        });
+
+        // Create the actions div
+        var actionsDiv = document.createElement('div');
+        actionsDiv.className = 'actions';
+        actionsDiv.innerHTML = "<input type='text' class='add-item-textbox' id='" + addToListTextboxID + "' placeholder='Add an item'><button class='add-item-button' onclick='addToList(document.querySelector(\"#" + addToListTextboxID + "\").value, \"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\"); document.querySelector(\"#" + addToListTextboxID + "\").focus()'>Add</button><div class='error-message' id='error-" + categoryID + "'></div>";
+
+        // Append the list and actions divs to the wrapper div
+        wrapperDiv.appendChild(listDiv);
+        wrapperDiv.appendChild(actionsDiv);
+
+        // Append the wrapper div to the group of lists
+        groupOfLists.appendChild(wrapperDiv);
+
+        // Clean the list up and hide the uncheck all button if there are no items in the category
+        rearrangeList(categoryID);
+
+        if (numItemsinCategory == 0) {
+            document.querySelector("#" + categoryID + " button").classList.add("invisible");
+        } else if (numItemsinCategory > 0) {
+            document.querySelector("#" + categoryID + " button").classList.remove("invisible");
+        }
+    });
+
+    // Optionally, update the indexes of all items in each list
+    const lists = document.querySelectorAll('.list ul');
+    lists.forEach(ul => {
+        updateIndexes(ul);
+    });
+
+    // Reattach event listeners and set draggable attribute correctly
+   // reattachEventListeners();
+}
+
+function reattachEventListeners() {
+    const checkboxes = document.querySelectorAll('.list-checkbox');
+    checkboxes.forEach(checkbox => {
+        // Remove any existing event listeners to prevent duplication
+        checkbox.removeEventListener('click', handleCheckboxClick);
+        checkbox.addEventListener('click', handleCheckboxClick);
+    });
+
+    const removeButtons = document.querySelectorAll('.remove-item-button');
+    removeButtons.forEach(button => {
+        // Remove any existing event listeners to prevent duplication
+        button.removeEventListener('click', handleRemoveButtonClick);
+        button.addEventListener('click', handleRemoveButtonClick);
+    });
+
+    const listItems = document.querySelectorAll('.list li');
+    listItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox && checkbox.checked) {
+            item.setAttribute('draggable', false);
+        } else {
+            item.setAttribute('draggable', true);
+        }
+    });
+}
+
+function handleCheckboxClick(event) {
+    const listID = this.closest('ul').id;
+    rearrangeList(listID);
+}
+
+function handleRemoveButtonClick(event) {
+    const itemID = this.closest('li').id;
+    removeThisItem(itemID);
+}
+
 function addToList(newItem, categoryID, categoryName){
+    console.log("newItem: ", newItem);
     alertDiv = document.querySelector("#error-" + categoryID);
     
     if (!newItem.trim()) {
@@ -49,13 +149,8 @@ function addToList(newItem, categoryID, categoryName){
 
      // Determine the order_index for the new item
     const uncheckedItems = groceries.filter(item => item.categoryID === categoryID && !item.isChecked);
-    console.log('Unchecked items:', uncheckedItems);
-
     const orderIndexes = uncheckedItems.map(item => item.order_index);
-    console.log('Order indexes:', orderIndexes);
-
     const order_index = uncheckedItems.length > 0 ? Math.max(...orderIndexes) + 1 : 0;
-    console.log('Order index:', order_index);
 
      // Add the new item to the groceries array
      groceries.push(new Groceries(itemID, newItem, 0, categoryName, categoryID, order_index));
@@ -69,11 +164,8 @@ function addToList(newItem, categoryID, categoryName){
      var ul = document.querySelector("#" + categoryID);
      ul.appendChild(li);
     
-     //console.log("ul: ", ul);
-     // Update the indexes of all items in the list
       //re-arrange the list
     rearrangeList(categoryID);
-
     updateIndexes(ul);
 
     // Create a variable with the index of all items inside the list along with the item ID
@@ -83,11 +175,6 @@ function addToList(newItem, categoryID, categoryName){
         index: index
        
     }));
-
-    console.log('listItems:', listItems);   
-
-    console.log('Items with index in the add:', itemsWithIndex);
-     
      
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
@@ -211,9 +298,12 @@ function isDropAllowed(itemEl, toIndex) {
 
 function removeThisItem(itemID){
     //remove it from the html
+    console.log("itemID: ", itemID);
     var forTheID = "#"+itemID;
     var li = document.querySelector(forTheID);
     var parentUl = li.parentNode; // Get the parent <ul> or <ol>
+    console.log("parentUl: ", parentUl);
+    console.log("li: ", li);
     li.remove(); 
 
     // Check if there are any <li> elements left in the list and make uncheck button invisible if not
@@ -637,6 +727,7 @@ function hideList(categoryID){
 }
 
 function rearrangeList(listID) {
+    console.log("rearrangeList", listID);
     let ul = document.querySelector("#" + listID);
     let items = Array.from(ul.children).filter(item => item.tagName.toLowerCase() === 'li'); // Convert to array and filter for only li items
     let checkedItems = [];
@@ -651,7 +742,6 @@ function rearrangeList(listID) {
             item.classList.remove("unchecked");
             item.classList.add("checked");
             item.setAttribute('draggable', false); // Ensure draggable is set to false for checked items
-            console.log(`Item ${item.id} set to draggable=false`);
             itemText = item.id.replace("#li", "");
             checkedItemsText.push(itemText);
             checkedItems.push(item);
@@ -664,7 +754,6 @@ function rearrangeList(listID) {
             item.classList.add("unchecked");
             item.classList.remove("checked");
             item.setAttribute('draggable', true); // Ensure draggable is set to true for unchecked items
-            console.log(`Item ${item.id} set to draggable=true`);
             itemText = item.id.replace("#li", "");
             uncheckedItemsText.push(itemText);
             uncheckedItems.push(item);

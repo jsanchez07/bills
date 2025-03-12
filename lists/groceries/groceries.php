@@ -61,7 +61,8 @@
         <h1>Lists</h1>
         <div id = "group-of-lists">
             <script>
-                var groupOfLists = document.querySelector("#group-of-lists");
+                populateAllLists();
+              /*  var groupOfLists = document.querySelector("#group-of-lists");
                 for(i=0; i<categories.length; i++){
                     categoryID = categories[i].id;
                     categoryName = categories[i].category_name;
@@ -114,7 +115,7 @@
                     }
                      rearrangeList(categoryID);
                 }
-
+            */
             </script>     
         </div>
        
