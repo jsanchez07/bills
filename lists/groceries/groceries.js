@@ -69,7 +69,7 @@ function populateAllLists() {
     // Optionally, update the indexes of all items in each list
     const lists = document.querySelectorAll('.list ul');
     lists.forEach(ul => {
-        updateIndexes(ul);
+       // updateIndexes(ul);
     });
 
     // Reattach event listeners and set draggable attribute correctly
@@ -306,6 +306,9 @@ function addCategory(categoryToAdd){
     var newCategory = categoryToAdd;
     var newCategoryID = generateID();
 
+    console.log("newCategory: ", newCategory);
+    console.log("newCategoryID: ", newCategoryID);
+
     // Extract order_index values from categories
     let orderIndexes = categories.map(category => category.order_index);
 
@@ -327,7 +330,7 @@ function addCategory(categoryToAdd){
     // Create the list div
     var listDiv = document.createElement('div');
     listDiv.className = 'list';
-    listDiv.innerHTML = "<h2>" + categoryToAdd + "</h2><ul id='" + newCategoryID + "'></ul>";
+    listDiv.innerHTML = "<div class='heading-and-buttons'><h2>" + newCategory + "</h2><div class='move-list'><button id='" + newCategoryID + "-up' onclick='moveCategoryUp(\"" + newCategoryID + "\")'></button><button id='" + newCategoryID + "-down' onclick='moveCategoryDown(\"" + newCategoryID + "\")'></button></div></div><ul id='" + newCategoryID + "'><button class='uncheck-all-button' onclick='uncheckAll(\"" + newCategoryID + "\")'>Uncheck All</button></ul>";
 
     // Create the actions div
     var actionsDiv = document.createElement('div');
