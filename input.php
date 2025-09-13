@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once('session_init.php');
 $username = $_POST['user'];
 //echo $username;
 $password = $_POST['pass'];
@@ -16,14 +16,14 @@ $_SESSION['role']=0;
 require('dbConfig.php');
 
 
-$con = mysqli_connect($localhost, $DBusername, $DBpassword);
+$con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
 
 
 //connect to database using correct login credentials
 
 if (!$con)
   {
-  die('Could not connect: ' . mysqli_error($con));
+  die('Could not connect: ' . mysqli_connect_error());
 
   }
   else{
@@ -31,13 +31,7 @@ if (!$con)
 }
 
 
-//select database
-$db_selected = mysqli_select_db($con, $database);
-
-
-if (!$db_selected) {
-    die ('Could not select databse : ' . mysqli_error($con));
-}
+// Database is already selected in mysqli_connect
 $result= mysqli_query($con, "SELECT * FROM user WHERE username = '".mysqli_real_escape_string($con, $_POST['user'])."'"); 
 
 
@@ -52,36 +46,36 @@ if ($num == 0)
 	header("Location: loginFalse.html");
 }
 
-for($i=1;$i<=$num; $i++){
+// Process the user data
+$user_found = false;
 while($row=mysqli_fetch_array($result))
 {
-
-$user=$row['username']; 
-$pass=$row['password'];
-$role=$row['role'];
-$db_num=$row['db_num'];
-
+    $user=$row['username']; 
+    $pass=$row['password'];
+    $role=$row['role'];
+    $db_num=$row['db_num'];
+    
+    if($username == $user && $password == $pass) {
+        $user_found = true;
+        
+        if($role == 1) {
+            $_SESSION['role']= 1; 
+            $_SESSION['db_num']=$db_num;
+            header("Location: bills.php");
+            exit();
+        } else {
+            $_SESSION['role']= 2; 
+            $_SESSION['db_num']=$db_num;
+            header("Location: billsUser.php");
+            exit();
+        }
+    }
 }
 
-if($username == $user && $password ==$pass && $role == 1)
-{
-header("Location: bills.php");
-$_SESSION['role']= 1; 
-$_SESSION['db_num']=$db_num;
-echo("Correct<br />superUSER");
-}
-else if($username == $user && $password ==$pass)
-{
-header("Location: billsUser.php");
-$_SESSION['role']= 2; 
-$_SESSION['db_num']=$db_num;
-echo("Correct");
-}
-else if($password != $pass || $username != $user ) //this is dumb because username has to equal some user or it wouldn't return results
-{
-header("Location: loginFalse.html");
-$_SESSION['role']= 0; 
-echo("Please Enter Correct Username and Password ...");
-}
+// If no matching user/password found
+if(!$user_found) {
+    header("Location: loginFalse.html");
+    $_SESSION['role']= 0; 
+    exit();
 }
 ?>

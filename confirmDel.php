@@ -1,7 +1,5 @@
 <?php
-
-
- session_start();
+require_once('session_init.php');
  
  if(!isset($_SESSION['role'])) {
       header("Location: logout.php");

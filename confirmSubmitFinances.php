@@ -1,8 +1,7 @@
 <?ini_set( 'error_reporting', E_ALL ^ E_NOTICE );?>
 <?ini_set( 'display_errors', '0' );?>
 <?php
-
- session_start();
+require_once('session_init.php');
  
  if(!isset($_SESSION['role'])) {
       header("Location: logout.php");

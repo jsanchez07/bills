@@ -1,5 +1,5 @@
 <?php
- session_start();
+require_once('session_init.php');
  
  //echo $_SESSION['db_num'];
  

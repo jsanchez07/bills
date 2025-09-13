@@ -1,6 +1,5 @@
 <?php
-
- session_start();
+require_once('session_init.php');
  
  //echo $_SESSION['db_num'];
 
@@ -72,7 +71,7 @@
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 
 
-$query="SELECT * FROM `{$_SESSION['db_num']}` order by store";
+$query="SELECT store, due_on, last_payment, last_amount, website, username, password, auto_pay, recurring_amount FROM `{$_SESSION['db_num']}` order by store";
 $result=mysqli_query($con, $query);
 
 $num=mysqli_num_rows($result);
@@ -194,6 +193,12 @@ default: $monthName ='DEF';
         $pass=$row[6];
         //echo (" password: ".$pass."<br />");
         
+        $auto_pay=$row[7];
+        //echo (" auto_pay: ".$auto_pay."<br />");
+        
+        $recurring_amount=$row[8];
+        //echo (" recurring_amount: ".$recurring_amount."<br />");
+        
         $credentials="username: ".$user."\n"."password: ".$pass;
         //echo (" credentials: ".$credentials."<br />");
         
@@ -236,7 +241,7 @@ else if ($dueOn > $dayNow && (($monthNow-$lastMonthPaid) == 1))
   
 
 
-$store_dashed = str_replace(" ", "-", $f1); 
+$store_dashed = preg_replace('/[^a-zA-Z0-9\-]/', '-', $f1); 
    //echo $store_dashed;
 $id_for_dropdown = "my-payment-dropdown-$store_dashed";
 $id_for_cred_dropdown = "my-cred-dropdown-$store_dashed";
@@ -259,7 +264,7 @@ $id_for_button = "pay-button-$store_dashed";
 //print($rowid[0]);
 //print ($row[0]);
 
-if($lastDayPaid<$dueOn && $lastMonthPaid == $monthNow){     /*|| $lastDayPaid==$dueOn) */ 
+if($lastDayPaid<=$dueOn && $lastMonthPaid == $monthNow){     /*|| $lastDayPaid==$dueOn) */ 
  $daysLeftArray = (($daysInMonthNow - $dayNow) + $dueOn);
 $paidArray = "paid";
 $newMonthArray = $monthNow +1;
@@ -454,7 +459,15 @@ $status = "";
                 <li class= "lastPayment"><?php echo $f3; ?></li>
                 <li class= "payAmount">$<?php echo $f4; ?></li>
                 <li class= "status"><?php echo $statusImg?></li>                 
-                <li class= "paymentButtonListItem"> <?php echo '<button onCLick="payDropFunction(\''.$id_for_dropdown.'\', \''.$id_for_button.'\')" id=\''.$id_for_button.'\' class="paymentButton" >Pay Now</button>'; ?></li>
+                <li class= "paymentButtonListItem"> 
+                    <?php 
+                    if($auto_pay == 1) {
+                        echo '<a href="updateBill.php?store='.urlencode($f1).'" class="editButton">Edit</a>';
+                    } else {
+                        echo '<button onCLick="payDropFunction(\''.$id_for_dropdown.'\', \''.$id_for_button.'\')" id=\''.$id_for_button.'\' class="paymentButton" >Pay Now</button>';
+                    }
+                    ?>
+                </li>
                 <div class="payment-dropdown-content" id="<?php echo $id_for_dropdown ?>"">
                     <button class= "link-to-website-button"  onMouseOver = "mouseOver('<?php echo $id_for_cred_dropdown ?>')" onMouseOut = "mouseOut('<?php echo $id_for_cred_dropdown ?>')"> 
                         <a href = "<?php echo $website; ?>" target="_blank" alt="<?php echo $credentials ?>"> Go to <?php echo $f1; ?>'s website</a>
@@ -555,8 +568,19 @@ $i++;
 
 ?>
 
-<div id="total">
+<div id="monthlyBreakdown">
     <h2>Total amount : $<?php echo $total_amount_formatted ?></h2>
+    <h3>Monthly Breakdown</h3>
+    <div class="breakdownContainer">
+        <div class="breakdownHalf">
+            <h4>First Half (1st - 14th)</h4>
+            <p class="breakdownAmount">$<?php echo number_format($firstHalfTotal, 2, '.', ','); ?></p>
+        </div>
+        <div class="breakdownHalf">
+            <h4>Second Half (15th - End of Month)</h4>
+            <p class="breakdownAmount">$<?php echo number_format($secondHalfTotal, 2, '.', ','); ?></p>
+        </div>
+    </div>
 </div>
 
 <canvas id="myChart"></canvas>

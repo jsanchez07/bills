@@ -2,7 +2,7 @@
 <?ini_set( 'display_errors', '0' );?>
 <?php
 // process.php
-session_start();
+require_once('session_init.php');
  // $dbNum = $_SESSION['db_num'];
  // echo $db_num;
  // echo $_SESSION['db_num'];
@@ -15,6 +15,8 @@ session_start();
 $allowedFields = array(
     'store',
     'due',
+    'auto_pay',
+    'recurring_amount',
 );
  
 // Specify the field names that you want to require...
@@ -72,7 +74,11 @@ $database="anaRoot";
 $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
 
 
-$sqlQuery="UPDATE `{$_SESSION['db_num']}` SET due_on = $_POST[due], website = '$_POST[website]', username ='$_POST[username]', password = '$_POST[password]' where store ='$_POST[store]'";
+// Handle auto_pay checkbox - if not checked, it won't be in $_POST
+$auto_pay = isset($_POST['auto_pay']) ? 1 : 0;
+$recurring_amount = isset($_POST['recurring_amount']) ? $_POST['recurring_amount'] : '0.00';
+
+$sqlQuery="UPDATE `{$_SESSION['db_num']}` SET due_on = $_POST[due], website = '$_POST[website]', username ='$_POST[username]', password = '$_POST[password]', auto_pay = '$auto_pay', recurring_amount = '$recurring_amount' where store ='$_POST[store]'";
 
 if (!mysqli_query($con, $sqlQuery ))
   {

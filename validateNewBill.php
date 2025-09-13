@@ -1,7 +1,6 @@
 <?php
 // process.php
- 
- session_start();
+require_once('session_init.php');
  
 
  if(!isset($_SESSION['role'])) {
@@ -28,6 +27,8 @@ require('dbConfig.php');
 $allowedFields = array(
     'store',
     'due',
+    'auto_pay',
+    'recurring_amount',
 	);
  
 // Specify the field names that you want to require...
@@ -88,9 +89,27 @@ if (!$con)
 
 
 
-$sql="INSERT INTO `{$_SESSION['db_num']}` (store, due_on, last_payment, last_amount, website, username, password)
+// Handle auto_pay checkbox - if not checked, it won't be in $_POST
+$auto_pay = isset($_POST['auto_pay']) ? 1 : 0;
+$recurring_amount = isset($_POST['recurring_amount']) ? $_POST['recurring_amount'] : '0.00';
+
+// Set last payment date based on auto-pay status
+if ($auto_pay == 1) {
+    // For auto-pay bills, set last payment to current month's due date
+    // This shows they were paid this month
+    $current_year = date('Y');
+    $current_month = date('m');
+    $due_day = $_POST['due'];
+    
+    $last_payment = $current_year . '-' . sprintf('%02d', $current_month) . '-' . sprintf('%02d', $due_day);
+} else {
+    // For manual bills, use the default date
+    $last_payment = '1983-07-07';
+}
+
+$sql="INSERT INTO `{$_SESSION['db_num']}` (store, due_on, last_payment, last_amount, website, username, password, auto_pay, recurring_amount)
 VALUES
-('$_POST[store]','$_POST[due]', '1983-07-07' ,'0.00', '$_POST[website]', '$_POST[username]', '$_POST[password]')";
+('$_POST[store]','$_POST[due]', '$last_payment' ,'$recurring_amount', '$_POST[website]', '$_POST[username]', '$_POST[password]', '$auto_pay', '$recurring_amount')";
 //echo $sql;
 
 if (!mysqli_query($con, $sql))
@@ -98,9 +117,9 @@ if (!mysqli_query($con, $sql))
   die('Error in this one:' . mysql_error());
   }
   
-  $sqlRec="INSERT INTO `rec{$_SESSION['db_num']}` (store, due_on, website, username, password, deleted)
+  $sqlRec="INSERT INTO `rec{$_SESSION['db_num']}` (store, due_on, website, username, password, deleted, auto_pay)
 VALUES
-('$_POST[store]','$_POST[due]', '$_POST[website]', '$_POST[username]', '$_POST[password]', '0')";
+('$_POST[store]','$_POST[due]', '$_POST[website]', '$_POST[username]', '$_POST[password]', '0', '$auto_pay')";
   
   if (!mysqli_query($con, $sqlRec))
   {

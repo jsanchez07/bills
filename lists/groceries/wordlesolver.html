@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Solver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            margin-left: 3px;
+        }
+        .grid input {
+            display: flex;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            text-transform: uppercase;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        .grid input.correct {
+            background-color: #6aaa64; /* Green for correct letters */
+            color: white;
+            border: none;
+        }
+        .grid input.present {
+            background-color: #c9b458; /* Yellow for present letters */
+            color: white;
+            border: none;
+        }
+        .grid input.absent {
+            background-color: #787c7e; /* Gray for absent letters */
+            color: white;
+            border: none;
+        }
+
+        #wordleGrid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px); /* 5 columns */
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        #presentContainer {
+            display: flex;
+            flex-direction: column; /* Stack the grids vertically */
+            align-items: center; /* Center the grids horizontally */
+            gap: 10px; /* Add spacing between the grids */
+            margin-bottom: 20px;
+        }
+
+        #presentGrid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px); /* 5 columns */
+            gap: 10px;
+            justify-content: center;
+        }
+
+        #absentContainer {
+            display: flex;
+            flex-direction: row; /* Stack the grid and button vertically */
+            align-items: center; /* Center the grid and button horizontally */
+            gap: 10px; /* Add spacing between the grid and the button */
+        }
+        
+        #absentGrid {
+            display: grid;
+            grid-template-columns: repeat(8, 50px); /* 5 columns */
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative; /* To position the plus button relative to the grid */
+        }
+
+        .plus-button {
+            position: relative;
+            right: -550px; /* Adjust to position the button to the right of the grid */
+            top: -10px; /* Center vertically relative to the grid */
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .plus-button:hover {
+            background-color: #45a049;
+        }
+        #addPresentRowButton {
+            right: -460px; /* Adjust to position the button to the right of the grid */  
+            top: -35px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .results li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        @media (max-width: 620px) {
+            .grid {
+                gap: 0;
+            }
+            .grid-wrapper {
+                width: 40px; /* Adjust width for smaller screens */
+                
+            }
+            .grid input {
+                width: 2rem; /* Reduce input width */
+                height: 2rem; /* Reduce input height */
+                font-size: 1.5rem; /* Adjust font size */
+                gap: 30px;
+            }
+            #absentGrid {
+                gap: 15px;
+                grid-template-columns: repeat(4, 50px); /* 4 columns */
+            }
+
+            #wordleGrid {
+                gap: 15px;
+            }
+
+            #presentGrid {
+                gap: 15px;
+            }
+            
+            .plus-button {
+            position: relative;
+            left: 90%; /* Adjust to position the button to the right of the grid */
+            top: -10px;
+            }
+            #addPresentRowButton {
+                left: 95%;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <h1>Wordle Solver</h1>
+    <div class="container">
+        <div class="correct-container">
+            <h2>Correct Pattern</h2>
+            <div class="grid" id="wordleGrid">
+                <!-- 5 input fields for the correct pattern -->
+            
+                    <input type="text" maxlength="1" id="letter1" class="correct-input">
+                    <input type="text" maxlength="1" id="letter2" class="correct-input">
+                    <input type="text" maxlength="1" id="letter3" class="correct-input">
+                    <input type="text" maxlength="1" id="letter4" class="correct-input">
+                    <input type="text" maxlength="1" id="letter5" class="correct-input">
+            </div>
+        </div>
+
+        <h2>Present Letters (Yellow)</h2>
+        <div id="presentContainer">
+            <div class="grid" id="presentGrid">
+                <!-- Initial 5 input fields for present letters -->
+                <input type="text" maxlength="1" id="present1" class="present-input">
+                <input type="text" maxlength="1" id="present2" class="present-input">
+                <input type="text" maxlength="1" id="present3" class="present-input">
+                <input type="text" maxlength="1" id="present4" class="present-input">
+                <input type="text" maxlength="1" id="present5" class="present-input">
+            </div>
+        </div>
+        <!-- Plus button to add more rows -->
+        <button id="addPresentRowButton" class="plus-button">+</button>
+
+        <h2>Absent Letters (Gray)</h2>
+        <div class="grid" id="absentGrid">
+            <!-- Initial 5 input fields for absent letters -->
+            <input type="text" maxlength="1" id="absent1" class="absent-input">
+            <input type="text" maxlength="1" id="absent2" class="absent-input">
+            <input type="text" maxlength="1" id="absent3" class="absent-input">
+            <input type="text" maxlength="1" id="absent4" class="absent-input">
+            <input type="text" maxlength="1" id="absent5" class="absent-input">
+            <input type="text" maxlength="1" id="absent6" class="absent-input">
+            <input type="text" maxlength="1" id="absent7" class="absent-input">
+            <input type="text" maxlength="1" id="absent8" class="absent-input">
+           
+        </div>
+
+       
+        <!-- Plus button to add more rows -->
+        <button id="addAbsentRowButton" class="plus-button">+</button>
+
+        <button id="solveButton">Solve Wordle</button>
+        <div class="results">
+            <h2 id="solution-count">Possible Solutions:</h2>
+            <ul id="resultsList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let wordList = []; // Declare wordList in a higher scope
+
+        // Fetch the word list from the file
+        fetch('wordle.json')
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => {
+            wordList = data.map(entry => entry.word); // Assume the JSON has a "words" array
+            //console.log('Word list loaded:', wordList); // Debugging
+        })
+        .catch(error => console.error('Error fetching word list:', error));
+
+
+    // Updated solveWordle function
+function solveWordle(wordList, correctPattern, presentLettersWithPositions, absentLetters) {
+    return wordList.filter(word => {
+        //console.log("Checking word:", word); // Debugging
+
+        // Check if the word matches the correct pattern
+        for (let i = 0; i < correctPattern.length; i++) {
+            if (correctPattern[i] !== "_" && word[i] !== correctPattern[i]) {
+               // console.log(`Pattern mismatch: ${word} does not match ${correctPattern}`);
+                return false;
+            }
+        }
+
+        // Check if the word contains all present letters but not in the specified positions
+        for (const { letter, position } of presentLettersWithPositions) {
+            if (letter) {
+                if (!word.includes(letter)) {
+                    //console.log(`Missing present letter: ${word} does not contain ${letter}`);
+                    return false;
+                }
+                if (word[position] === letter) {
+                    //console.log(`Letter ${letter} is in the wrong position ${position + 1} in word ${word}`);
+                    return false;
+                }
+            }
+        }
+
+        // Check if the word does not contain any absent letters
+        for (const letter of absentLetters) {
+            if (word.includes(letter)) {
+                //console.log(`Contains absent letter: ${word} contains ${letter}`);
+                return false;
+            }
+        }
+        console.log(`Word ${word} matches all criteria`);
+        return true;
+    });
+}
+
+ 
+
+
+
+// Handle the Solve button click
+document.getElementById("solveButton").addEventListener("click", () => {
+    const correctPattern = Array.from(document.querySelectorAll("#wordleGrid input"))
+        .map(input => input.value.trim().toLowerCase() || "_")
+        .join("");
+    console.log("Correct Pattern:", correctPattern); // Debugging
+
+    const presentLettersWithPositions = Array.from(document.querySelectorAll("#presentGrid input"))
+        .map((input, index) => ({
+            letter: input.value.trim().toLowerCase(),
+            position: index % 5 // Calculate the column position (0-based index)
+        }))
+        .filter(entry => entry.letter); // Filter out empty inputs
+    console.log("Present Letters with Positions:", presentLettersWithPositions); // Debugging
+
+    const absentLetters = Array.from(document.querySelectorAll("#absentGrid input"))
+        .map(input => input.value.trim().toLowerCase())
+        .filter(letter => letter !== "");
+    console.log("Absent Letters:", absentLetters); // Debugging
+
+    if (wordList.length === 0) {
+        alert("Word list is not loaded yet. Please try again in a moment.");
+        return;
+    }
+
+    const possibleSolutions = solveWordle(wordList, correctPattern, presentLettersWithPositions, absentLetters);
+
+    // Display the results
+    const resultsList = document.getElementById("resultsList");
+    resultsList.innerHTML = ""; // Clear previous results
+
+    const solutionCount = possibleSolutions.length;
+    const solutionCountH2 = document.getElementById("solution-count");
+    solutionCountH2.textContent = `Possible Solutions: ${solutionCount}`;
+
+    if (solutionCount > 0) {
+        possibleSolutions.forEach(word => {
+            const li = document.createElement("li");
+            li.textContent = word;
+            resultsList.appendChild(li);
+        });
+    } else {
+        resultsList.innerHTML = "<li>No solutions found</li>";
+    }
+});
+
+// Handle adding more rows to the present letters grid
+document.getElementById("addPresentRowButton").addEventListener("click", () => {
+        const presentGrid = document.getElementById("presentGrid");
+
+        // Create a new row with 5 input fields for present letters
+        const newInputs = [];
+        for (let i = 0; i < 5; i++) {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.maxLength = 1;
+            input.classList.add("present-input"); // Optional class for styling
+            presentGrid.appendChild(input);
+            newInputs.push(input);
+
+            // Add the input event listener to the new input
+            input.addEventListener("input", () => updateInputBackgroundAndFocus(input));
+
+            // Handle keydown event for backspace and spacebar navigation
+            input.addEventListener("keydown", (event) => {
+                if (event.key === "Backspace" && input.value.trim() === "") {
+                    moveToPreviousInput(input); // Move to the previous input if backspace is pressed
+                } else if (event.key === " " || event.key === "Spacebar") {
+                    event.preventDefault(); // Prevent the default spacebar behavior
+                    moveToNextInput(input); // Move to the next input if spacebar is pressed
+                }
+            });
+        }
+       
+
+        // Adjust the grid layout to accommodate the new row
+        const currentRows = Math.ceil(presentGrid.children.length / 5); // Calculate the number of rows
+        presentGrid.style.gridTemplateRows = `repeat(${currentRows}, 50px)`; // Update the grid rows
+
+        // Focus on the first input in the new row
+        if (newInputs.length > 0) {
+            newInputs[0].focus();
+        }
+    });
+
+// Handle adding more rows to the absent letters grid
+document.getElementById("addAbsentRowButton").addEventListener("click", () => {
+    const absentGrid = document.getElementById("absentGrid");
+
+    // Create a new row with 8 input fields
+    const newInputs = [];
+    for (let i = 0; i < 8; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 1;
+        input.classList.add("absent-input"); // Optional class for styling
+        absentGrid.appendChild(input);
+        newInputs.push(input);
+
+        // Add the input event listener to the new input
+        input.addEventListener("input", () => updateInputBackgroundAndFocus(input));
+
+        // Handle keydown event for backspace and spacebar navigation
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Backspace" && input.value.trim() === "") {
+                moveToPreviousInput(input); // Move to the previous input if backspace is pressed
+            } else if (event.key === " " || event.key === "Spacebar") {
+                event.preventDefault(); // Prevent the default spacebar behavior
+                moveToNextInput(input); // Move to the next input if spacebar is pressed
+            }
+        });
+    }
+
+    // Adjust the grid layout to accommodate the new row
+    const currentRows = Math.ceil(absentGrid.children.length / 8); // Calculate the number of rows
+    absentGrid.style.gridTemplateRows = `repeat(${currentRows}, 50px)`; // Update the grid rows
+
+    // Focus on the first input in the new row
+    if (newInputs.length > 0) {
+        newInputs[0].focus();
+    }
+});
+
+
+// Function to move focus to the previous input field
+function moveToPreviousInput(input) {
+    const gridInputs = Array.from(document.querySelectorAll(".grid input[type='text']"));
+    const currentIndex = gridInputs.indexOf(input);
+
+    if (currentIndex > 0) {
+        gridInputs[currentIndex - 1].focus(); // Move focus to the previous input
+    }
+}
+
+// Function to move focus to the next input field
+function moveToNextInput(input) {
+    const gridInputs = Array.from(document.querySelectorAll(".grid input[type='text']"));
+    const currentIndex = gridInputs.indexOf(input);
+
+    if (currentIndex !== -1 && currentIndex < gridInputs.length - 1) {
+        gridInputs[currentIndex + 1].focus(); // Move focus to the next input
+    }
+}
+
+// Function to update the background color of an input box and move focus
+function updateInputBackgroundAndFocus(input) {
+    updateInputBackground(input); // Update the background color
+    if (input.value.trim().length === 1) {
+        moveToNextInput(input); // Move to the next input if a letter is entered
+    }
+}
+
+// Function to update the background color of an input box based on its value
+function updateInputBackground(input) {
+    const value = input.value.trim().toLowerCase();
+    console.log("Input value:", value); // Debugging
+
+    if (value) {
+        // Change background color based on the grid type
+        if (input.classList.contains("present-input")) {
+            input.style.backgroundColor = "#c9b458"; // Yellow for present letters
+            input.style.color = "white";
+        } else if (input.classList.contains("absent-input")) {
+            input.style.backgroundColor = "#787c7e"; // Gray for absent letters
+            input.style.color = "white";
+        } else if (input.classList.contains("correct-input")) {
+            input.style.backgroundColor = "#6aaa64"; // Green for correct letters
+            input.style.color = "white";
+        }
+    } else {
+        // Reset background color if the input is cleared
+        input.style.backgroundColor = "";
+        input.style.color = "";
+    }
+}
+
+// Add event listeners to all input fields in the grids
+function addInputListeners() {
+    const allInputs = document.querySelectorAll(".grid input[type='text']");
+    console.log("Adding input listeners to:", allInputs); // Debugging
+    allInputs.forEach(input => {
+        input.addEventListener("input", () => updateInputBackgroundAndFocus(input));
+
+        // Handle keydown event for backspace and spacebar navigation
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Backspace" && input.value.trim() === "") {
+                moveToPreviousInput(input); // Move to the previous input if backspace is pressed
+            } else if (event.key === " " || event.key === "Spacebar") {
+                event.preventDefault(); // Prevent the default spacebar behavior
+                moveToNextInput(input); // Move to the next input if spacebar is pressed
+            }
+        });
+    });
+}
+
+// Call the function to add listeners to existing inputs
+addInputListeners();
+
+    </script>
+</body>
+</html>

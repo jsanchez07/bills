@@ -1,6 +1,5 @@
 <?php
-
- session_start();
+require_once('session_init.php');
  
  
  if(!isset($_SESSION['role'])) {
@@ -39,6 +38,33 @@ td{color:#34B404;}
 </head>
 
 <body>
+
+<script>
+function toggleRecurringAmount() {
+    var checkbox = document.querySelector('input[name="auto_pay"]');
+    var recurringField = document.getElementById('recurring_amount');
+    
+    if (checkbox && recurringField) {
+        if (checkbox.checked) {
+            recurringField.style.display = 'block';
+            recurringField.required = true;
+        } else {
+            recurringField.style.display = 'none';
+            recurringField.required = false;
+            recurringField.value = '';
+        }
+    }
+}
+
+// Make sure the function is available when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the field as hidden
+    var recurringField = document.getElementById('recurring_amount');
+    if (recurringField) {
+        recurringField.style.display = 'none';
+    }
+});
+</script>
  <?= 
  @$errorString
  ?>
@@ -54,6 +80,8 @@ td{color:#34B404;}
 <tr><td>Website:</td><td><input type="text" name="website" value="<?php $website?>" /></td></tr>
 <tr><td>Username:</td><td><input type="text" name="username" value="<?php $username?>" /></td></tr>
 <tr><td>Password:</td><td><input type="text" name="password" value="<?php $password?>" /></td></tr>
+<tr><td>Auto-Pay:</td><td><input type="checkbox" name="auto_pay" value="1" onchange="toggleRecurringAmount()" /> Check if this bill is paid automatically</td></tr>
+<tr><td>Recurring Amount:</td><td><input type="text" name="recurring_amount" id="recurring_amount" placeholder="Enter monthly amount" style="display:none;" /></td></tr>
 
 
 

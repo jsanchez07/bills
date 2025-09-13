@@ -147,6 +147,7 @@ to {
 .cash img{
     display: block;
     position: absolute;
+    z-index: 99;
     top: 130%;
     left: -20px;
     width: 150px;
@@ -365,6 +366,29 @@ rows {
 .paymentButton:hover{
     background-color: #31B404;
 }
+
+.editButton {
+    display: block;
+    background-color: #FF9800; 
+    color: white;
+    padding: 10px 25px 10px 25px;
+    margin: 0px 0px 10px 0px;
+    font-size: 15px;
+    border-radius: 25px;
+    transition: .5s;
+    white-space: nowrap; 
+    min-width: auto;
+    border: 2px solid #F57C00;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+}
+
+.editButton:hover {
+    background-color: #F57C00;
+    color: white;
+    text-decoration: none;
+}
 .payment-dropdown{
      display: block;
     float: right;
@@ -558,6 +582,57 @@ rows {
     text-align: center;
     justify-content: center;
     
+}
+
+#monthlyBreakdown {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #e8f4f8;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#monthlyBreakdown h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#monthlyBreakdown h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.breakdownContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.breakdownHalf {
+    background-color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    min-width: 200px;
+    flex: 1;
+}
+
+.breakdownHalf h4 {
+    color: #34495e;
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+}
+
+.breakdownAmount {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #27ae60;
+    margin: 0;
 }
 
 /*the pie chart of the bills*/
