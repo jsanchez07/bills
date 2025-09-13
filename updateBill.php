@@ -58,25 +58,7 @@ while ($row=mysqli_fetch_array($result)) {
 } 
 
 
- function change(){
-     echo "is this shit working at all???<br />";
- /* $theStoreChange = $document->getElementById( 'store' );
-   $mySql = "SELECT * FROM `{$_SESSION['db_num']}`";
-     $myResult = mysql_query($mySql);
-     
-    while ($row=mysql_fetch_array($myResult)) { 
-     $store=$row["store"]; 
-if($theStoreChange == $store){
-    $due = $row["due_on"];
-    $website = $row["website"];
-    $username = $row["user"];
-    $password = $row["pass"];
-   }//end if
-   
-   echo $website;
-} //end while*/
-     
- } //end function change()
+ // This function is no longer needed - using JavaScript instead
 
 
 
@@ -119,6 +101,16 @@ function toggleRecurringAmount() {
         recurringField.value = '';
     }
 }
+
+function loadStoreData() {
+    var storeSelect = document.getElementById('store');
+    var selectedStore = storeSelect.value;
+    
+    if (selectedStore && selectedStore !== '') {
+        // Reload the page with the selected store as a parameter
+        window.location.href = 'updateBill.php?store=' + encodeURIComponent(selectedStore);
+    }
+}
 </script>
  
 
@@ -128,8 +120,8 @@ function toggleRecurringAmount() {
  <b>Select store you wish to update</b>
 <form action="validateUpdateBill.php" method="POST">
 <table border="0">
-<tr><td><SELECT id = "store" NAME="store" onchange="<?php change() ?>"> 
-<OPTION VALUE="<?php $store ?>">Choose</OPTION> 
+<tr><td><SELECT id = "store" NAME="store" onchange="loadStoreData()"> 
+<OPTION VALUE="">Choose</OPTION> 
 <?php echo $options?> 
 </SELECT> </td></tr>
 
