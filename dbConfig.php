@@ -1,6 +1,6 @@
 <?php
 
-$localhost="107.180.25.36";
+$localhost="localhost";
 $DBusername="jessesanchezroot";
 $DBpassword="Incubus1!";
 $database="jessesanchezbills";
