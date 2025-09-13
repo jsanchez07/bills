@@ -369,7 +369,7 @@ rows {
 
 .editButton {
     display: block;
-    background-color: #FF9800; 
+    background-color: #82bfed; 
     color: white;
     padding: 10px 25px 10px 25px;
     margin: 0px 0px 10px 0px;
@@ -378,7 +378,7 @@ rows {
     transition: .5s;
     white-space: nowrap; 
     min-width: auto;
-    border: 2px solid #F57C00;
+    border: 2px solid #4682B4;
     font-weight: bold;
     text-decoration: none;
     text-align: center;
