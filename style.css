@@ -725,6 +725,12 @@ rows {
     .status{
         padding: 10px 40px 10px 54px !important
     }
+    #payFormHeaders ol:nth-child(1) {
+        margin: 0 0 0 -38px;
+    }
+    #payFormRow input{
+        margin: 0px 46px 0px 40px !important;
+    }
 
     #monthlyBreakdown{
         margin: 25px 0px 0px -15px !important;
