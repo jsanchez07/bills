@@ -612,9 +612,26 @@ $i++;
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: "Bills Broken Down"
+            },
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 20,
+                    bottom: 20
+                }
+            },
+            legend: {
+                position: 'right',
+                labels: {
+                    boxWidth: 15,
+                    padding: 15
+                }
             }
         }
     });

@@ -181,6 +181,7 @@ rows {
 	text-align: center;
 }
 
+
 /*new table of bills*/
 .listOfHeaders{
     
@@ -586,7 +587,7 @@ rows {
 
 #monthlyBreakdown {
     text-align: center;
-    margin: 20px 0;
+    margin: 20px 0 20px -55px;
     padding: 20px;
     background-color: #e8f4f8;
     border-radius: 10px;
@@ -638,12 +639,106 @@ rows {
 /*the pie chart of the bills*/
 .chartjs-render-monitor{
     width:100%;
-    max-width:75%;
-    left: 10%;
+    max-width:100%;
+    left: 0%;
     margin: 100px 0px;
     display:block;
     position:relative;
+    height: 500px;
 }
 
+@media only screen and (max-width: 980px) {
+   
+    /* Mobile-specific styles only - add your mobile adjustments here */
+    .navBar{
+        top: 25px;
+    }
+
+    .navBar li a{
+        padding: 10px 10px !important;
+    }
+
+    #timeDisplay{
+        padding-left: 15%;
+    }
+
+    #timeDisplay{
+        padding-left: 0px !important;
+    }
+
+    /* Hide bill and cash images on mobile */
+    .bill1 {
+        display: none !important;
+    }
+    
+    .bill2 {
+        display: none !important;
+    }
+    
+    .cash {
+        display: none !important;
+    }
+    
+    .listOfHeaders {
+        margin: 0px 0px 0px -150px !important;
+    }
+
+    .dueDateHeader{
+        padding: 10px 10px !important;
+    }
+
+    .daysLeftHeader{
+        padding: 10px 20px !important;
+    }
+    
+    .rowsOfBills {
+        margin: 0px 0px 0px 0 !important;
+    }
+
+    [class^="this-row"]{
+        background-color: none;
+        margin: 0px -20px 0px -72px;
+        padding: 0px 0px 0px 0px;
+    }
+    
+    .listOfBills {
+        margin: 0px 0px 0px 0 !important;
+    }
+    
+    .store {
+        padding: 10px!important;
+    }
+    
+    .nextDue {
+        padding: 10px 10px !important;
+        width: 6% !important;
+    }
+
+    .daysLeft{
+        padding: 10px 10px 10px 30px !important;
+    }
+    
+    .lastPayment{
+        padding: 10px 15px 0 35px !important;
+    }
+
+    .status{
+        padding: 10px 40px 10px 54px !important
+    }
+
+    #monthlyBreakdown{
+        margin: 25px 0px 0px -15px !important;
+    }
+    
+    /* Pie chart mobile - ensure proper sizing */
+    .chartjs-render-monitor {
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0% !important;
+        margin: 20px 0 !important;
+        height: 400px !important;
+    }
+    
+}
 
 
