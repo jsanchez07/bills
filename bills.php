@@ -649,7 +649,8 @@ $i++;
     
     // Function to update totals
     function updateTotals() {
-        console.log('Updating totals...');
+        console.log('=== UPDATING TOTALS ===');
+        console.log('Hidden bills:', Array.from(hiddenBills));
         var currentTotal = originalTotal;
         var currentFirstHalf = originalFirstHalf;
         var currentSecondHalf = originalSecondHalf;
@@ -678,7 +679,7 @@ $i++;
                     }
                 }
             } else {
-                console.log('Could not find amount element for:', storeName);
+                console.log('Could not find amount element for:', storeName, 'Dashed:', storeDashed);
             }
         });
         
@@ -689,15 +690,23 @@ $i++;
         var firstHalfElement = document.querySelector('.breakdownContainer .breakdownHalf:first-child .breakdownAmount');
         var secondHalfElement = document.querySelector('.breakdownContainer .breakdownHalf:last-child .breakdownAmount');
         
+        console.log('Total element found:', !!totalElement);
+        console.log('First half element found:', !!firstHalfElement);
+        console.log('Second half element found:', !!secondHalfElement);
+        
         if (totalElement) {
             totalElement.textContent = 'Total amount : $' + currentTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            console.log('Updated total display');
         }
         if (firstHalfElement) {
             firstHalfElement.textContent = '$' + currentFirstHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            console.log('Updated first half display');
         }
         if (secondHalfElement) {
             secondHalfElement.textContent = '$' + currentSecondHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            console.log('Updated second half display');
         }
+        console.log('=== TOTALS UPDATE COMPLETE ===');
     }
     
     // Function to hide pie chart slice (only called from pie chart clicks)
@@ -714,15 +723,23 @@ $i++;
         hiddenBills.add(storeName);
         chart.data.datasets[0].data[storeIndex] = 0;
         
-        // Add strikethrough to legend
-        var legendItems = document.querySelectorAll('.chartjs-legend li');
-        if (legendItems[storeIndex]) {
-            legendItems[storeIndex].style.textDecoration = 'line-through';
-        }
-        
-        // Update the chart
+        // Update the chart first
         chart.update();
-        updateTotals();
+        
+        // Then update legend and totals after chart is updated
+        setTimeout(function() {
+            // Add strikethrough to legend
+            var legendItems = document.querySelectorAll('.chartjs-legend li');
+            if (legendItems[storeIndex]) {
+                legendItems[storeIndex].style.textDecoration = 'line-through';
+                console.log('Applied strikethrough to legend item:', storeName);
+            } else {
+                console.log('Could not find legend item for index:', storeIndex);
+            }
+            
+            // Update totals
+            updateTotals();
+        }, 100);
     }
     
     // Function to toggle pie chart slice (only called from legend clicks)
@@ -740,28 +757,36 @@ $i++;
             console.log('Showing slice for:', storeName);
             hiddenBills.delete(storeName);
             chart.data.datasets[0].data[storeIndex] = arrayOfAmounts[storeIndex];
-            
-            // Remove strikethrough from legend
-            var legendItems = document.querySelectorAll('.chartjs-legend li');
-            if (legendItems[storeIndex]) {
-                legendItems[storeIndex].style.textDecoration = 'none';
-            }
         } else {
             // Hide the slice
             console.log('Hiding slice for:', storeName);
             hiddenBills.add(storeName);
             chart.data.datasets[0].data[storeIndex] = 0;
-            
-            // Add strikethrough to legend
-            var legendItems = document.querySelectorAll('.chartjs-legend li');
-            if (legendItems[storeIndex]) {
-                legendItems[storeIndex].style.textDecoration = 'line-through';
-            }
         }
         
-        // Update the chart
+        // Update the chart first
         chart.update();
-        updateTotals();
+        
+        // Then update legend and totals after chart is updated
+        setTimeout(function() {
+            // Update legend appearance
+            var legendItems = document.querySelectorAll('.chartjs-legend li');
+            if (legendItems[storeIndex]) {
+                if (hiddenBills.has(storeName)) {
+                    legendItems[storeIndex].style.textDecoration = 'line-through';
+                    console.log('Applied strikethrough to legend item:', storeName);
+                } else {
+                    legendItems[storeIndex].style.textDecoration = 'none';
+                    console.log('Removed strikethrough from legend item:', storeName);
+                }
+            } else {
+                console.log('Could not find legend item for index:', storeIndex);
+            }
+            
+            // Update totals
+            console.log('Updating totals from toggleBill...');
+            updateTotals();
+        }, 100);
     }
 
     var chart = new Chart("myChart", {
