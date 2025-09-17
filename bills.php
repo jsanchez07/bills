@@ -624,6 +624,19 @@ $i++;
     // Track which bills are currently hidden
     var hiddenBills = new Set();
     
+    // Function to sync legend appearance with current state
+    function syncLegendAppearance() {
+        var legendItems = document.querySelectorAll('.chartjs-legend li');
+        legendItems.forEach(function(item, index) {
+            var storeName = arrayOfStores[index];
+            if (hiddenBills.has(storeName)) {
+                item.style.textDecoration = 'line-through';
+            } else {
+                item.style.textDecoration = 'none';
+            }
+        });
+    }
+    
     // Debug function
     function debugInfo() {
         console.log('=== DEBUG INFO ===');
@@ -724,6 +737,9 @@ $i++;
         // Update the chart
         chart.update();
         updateTotals();
+        
+        // Sync legend appearance after a short delay to ensure chart is updated
+        setTimeout(syncLegendAppearance, 100);
     }
 
     var chart = new Chart("myChart", {
@@ -769,30 +785,50 @@ $i++;
             var storeName = arrayOfStores[index];
             console.log('Clicked on pie slice:', storeName, 'Index:', index);
             toggleBill(storeName);
+            
+            // Ensure legend strikethrough is applied immediately
+            setTimeout(function() {
+                var legendItems = document.querySelectorAll('.chartjs-legend li');
+                if (legendItems[index]) {
+                    if (hiddenBills.has(storeName)) {
+                        legendItems[index].style.textDecoration = 'line-through';
+                    } else {
+                        legendItems[index].style.textDecoration = 'none';
+                    }
+                }
+            }, 100);
         }
     };
     
     // Add click handlers to legend labels
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            var legendItems = document.querySelectorAll('.chartjs-legend li');
-            console.log('Found legend items:', legendItems.length);
-            legendItems.forEach(function(item, index) {
-                item.style.cursor = 'pointer';
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var storeName = arrayOfStores[index];
-                    console.log('Clicked on legend item:', storeName, 'Index:', index);
-                    // Use the same toggleBill function as pie slice clicks
-                    toggleBill(storeName);
-                });
+    function setupLegendHandlers() {
+        var legendItems = document.querySelectorAll('.chartjs-legend li');
+        console.log('Setting up legend handlers, found items:', legendItems.length);
+        legendItems.forEach(function(item, index) {
+            // Remove any existing click handlers to prevent duplicates
+            item.onclick = null;
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var storeName = arrayOfStores[index];
+                console.log('Clicked on legend item:', storeName, 'Index:', index);
+                // Use the same toggleBill function as pie slice clicks
+                toggleBill(storeName);
             });
-        }, 2000); // Increased timeout to ensure chart is fully rendered
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up legend handlers multiple times to ensure they're always available
+        setTimeout(setupLegendHandlers, 1000);
+        setTimeout(setupLegendHandlers, 2000);
+        setTimeout(setupLegendHandlers, 3000);
         
         // Add debug info after chart loads
         setTimeout(function() {
             debugInfo();
+            syncLegendAppearance(); // Ensure legend is synced on load
         }, 3000);
     });
     
