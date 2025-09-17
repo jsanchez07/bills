@@ -624,48 +624,93 @@ $i++;
     // Track which bills are currently hidden
     var hiddenBills = new Set();
     
+    // Debug function
+    function debugInfo() {
+        console.log('=== DEBUG INFO ===');
+        console.log('Original totals - Total:', originalTotal, 'First Half:', originalFirstHalf, 'Second Half:', originalSecondHalf);
+        console.log('Hidden pie slices:', Array.from(hiddenBills));
+        console.log('Store names:', arrayOfStores);
+        console.log('Chart data:', chart.data.datasets[0].data);
+        console.log('==================');
+    }
+    
     // Function to update totals
     function updateTotals() {
+        console.log('Updating totals...');
         var currentTotal = originalTotal;
         var currentFirstHalf = originalFirstHalf;
         var currentSecondHalf = originalSecondHalf;
         
         // Subtract hidden bills from totals
         hiddenBills.forEach(function(storeName) {
-            var amount = parseFloat(document.querySelector('.this-row-' + storeName.replace(/[^a-zA-Z0-9\-]/g, '-') + ' .payAmount').textContent.replace('$', '').replace(',', ''));
-            currentTotal -= amount;
+            console.log('Processing hidden bill:', storeName);
+            var storeDashed = storeName.replace(/[^a-zA-Z0-9\-]/g, '-');
+            var amountElement = document.querySelector('.this-row-' + storeDashed + ' .payAmount');
             
-            // Check if this bill is in first or second half
-            var dueDate = document.querySelector('.this-row-' + storeName.replace(/[^a-zA-Z0-9\-]/g, '-') + ' .nextDue').textContent;
-            var day = parseInt(dueDate.split('-')[1]);
-            if (day <= 14) {
-                currentFirstHalf -= amount;
+            if (amountElement) {
+                var amount = parseFloat(amountElement.textContent.replace('$', '').replace(',', ''));
+                console.log('Amount for', storeName, ':', amount);
+                currentTotal -= amount;
+                
+                // Check if this bill is in first or second half
+                var dueDateElement = document.querySelector('.this-row-' + storeDashed + ' .nextDue');
+                if (dueDateElement) {
+                    var dueDate = dueDateElement.textContent;
+                    var day = parseInt(dueDate.split('-')[1]);
+                    console.log('Due date for', storeName, ':', dueDate, 'Day:', day);
+                    if (day <= 14) {
+                        currentFirstHalf -= amount;
+                    } else {
+                        currentSecondHalf -= amount;
+                    }
+                }
             } else {
-                currentSecondHalf -= amount;
+                console.log('Could not find amount element for:', storeName);
             }
         });
         
+        console.log('New totals - Total:', currentTotal, 'First Half:', currentFirstHalf, 'Second Half:', currentSecondHalf);
+        
         // Update display
-        document.querySelector('#monthlyBreakdown h2').textContent = 'Total amount : $' + currentTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        document.querySelector('.breakdownContainer .breakdownHalf:first-child .breakdownAmount').textContent = '$' + currentFirstHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        document.querySelector('.breakdownContainer .breakdownHalf:last-child .breakdownAmount').textContent = '$' + currentSecondHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        var totalElement = document.querySelector('#monthlyBreakdown h2');
+        var firstHalfElement = document.querySelector('.breakdownContainer .breakdownHalf:first-child .breakdownAmount');
+        var secondHalfElement = document.querySelector('.breakdownContainer .breakdownHalf:last-child .breakdownAmount');
+        
+        if (totalElement) {
+            totalElement.textContent = 'Total amount : $' + currentTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        if (firstHalfElement) {
+            firstHalfElement.textContent = '$' + currentFirstHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        if (secondHalfElement) {
+            secondHalfElement.textContent = '$' + currentSecondHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
     }
     
-    // Function to toggle bill visibility
+    // Function to toggle pie chart slice visibility
     function toggleBill(storeName) {
-        var storeDashed = storeName.replace(/[^a-zA-Z0-9\-]/g, '-');
-        var billRow = document.querySelector('.this-row-' + storeDashed);
+        console.log('Toggling pie chart slice for:', storeName);
         
-        if (hiddenBills.has(storeName)) {
-            // Show the bill
-            billRow.style.display = 'flex';
-            hiddenBills.delete(storeName);
-        } else {
-            // Hide the bill
-            billRow.style.display = 'none';
-            hiddenBills.add(storeName);
+        var storeIndex = arrayOfStores.indexOf(storeName);
+        if (storeIndex === -1) {
+            console.log('Store not found in array:', storeName);
+            return;
         }
         
+        if (hiddenBills.has(storeName)) {
+            // Show the slice
+            console.log('Showing slice for:', storeName);
+            hiddenBills.delete(storeName);
+            chart.data.datasets[0].data[storeIndex] = arrayOfAmounts[storeIndex];
+        } else {
+            // Hide the slice
+            console.log('Hiding slice for:', storeName);
+            hiddenBills.add(storeName);
+            chart.data.datasets[0].data[storeIndex] = 0;
+        }
+        
+        // Update the chart
+        chart.update();
         updateTotals();
     }
 
@@ -699,30 +744,51 @@ $i++;
                     boxWidth: 15,
                     padding: 15
                 }
-            },
-            onClick: function(event, elements) {
-                if (elements.length > 0) {
-                    var index = elements[0].index;
-                    var storeName = arrayOfStores[index];
-                    toggleBill(storeName);
-                }
             }
         }
     });
+    
+    // Add click handler to chart (Chart.js 2.9.4 API)
+    document.getElementById('myChart').onclick = function(evt) {
+        var activePoints = chart.getElementsAtEvent(evt);
+        if (activePoints.length > 0) {
+            var firstPoint = activePoints[0];
+            var index = firstPoint._index;
+            var storeName = arrayOfStores[index];
+            console.log('Clicked on pie slice:', storeName, 'Index:', index);
+            toggleBill(storeName);
+        }
+    };
     
     // Add click handlers to legend labels
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             var legendItems = document.querySelectorAll('.chartjs-legend li');
+            console.log('Found legend items:', legendItems.length);
             legendItems.forEach(function(item, index) {
                 item.style.cursor = 'pointer';
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     var storeName = arrayOfStores[index];
+                    console.log('Clicked on legend item:', storeName, 'Index:', index);
                     toggleBill(storeName);
                 });
             });
-        }, 1000);
+        }, 2000); // Increased timeout to ensure chart is fully rendered
+        
+        // Add debug info after chart loads
+        setTimeout(function() {
+            debugInfo();
+        }, 3000);
     });
+    
+    // Make debug function globally available
+    window.debugChart = debugInfo;
+    window.toggleBillTest = function(storeName) {
+        console.log('Manual toggle test for:', storeName);
+        toggleBill(storeName);
+    };
 
 </script>
  </body>
