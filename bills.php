@@ -847,8 +847,24 @@ $i++;
         
         // Manually update legend strikethrough after a short delay
         setTimeout(function() {
-            const legendItems = document.querySelectorAll('.chartjs-legend li');
-            if (legendItems[index]) {
+            // Try multiple selectors to find legend items
+            let legendItems = document.querySelectorAll('.chartjs-legend li');
+            console.log('Found legend items with .chartjs-legend li:', legendItems.length);
+            
+            if (legendItems.length === 0) {
+                // Try alternative selectors
+                legendItems = document.querySelectorAll('ul li');
+                console.log('Found legend items with ul li:', legendItems.length);
+            }
+            
+            if (legendItems.length === 0) {
+                // Try finding by looking for the chart container
+                const chartContainer = document.getElementById('myChart').parentElement;
+                legendItems = chartContainer.querySelectorAll('li');
+                console.log('Found legend items in chart container:', legendItems.length);
+            }
+            
+            if (legendItems.length > 0 && legendItems[index]) {
                 if (hiddenBills.has(storeName)) {
                     legendItems[index].style.textDecoration = 'line-through';
                     console.log('Applied strikethrough to legend item:', storeName);
@@ -857,9 +873,22 @@ $i++;
                     console.log('Removed strikethrough from legend item:', storeName);
                 }
             } else {
-                console.log('Could not find legend item for index:', index);
+                console.log('Could not find legend item for index:', index, 'Total items found:', legendItems.length);
+                // Try to find by text content as fallback
+                for (let i = 0; i < legendItems.length; i++) {
+                    if (legendItems[i].textContent.trim() === storeName) {
+                        if (hiddenBills.has(storeName)) {
+                            legendItems[i].style.textDecoration = 'line-through';
+                            console.log('Applied strikethrough to legend item by text:', storeName);
+                        } else {
+                            legendItems[i].style.textDecoration = 'none';
+                            console.log('Removed strikethrough from legend item by text:', storeName);
+                        }
+                        break;
+                    }
+                }
             }
-        }, 100);
+        }, 200);
     };
     
     // Add click handler to chart (Chart.js 2.9.4 API)
