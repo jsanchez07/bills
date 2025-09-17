@@ -847,32 +847,28 @@ $i++;
         
         // Manually update legend strikethrough after a short delay
         setTimeout(function() {
-            // Find the chart legend specifically
-            const chartCanvas = document.getElementById('myChart');
-            const chartParent = chartCanvas.parentElement;
-            let legendItems = chartParent.querySelectorAll('ul li');
+            // Chart.js creates the legend outside the canvas, look for it in the document
+            let legendItems = document.querySelectorAll('.chartjs-legend li');
+            console.log('Found legend items with .chartjs-legend li:', legendItems.length);
             
-            console.log('Chart parent element:', chartParent);
-            console.log('Found legend items in chart parent:', legendItems.length);
-            
-            // If still not found, try to find the legend container
-            if (legendItems.length === 0) {
-                const legendContainer = chartParent.querySelector('.chartjs-legend');
-                if (legendContainer) {
-                    legendItems = legendContainer.querySelectorAll('li');
-                    console.log('Found legend items in .chartjs-legend:', legendItems.length);
-                }
-            }
-            
-            // If still not found, look for any ul near the chart
+            // If not found, look for any ul that has the right number of items
             if (legendItems.length === 0) {
                 const allUls = document.querySelectorAll('ul');
                 for (let ul of allUls) {
                     const items = ul.querySelectorAll('li');
                     if (items.length === arrayOfStores.length) {
-                        legendItems = items;
-                        console.log('Found legend items by matching count:', legendItems.length);
-                        break;
+                        // Check if this looks like a chart legend by checking if items contain store names
+                        let matches = 0;
+                        for (let item of items) {
+                            if (arrayOfStores.includes(item.textContent.trim())) {
+                                matches++;
+                            }
+                        }
+                        if (matches >= arrayOfStores.length * 0.8) { // 80% match
+                            legendItems = items;
+                            console.log('Found legend items by content matching:', legendItems.length);
+                            break;
+                        }
                     }
                 }
             }
@@ -903,7 +899,7 @@ $i++;
                     }
                 }
             }
-        }, 300);
+        }, 500);
     };
     
     // Add click handler to chart (Chart.js 2.9.4 API)
