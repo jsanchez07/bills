@@ -636,6 +636,7 @@ rows {
     margin: 0;
 }
 
+
 /*the pie chart of the bills*/
 .chartjs-render-monitor{
     width:100%;
@@ -655,6 +656,12 @@ rows {
 
 .chartjs-legend li:hover {
     opacity: 0.7;
+}
+
+#myChart{
+    display: flex !important;
+    width: 75% !important;
+    height: 75% !important;
 }
 
 /* Hidden bill rows */

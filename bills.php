@@ -601,20 +601,10 @@ $i++;
 
 <script>
     var barColors = [
-        "red",
-        "blue",
-        "yellow",
-        "orange",
-        "purple",
-        "black",
-        "green",
-        "brown",
-        "aquamarine",
-        "lightpink",
-        "magenta",
-        "navy",
-        "orangered",
-        "teal"
+        "#4E79A7", "#F28E2B", "#E15759", "#76B7B2", "#59A14F",
+        "#EDC948", "#B07AA1", "#FF9DA7", "#9C755F", "#BAB0AC",
+        "#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
+        "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"
     ];
     // Store original totals
     var originalTotal = <?php echo $totalAmount; ?>;
@@ -625,33 +615,19 @@ $i++;
     var hiddenBills = new Set();
     
     
-    // Debug function
-    function debugInfo() {
-        console.log('=== DEBUG INFO ===');
-        console.log('Original totals - Total:', originalTotal, 'First Half:', originalFirstHalf, 'Second Half:', originalSecondHalf);
-        console.log('Hidden pie slices:', Array.from(hiddenBills));
-        console.log('Store names:', arrayOfStores);
-        console.log('Chart data:', chart.data.datasets[0].data);
-        console.log('==================');
-    }
-    
     // Function to update totals
     function updateTotals() {
-        console.log('=== UPDATING TOTALS ===');
-        console.log('Hidden bills:', Array.from(hiddenBills));
         var currentTotal = originalTotal;
         var currentFirstHalf = originalFirstHalf;
         var currentSecondHalf = originalSecondHalf;
         
         // Subtract hidden bills from totals
         hiddenBills.forEach(function(storeName) {
-            console.log('Processing hidden bill:', storeName);
             var storeDashed = storeName.replace(/[^a-zA-Z0-9\-]/g, '-');
             var amountElement = document.querySelector('.this-row-' + storeDashed + ' .payAmount');
             
             if (amountElement) {
                 var amount = parseFloat(amountElement.textContent.replace('$', '').replace(',', ''));
-                console.log('Amount for', storeName, ':', amount);
                 currentTotal -= amount;
                 
                 // Check if this bill is in first or second half
@@ -659,148 +635,31 @@ $i++;
                 if (dueDateElement) {
                     var dueDate = dueDateElement.textContent;
                     var day = parseInt(dueDate.split('-')[1]);
-                    console.log('Due date for', storeName, ':', dueDate, 'Day:', day);
                     if (day <= 14) {
                         currentFirstHalf -= amount;
                     } else {
                         currentSecondHalf -= amount;
                     }
                 }
-            } else {
-                console.log('Could not find amount element for:', storeName, 'Dashed:', storeDashed);
             }
         });
-        
-        console.log('New totals - Total:', currentTotal, 'First Half:', currentFirstHalf, 'Second Half:', currentSecondHalf);
         
         // Update display
         var totalElement = document.querySelector('#monthlyBreakdown h2');
         var firstHalfElement = document.querySelector('.breakdownContainer .breakdownHalf:first-child .breakdownAmount');
         var secondHalfElement = document.querySelector('.breakdownContainer .breakdownHalf:last-child .breakdownAmount');
         
-        console.log('Total element found:', !!totalElement);
-        console.log('First half element found:', !!firstHalfElement);
-        console.log('Second half element found:', !!secondHalfElement);
-        
         if (totalElement) {
             totalElement.textContent = 'Total amount : $' + currentTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            console.log('Updated total display');
         }
         if (firstHalfElement) {
             firstHalfElement.textContent = '$' + currentFirstHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            console.log('Updated first half display');
         }
         if (secondHalfElement) {
             secondHalfElement.textContent = '$' + currentSecondHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            console.log('Updated second half display');
         }
-        console.log('=== TOTALS UPDATE COMPLETE ===');
     }
     
-    // Function to hide pie chart slice (only called from pie chart clicks)
-    function hideSlice(storeName) {
-        console.log('Hiding pie chart slice for:', storeName);
-        
-        var storeIndex = arrayOfStores.indexOf(storeName);
-        if (storeIndex === -1) {
-            console.log('Store not found in array:', storeName);
-            return;
-        }
-        
-        // Hide the slice
-        hiddenBills.add(storeName);
-        chart.data.datasets[0].data[storeIndex] = 0;
-        
-        // Update the chart first
-        chart.update();
-        
-        // Then update legend and totals after chart is updated
-        setTimeout(function() {
-            // Add strikethrough to legend - try multiple selectors
-            var legendItems = document.querySelectorAll('.chartjs-legend li');
-            console.log('Found legend items:', legendItems.length, 'Looking for index:', storeIndex);
-            
-            if (legendItems[storeIndex]) {
-                legendItems[storeIndex].style.textDecoration = 'line-through';
-                console.log('Applied strikethrough to legend item:', storeName);
-            } else {
-                console.log('Could not find legend item for index:', storeIndex);
-                // Try alternative approach - find by text content
-                for (var i = 0; i < legendItems.length; i++) {
-                    if (legendItems[i].textContent.trim() === storeName) {
-                        legendItems[i].style.textDecoration = 'line-through';
-                        console.log('Applied strikethrough to legend item by text:', storeName);
-                        break;
-                    }
-                }
-            }
-            
-            // Update totals
-            updateTotals();
-        }, 200);
-    }
-    
-    // Function to toggle pie chart slice (only called from legend clicks)
-    function toggleBill(storeName) {
-        console.log('Toggling pie chart slice for:', storeName);
-        
-        var storeIndex = arrayOfStores.indexOf(storeName);
-        if (storeIndex === -1) {
-            console.log('Store not found in array:', storeName);
-            return;
-        }
-        
-        if (hiddenBills.has(storeName)) {
-            // Show the slice
-            console.log('Showing slice for:', storeName);
-            hiddenBills.delete(storeName);
-            chart.data.datasets[0].data[storeIndex] = arrayOfAmounts[storeIndex];
-        } else {
-            // Hide the slice
-            console.log('Hiding slice for:', storeName);
-            hiddenBills.add(storeName);
-            chart.data.datasets[0].data[storeIndex] = 0;
-        }
-        
-        // Update the chart first
-        chart.update();
-        
-        // Then update legend and totals after chart is updated
-        setTimeout(function() {
-            // Update legend appearance - try multiple selectors
-            var legendItems = document.querySelectorAll('.chartjs-legend li');
-            console.log('Found legend items:', legendItems.length, 'Looking for index:', storeIndex);
-            
-            if (legendItems[storeIndex]) {
-                if (hiddenBills.has(storeName)) {
-                    legendItems[storeIndex].style.textDecoration = 'line-through';
-                    console.log('Applied strikethrough to legend item:', storeName);
-                } else {
-                    legendItems[storeIndex].style.textDecoration = 'none';
-                    console.log('Removed strikethrough from legend item:', storeName);
-                }
-            } else {
-                console.log('Could not find legend item for index:', storeIndex);
-                // Try alternative approach - find by text content
-                for (var i = 0; i < legendItems.length; i++) {
-                    if (legendItems[i].textContent.trim() === storeName) {
-                        if (hiddenBills.has(storeName)) {
-                            legendItems[i].style.textDecoration = 'line-through';
-                            console.log('Applied strikethrough to legend item by text:', storeName);
-                        } else {
-                            legendItems[i].style.textDecoration = 'none';
-                            console.log('Removed strikethrough from legend item by text:', storeName);
-                        }
-                        break;
-                    }
-                }
-            }
-            
-            // Update totals
-            console.log('Updating totals from toggleBill...');
-            updateTotals();
-        }, 200);
-    }
 
     var chart = new Chart("myChart", {
     type: "pie",
@@ -816,122 +675,67 @@ $i++;
             maintainAspectRatio: false,
             title: {
                 display: true,
-                text: "Bills Broken Down (Click to toggle)"
+                text: "Bills Broken Down (Click to toggle)",
+                fontSize: 30,
             },
             layout: {
                 padding: {
-                    left: 20,
+                    left: 150,
                     right: 20,
                     top: 20,
                     bottom: 20
                 }
             },
             legend: {
-                position: 'right',
+                position: 'left',
                 labels: {
                     boxWidth: 15,
-                    padding: 15
+                    padding:20,
+                    fontSize: 20
                 }
             }
         }
     });
     
-    // Add legend click handler (Chart.js 2.9.4 API)
+    // Add legend click handler (Chart.js 2.9.4 API) - toggle arc hidden state
     chart.options.legend.onClick = function(evt, legendItem) {
         const index = legendItem.index;
         const storeName = arrayOfStores[index];
-        console.log('Legend clicked:', storeName, 'Index:', index);
-        
-        // Call toggleBill and then manually update legend appearance
-        toggleBill(storeName);
-        
-        // Manually update legend strikethrough after a short delay
-        setTimeout(function() {
-            // Chart.js creates the legend outside the canvas, look for it in the document
-            let legendItems = document.querySelectorAll('.chartjs-legend li');
-            console.log('Found legend items with .chartjs-legend li:', legendItems.length);
-            
-            // If not found, look for any ul that has the right number of items
-            if (legendItems.length === 0) {
-                const allUls = document.querySelectorAll('ul');
-                for (let ul of allUls) {
-                    const items = ul.querySelectorAll('li');
-                    if (items.length === arrayOfStores.length) {
-                        // Check if this looks like a chart legend by checking if items contain store names
-                        let matches = 0;
-                        for (let item of items) {
-                            if (arrayOfStores.includes(item.textContent.trim())) {
-                                matches++;
-                            }
-                        }
-                        if (matches >= arrayOfStores.length * 0.8) { // 80% match
-                            legendItems = items;
-                            console.log('Found legend items by content matching:', legendItems.length);
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            console.log('Final legend items found:', legendItems.length, 'Looking for index:', index);
-            
-            if (legendItems.length > 0 && legendItems[index]) {
-                if (hiddenBills.has(storeName)) {
-                    legendItems[index].style.textDecoration = 'line-through';
-                    console.log('Applied strikethrough to legend item:', storeName);
-                } else {
-                    legendItems[index].style.textDecoration = 'none';
-                    console.log('Removed strikethrough from legend item:', storeName);
-                }
-            } else {
-                console.log('Could not find legend item for index:', index, 'Total items found:', legendItems.length);
-                // Try to find by text content as fallback
-                for (let i = 0; i < legendItems.length; i++) {
-                    if (legendItems[i].textContent.trim() === storeName) {
-                        if (hiddenBills.has(storeName)) {
-                            legendItems[i].style.textDecoration = 'line-through';
-                            console.log('Applied strikethrough to legend item by text:', storeName);
-                        } else {
-                            legendItems[i].style.textDecoration = 'none';
-                            console.log('Removed strikethrough from legend item by text:', storeName);
-                        }
-                        break;
-                    }
-                }
-            }
-        }, 500);
+
+        var meta = chart.getDatasetMeta(0);
+        var arc = meta && meta.data ? meta.data[index] : null;
+        if (!arc) { return; }
+
+        var wasHidden = arc.hidden === true;
+        arc.hidden = !wasHidden;
+        if (arc.hidden) { hiddenBills.add(storeName); } else { hiddenBills.delete(storeName); }
+
+        chart.update();
+        updateTotals();
     };
     
-    // Add click handler to chart (Chart.js 2.9.4 API)
+    // Add click handler to chart (Chart.js 2.9.4 API) - hide only on slice click
     document.getElementById('myChart').onclick = function(evt) {
         var activePoints = chart.getElementsAtEvent(evt);
         if (activePoints.length > 0) {
             var firstPoint = activePoints[0];
             var index = firstPoint._index;
             var storeName = arrayOfStores[index];
-            console.log('Clicked on pie slice:', storeName, 'Index:', index);
             
-            // Only hide if not already hidden (can't click on hidden slices)
-            if (!hiddenBills.has(storeName)) {
-                hideSlice(storeName);
+            var meta = chart.getDatasetMeta(0);
+            var arc = meta && meta.data ? meta.data[index] : null;
+            if (!arc) { return; }
+            
+            // Only hide if not already hidden (can't click hidden slices)
+            if (arc.hidden !== true) {
+                arc.hidden = true;
+                hiddenBills.add(storeName);
+                chart.update();
+                updateTotals();
             }
         }
     };
     
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add debug info after chart loads
-        setTimeout(function() {
-            debugInfo();
-        }, 3000);
-    });
-    
-    // Make debug function globally available
-    window.debugChart = debugInfo;
-    window.toggleBillTest = function(storeName) {
-        console.log('Manual toggle test for:', storeName);
-        toggleBill(storeName);
-    };
-
 </script>
  </body>
 
