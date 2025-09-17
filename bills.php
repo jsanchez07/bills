@@ -700,7 +700,32 @@ $i++;
         }
     }
     
-    // Function to toggle pie chart slice visibility and legend strikethrough
+    // Function to hide pie chart slice (only called from pie chart clicks)
+    function hideSlice(storeName) {
+        console.log('Hiding pie chart slice for:', storeName);
+        
+        var storeIndex = arrayOfStores.indexOf(storeName);
+        if (storeIndex === -1) {
+            console.log('Store not found in array:', storeName);
+            return;
+        }
+        
+        // Hide the slice
+        hiddenBills.add(storeName);
+        chart.data.datasets[0].data[storeIndex] = 0;
+        
+        // Add strikethrough to legend
+        var legendItems = document.querySelectorAll('.chartjs-legend li');
+        if (legendItems[storeIndex]) {
+            legendItems[storeIndex].style.textDecoration = 'line-through';
+        }
+        
+        // Update the chart
+        chart.update();
+        updateTotals();
+    }
+    
+    // Function to toggle pie chart slice (only called from legend clicks)
     function toggleBill(storeName) {
         console.log('Toggling pie chart slice for:', storeName);
         
@@ -737,9 +762,6 @@ $i++;
         // Update the chart
         chart.update();
         updateTotals();
-        
-        // Sync legend appearance after a short delay to ensure chart is updated
-        setTimeout(syncLegendAppearance, 100);
     }
 
     var chart = new Chart("myChart", {
@@ -784,19 +806,11 @@ $i++;
             var index = firstPoint._index;
             var storeName = arrayOfStores[index];
             console.log('Clicked on pie slice:', storeName, 'Index:', index);
-            toggleBill(storeName);
             
-            // Ensure legend strikethrough is applied immediately
-            setTimeout(function() {
-                var legendItems = document.querySelectorAll('.chartjs-legend li');
-                if (legendItems[index]) {
-                    if (hiddenBills.has(storeName)) {
-                        legendItems[index].style.textDecoration = 'line-through';
-                    } else {
-                        legendItems[index].style.textDecoration = 'none';
-                    }
-                }
-            }, 100);
+            // Only hide if not already hidden (can't click on hidden slices)
+            if (!hiddenBills.has(storeName)) {
+                hideSlice(storeName);
+            }
         }
     };
     
