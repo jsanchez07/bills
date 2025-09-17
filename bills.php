@@ -728,18 +728,28 @@ $i++;
         
         // Then update legend and totals after chart is updated
         setTimeout(function() {
-            // Add strikethrough to legend
+            // Add strikethrough to legend - try multiple selectors
             var legendItems = document.querySelectorAll('.chartjs-legend li');
+            console.log('Found legend items:', legendItems.length, 'Looking for index:', storeIndex);
+            
             if (legendItems[storeIndex]) {
                 legendItems[storeIndex].style.textDecoration = 'line-through';
                 console.log('Applied strikethrough to legend item:', storeName);
             } else {
                 console.log('Could not find legend item for index:', storeIndex);
+                // Try alternative approach - find by text content
+                for (var i = 0; i < legendItems.length; i++) {
+                    if (legendItems[i].textContent.trim() === storeName) {
+                        legendItems[i].style.textDecoration = 'line-through';
+                        console.log('Applied strikethrough to legend item by text:', storeName);
+                        break;
+                    }
+                }
             }
             
             // Update totals
             updateTotals();
-        }, 100);
+        }, 200);
     }
     
     // Function to toggle pie chart slice (only called from legend clicks)
@@ -769,8 +779,10 @@ $i++;
         
         // Then update legend and totals after chart is updated
         setTimeout(function() {
-            // Update legend appearance
+            // Update legend appearance - try multiple selectors
             var legendItems = document.querySelectorAll('.chartjs-legend li');
+            console.log('Found legend items:', legendItems.length, 'Looking for index:', storeIndex);
+            
             if (legendItems[storeIndex]) {
                 if (hiddenBills.has(storeName)) {
                     legendItems[storeIndex].style.textDecoration = 'line-through';
@@ -781,12 +793,25 @@ $i++;
                 }
             } else {
                 console.log('Could not find legend item for index:', storeIndex);
+                // Try alternative approach - find by text content
+                for (var i = 0; i < legendItems.length; i++) {
+                    if (legendItems[i].textContent.trim() === storeName) {
+                        if (hiddenBills.has(storeName)) {
+                            legendItems[i].style.textDecoration = 'line-through';
+                            console.log('Applied strikethrough to legend item by text:', storeName);
+                        } else {
+                            legendItems[i].style.textDecoration = 'none';
+                            console.log('Removed strikethrough from legend item by text:', storeName);
+                        }
+                        break;
+                    }
+                }
             }
             
             // Update totals
             console.log('Updating totals from toggleBill...');
             updateTotals();
-        }, 100);
+        }, 200);
     }
 
     var chart = new Chart("myChart", {
@@ -843,15 +868,21 @@ $i++;
     function setupLegendHandlers() {
         var legendItems = document.querySelectorAll('.chartjs-legend li');
         console.log('Setting up legend handlers, found items:', legendItems.length);
+        console.log('Store names array:', arrayOfStores);
+        
         legendItems.forEach(function(item, index) {
             // Remove any existing click handlers to prevent duplicates
             item.onclick = null;
             item.style.cursor = 'pointer';
+            
+            // Get store name by text content instead of index
+            var storeName = item.textContent.trim();
+            console.log('Setting up handler for legend item:', storeName, 'Index:', index);
+            
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var storeName = arrayOfStores[index];
-                console.log('Clicked on legend item:', storeName, 'Index:', index);
+                console.log('Legend clicked:', storeName, 'Index:', index);
                 // Use the same toggleBill function as pie slice clicks
                 toggleBill(storeName);
             });
