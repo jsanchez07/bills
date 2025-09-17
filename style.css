@@ -647,6 +647,21 @@ rows {
     height: 500px;
 }
 
+/* Pie chart legend styling */
+.chartjs-legend li {
+    cursor: pointer !important;
+    transition: opacity 0.3s ease;
+}
+
+.chartjs-legend li:hover {
+    opacity: 0.7;
+}
+
+/* Hidden bill rows */
+.this-row-hidden {
+    display: none !important;
+}
+
 @media only screen and (max-width: 980px) {
    
     /* Mobile-specific styles only - add your mobile adjustments here */

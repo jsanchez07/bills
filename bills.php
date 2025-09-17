@@ -68,11 +68,25 @@ require_once('session_init.php');
  require('dbConfig.php');
 
 
+// Test connection with error handling
 $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
+
+if (!$con) {
+    die("Connection failed: " . mysqli_connect_error() . "<br>Error number: " . mysqli_connect_errno());
+}
+
+// Test if connection is still alive
+if (!mysqli_ping($con)) {
+    die("Connection lost: MySQL server has gone away. Please try again in a few moments.");
+}
 
 
 $query="SELECT store, due_on, last_payment, last_amount, website, username, password, auto_pay, recurring_amount FROM `{$_SESSION['db_num']}` order by store";
 $result=mysqli_query($con, $query);
+
+if (!$result) {
+    die("Query failed: " . mysqli_error($con));
+}
 
 $num=mysqli_num_rows($result);
 
@@ -602,7 +616,60 @@ $i++;
         "orangered",
         "teal"
     ];
-    new Chart("myChart", {
+    // Store original totals
+    var originalTotal = <?php echo $totalAmount; ?>;
+    var originalFirstHalf = <?php echo $firstHalfTotal; ?>;
+    var originalSecondHalf = <?php echo $secondHalfTotal; ?>;
+    
+    // Track which bills are currently hidden
+    var hiddenBills = new Set();
+    
+    // Function to update totals
+    function updateTotals() {
+        var currentTotal = originalTotal;
+        var currentFirstHalf = originalFirstHalf;
+        var currentSecondHalf = originalSecondHalf;
+        
+        // Subtract hidden bills from totals
+        hiddenBills.forEach(function(storeName) {
+            var amount = parseFloat(document.querySelector('.this-row-' + storeName.replace(/[^a-zA-Z0-9\-]/g, '-') + ' .payAmount').textContent.replace('$', '').replace(',', ''));
+            currentTotal -= amount;
+            
+            // Check if this bill is in first or second half
+            var dueDate = document.querySelector('.this-row-' + storeName.replace(/[^a-zA-Z0-9\-]/g, '-') + ' .nextDue').textContent;
+            var day = parseInt(dueDate.split('-')[1]);
+            if (day <= 14) {
+                currentFirstHalf -= amount;
+            } else {
+                currentSecondHalf -= amount;
+            }
+        });
+        
+        // Update display
+        document.querySelector('#monthlyBreakdown h2').textContent = 'Total amount : $' + currentTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        document.querySelector('.breakdownContainer .breakdownHalf:first-child .breakdownAmount').textContent = '$' + currentFirstHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        document.querySelector('.breakdownContainer .breakdownHalf:last-child .breakdownAmount').textContent = '$' + currentSecondHalf.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    // Function to toggle bill visibility
+    function toggleBill(storeName) {
+        var storeDashed = storeName.replace(/[^a-zA-Z0-9\-]/g, '-');
+        var billRow = document.querySelector('.this-row-' + storeDashed);
+        
+        if (hiddenBills.has(storeName)) {
+            // Show the bill
+            billRow.style.display = 'flex';
+            hiddenBills.delete(storeName);
+        } else {
+            // Hide the bill
+            billRow.style.display = 'none';
+            hiddenBills.add(storeName);
+        }
+        
+        updateTotals();
+    }
+
+    var chart = new Chart("myChart", {
     type: "pie",
         data: {
             labels: arrayOfStores,
@@ -616,7 +683,7 @@ $i++;
             maintainAspectRatio: false,
             title: {
                 display: true,
-                text: "Bills Broken Down"
+                text: "Bills Broken Down (Click to toggle)"
             },
             layout: {
                 padding: {
@@ -632,8 +699,29 @@ $i++;
                     boxWidth: 15,
                     padding: 15
                 }
+            },
+            onClick: function(event, elements) {
+                if (elements.length > 0) {
+                    var index = elements[0].index;
+                    var storeName = arrayOfStores[index];
+                    toggleBill(storeName);
+                }
             }
         }
+    });
+    
+    // Add click handlers to legend labels
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            var legendItems = document.querySelectorAll('.chartjs-legend li');
+            legendItems.forEach(function(item, index) {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', function() {
+                    var storeName = arrayOfStores[index];
+                    toggleBill(storeName);
+                });
+            });
+        }, 1000);
     });
 
 </script>
