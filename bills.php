@@ -831,16 +831,18 @@ $i++;
                 labels: {
                     boxWidth: 15,
                     padding: 15
-                },
-                onClick: function(evt, legendItem, legend) {
-                    const index = legendItem.index;
-                    const storeName = legend.chart.data.labels[index];
-                    console.log('Legend clicked:', storeName, 'Index:', index);
-                    toggleBill(storeName);
                 }
             }
         }
     });
+    
+    // Add legend click handler (Chart.js 2.9.4 API)
+    chart.options.legend.onClick = function(evt, legendItem) {
+        const index = legendItem.index;
+        const storeName = arrayOfStores[index];
+        console.log('Legend clicked:', storeName, 'Index:', index);
+        toggleBill(storeName);
+    };
     
     // Add click handler to chart (Chart.js 2.9.4 API)
     document.getElementById('myChart').onclick = function(evt) {
