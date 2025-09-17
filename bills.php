@@ -687,7 +687,7 @@ $i++;
         }
     }
     
-    // Function to toggle pie chart slice visibility
+    // Function to toggle pie chart slice visibility and legend strikethrough
     function toggleBill(storeName) {
         console.log('Toggling pie chart slice for:', storeName);
         
@@ -702,11 +702,23 @@ $i++;
             console.log('Showing slice for:', storeName);
             hiddenBills.delete(storeName);
             chart.data.datasets[0].data[storeIndex] = arrayOfAmounts[storeIndex];
+            
+            // Remove strikethrough from legend
+            var legendItems = document.querySelectorAll('.chartjs-legend li');
+            if (legendItems[storeIndex]) {
+                legendItems[storeIndex].style.textDecoration = 'none';
+            }
         } else {
             // Hide the slice
             console.log('Hiding slice for:', storeName);
             hiddenBills.add(storeName);
             chart.data.datasets[0].data[storeIndex] = 0;
+            
+            // Add strikethrough to legend
+            var legendItems = document.querySelectorAll('.chartjs-legend li');
+            if (legendItems[storeIndex]) {
+                legendItems[storeIndex].style.textDecoration = 'line-through';
+            }
         }
         
         // Update the chart
@@ -772,6 +784,7 @@ $i++;
                     e.stopPropagation();
                     var storeName = arrayOfStores[index];
                     console.log('Clicked on legend item:', storeName, 'Index:', index);
+                    // Use the same toggleBill function as pie slice clicks
                     toggleBill(storeName);
                 });
             });
