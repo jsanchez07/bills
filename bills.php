@@ -841,7 +841,25 @@ $i++;
         const index = legendItem.index;
         const storeName = arrayOfStores[index];
         console.log('Legend clicked:', storeName, 'Index:', index);
+        
+        // Call toggleBill and then manually update legend appearance
         toggleBill(storeName);
+        
+        // Manually update legend strikethrough after a short delay
+        setTimeout(function() {
+            const legendItems = document.querySelectorAll('.chartjs-legend li');
+            if (legendItems[index]) {
+                if (hiddenBills.has(storeName)) {
+                    legendItems[index].style.textDecoration = 'line-through';
+                    console.log('Applied strikethrough to legend item:', storeName);
+                } else {
+                    legendItems[index].style.textDecoration = 'none';
+                    console.log('Removed strikethrough from legend item:', storeName);
+                }
+            } else {
+                console.log('Could not find legend item for index:', index);
+            }
+        }, 100);
     };
     
     // Add click handler to chart (Chart.js 2.9.4 API)
