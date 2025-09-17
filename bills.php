@@ -847,22 +847,37 @@ $i++;
         
         // Manually update legend strikethrough after a short delay
         setTimeout(function() {
-            // Try multiple selectors to find legend items
-            let legendItems = document.querySelectorAll('.chartjs-legend li');
-            console.log('Found legend items with .chartjs-legend li:', legendItems.length);
+            // Find the chart legend specifically
+            const chartCanvas = document.getElementById('myChart');
+            const chartParent = chartCanvas.parentElement;
+            let legendItems = chartParent.querySelectorAll('ul li');
             
+            console.log('Chart parent element:', chartParent);
+            console.log('Found legend items in chart parent:', legendItems.length);
+            
+            // If still not found, try to find the legend container
             if (legendItems.length === 0) {
-                // Try alternative selectors
-                legendItems = document.querySelectorAll('ul li');
-                console.log('Found legend items with ul li:', legendItems.length);
+                const legendContainer = chartParent.querySelector('.chartjs-legend');
+                if (legendContainer) {
+                    legendItems = legendContainer.querySelectorAll('li');
+                    console.log('Found legend items in .chartjs-legend:', legendItems.length);
+                }
             }
             
+            // If still not found, look for any ul near the chart
             if (legendItems.length === 0) {
-                // Try finding by looking for the chart container
-                const chartContainer = document.getElementById('myChart').parentElement;
-                legendItems = chartContainer.querySelectorAll('li');
-                console.log('Found legend items in chart container:', legendItems.length);
+                const allUls = document.querySelectorAll('ul');
+                for (let ul of allUls) {
+                    const items = ul.querySelectorAll('li');
+                    if (items.length === arrayOfStores.length) {
+                        legendItems = items;
+                        console.log('Found legend items by matching count:', legendItems.length);
+                        break;
+                    }
+                }
             }
+            
+            console.log('Final legend items found:', legendItems.length, 'Looking for index:', index);
             
             if (legendItems.length > 0 && legendItems[index]) {
                 if (hiddenBills.has(storeName)) {
@@ -888,7 +903,7 @@ $i++;
                     }
                 }
             }
-        }, 200);
+        }, 300);
     };
     
     // Add click handler to chart (Chart.js 2.9.4 API)
