@@ -991,16 +991,17 @@ function saveItemDetails() {
     })
     .then(response => {
         console.log('Response status:', response.status);
-        if (!response.ok) {
-            return response.text().then(text => {
-                throw new Error('Server error: ' + text.substring(0, 200));
-            });
-        }
-        return response.json().catch(err => {
-            return response.text().then(text => {
+        return response.text().then(text => {
+            console.log('Raw response text:', text.substring(0, 500));
+            if (!response.ok) {
+                throw new Error('Server error (status ' + response.status + '): ' + text.substring(0, 300));
+            }
+            try {
+                return JSON.parse(text);
+            } catch (err) {
                 console.error('Invalid JSON response:', text.substring(0, 500));
-                throw new Error('Server returned invalid JSON. Response: ' + text.substring(0, 200));
-            });
+                throw new Error('Server returned invalid JSON. Response: ' + text.substring(0, 300));
+            }
         });
     })
     .then(data => {
