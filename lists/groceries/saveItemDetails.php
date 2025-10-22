@@ -3,33 +3,43 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
-require('dbConfig.php');
+try {
+    require('dbConfig.php');
 
-$con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
-if(!$con){
-    echo json_encode(array('success' => false, 'message' => 'Failed to connect to the database'));
-    exit;
-}
-
-$itemID = $_POST['itemID'] ?? '';
-$description = $_POST['description'] ?? '';
-$removeImage = isset($_POST['removeImage']) && $_POST['removeImage'] === 'true';
-
-if (empty($itemID)) {
-    echo json_encode(array('success' => false, 'message' => 'Item ID is required'));
-    exit;
-}
-
-$image_url = null;
-
-// Handle image upload
-if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = 'uploads/';
-    
-    // Create uploads directory if it doesn't exist
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+    $con = mysqli_connect($localhost, $DBusername, $DBpassword, $database);
+    if(!$con){
+        echo json_encode(array('success' => false, 'message' => 'Failed to connect to the database'));
+        exit;
     }
+
+    $itemID = $_POST['itemID'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $removeImage = isset($_POST['removeImage']) && $_POST['removeImage'] === 'true';
+
+    if (empty($itemID)) {
+        echo json_encode(array('success' => false, 'message' => 'Item ID is required'));
+        exit;
+    }
+
+    $image_url = null;
+
+    // Handle image upload
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/';
+        
+        // Create uploads directory if it doesn't exist
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+                echo json_encode(array('success' => false, 'message' => 'Failed to create uploads directory. Check permissions.'));
+                exit;
+            }
+        }
+        
+        // Check if directory is writable
+        if (!is_writable($uploadDir)) {
+            echo json_encode(array('success' => false, 'message' => 'Uploads directory is not writable. Check permissions.'));
+            exit;
+        }
     
     $fileExtension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
@@ -114,17 +124,23 @@ if ($image_url !== null) {
     mysqli_stmt_bind_param($stmt, 'ss', $description, $itemID);
 }
 
-if (mysqli_stmt_execute($stmt)) {
-    $response = array('success' => true, 'message' => 'Details saved successfully');
-    if ($image_url !== null) {
-        $response['image_url'] = $image_url;
+    if (mysqli_stmt_execute($stmt)) {
+        $response = array('success' => true, 'message' => 'Details saved successfully');
+        if ($image_url !== null) {
+            $response['image_url'] = $image_url;
+        }
+        echo json_encode($response);
+    } else {
+        echo json_encode(array('success' => false, 'message' => 'Failed to save details: ' . mysqli_error($con)));
     }
-    echo json_encode($response);
-} else {
-    echo json_encode(array('success' => false, 'message' => 'Failed to save details: ' . mysqli_error($con)));
-}
 
-mysqli_stmt_close($stmt);
-mysqli_close($con);
+    mysqli_stmt_close($stmt);
+    mysqli_close($con);
+
+} catch (Exception $e) {
+    echo json_encode(array('success' => false, 'message' => 'Error: ' . $e->getMessage()));
+} catch (Error $e) {
+    echo json_encode(array('success' => false, 'message' => 'Fatal error: ' . $e->getMessage()));
+}
 ?>
 
