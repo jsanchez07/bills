@@ -991,7 +991,17 @@ function saveItemDetails() {
     })
     .then(response => {
         console.log('Response status:', response.status);
-        return response.json();
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error('Server error: ' + text.substring(0, 200));
+            });
+        }
+        return response.json().catch(err => {
+            return response.text().then(text => {
+                console.error('Invalid JSON response:', text.substring(0, 500));
+                throw new Error('Server returned invalid JSON. Response: ' + text.substring(0, 200));
+            });
+        });
     })
     .then(data => {
         console.log('Response data:', data);
@@ -1011,7 +1021,7 @@ function saveItemDetails() {
     })
     .catch((error) => {
         console.error('Fetch error:', error);
-        alert('Error saving details');
+        alert('Error saving details: ' + error.message);
     });
 }
 
