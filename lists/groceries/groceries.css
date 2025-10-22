@@ -486,8 +486,29 @@ h1 {
 }
 
 #imageUpload {
-    margin-bottom: 10px;
+    flex: 1;
     font-size: 16px;
+}
+
+#imageUpload::file-selector-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#imageUpload::file-selector-button:hover {
+    background-color: #45a049;
+}
+
+.image-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 #removeImageBtn {
