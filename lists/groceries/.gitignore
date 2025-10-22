@@ -1,0 +1,7 @@
+# Uploaded images
+uploads/
+
+# Local PHP config files
+php.ini
+.user.ini
+

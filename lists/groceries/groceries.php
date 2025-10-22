@@ -147,7 +147,7 @@
                             <img id="previewImg" src="" alt="No image" style="display:none;">
                             <p id="noImageText">No image uploaded</p>
                         </div>
-                        <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+                        <input type="file" id="imageUpload" accept="image/*,.heic,.heif" onchange="handleImageUpload(event)">
                         <button onclick="removeImage()" id="removeImageBtn" style="display:none;">Remove Image</button>
                     </div>
                     <div class="description-section">

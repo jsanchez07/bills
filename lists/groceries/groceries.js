@@ -31,7 +31,7 @@ function populateAllLists() {
         // Create the list div
         var listDiv = document.createElement('div');
         listDiv.className = 'list';
-        listDiv.innerHTML = "<div class='heading-and-buttons' onclick='toggleCategory(\"" + categoryID + "\")'><span class='collapse-arrow'>▼</span><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='event.stopPropagation(); moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='event.stopPropagation(); moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "' class='category-content'><div class='list-action-buttons'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button><button class='delete-all-button' onclick='deleteAllItems(\"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\")'>Delete All</button></div></ul>";
+        listDiv.innerHTML = "<div class='heading-and-buttons' onclick='toggleCategory(\"" + categoryID + "\")'><span class='collapse-arrow'>▼</span><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='event.stopPropagation(); moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='event.stopPropagation(); moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "' class='category-content'><div class='list-action-buttons'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button><button class='delete-all-button' onclick='deleteCheckedItems(\"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\")'>Delete Checked</button></div></ul>";
 
         // Append list items to the list div
         var numItemsinCategory = 0;
@@ -813,27 +813,34 @@ function toggleCategory(categoryID) {
     }
 }
 
-function deleteAllItems(categoryID, categoryName) {
+function deleteCheckedItems(categoryID, categoryName) {
     var ul = document.querySelector("#" + categoryID);
     var items = Array.from(ul.querySelectorAll('li'));
     
-    if (items.length === 0) {
+    // Filter to only checked items
+    var checkedItems = items.filter(function(item) {
+        var checkbox = item.querySelector('input[type="checkbox"]');
+        return checkbox && checkbox.checked;
+    });
+    
+    if (checkedItems.length === 0) {
+        alert('No checked items to delete in ' + categoryName);
         return;
     }
     
     // Ask for confirmation
-    if (!confirm("Are you sure you want to delete all items in '" + categoryName + "'? This cannot be undone.")) {
+    if (!confirm("Are you sure you want to delete " + checkedItems.length + " checked item(s) in '" + categoryName + "'? This cannot be undone.")) {
         return;
     }
     
-    // Get all item IDs to delete
+    // Get all checked item IDs to delete
     var itemIDsToDelete = [];
-    items.forEach(function(item) {
+    checkedItems.forEach(function(item) {
         itemIDsToDelete.push(item.id);
     });
     
     // Remove from DOM
-    items.forEach(function(item) {
+    checkedItems.forEach(function(item) {
         item.remove();
     });
     
@@ -842,10 +849,13 @@ function deleteAllItems(categoryID, categoryName) {
         return !itemIDsToDelete.includes(grocery.id);
     });
     
-    // Hide the action buttons
-    document.querySelector("#" + categoryID + " .list-action-buttons").classList.add("invisible");
+    // Check if there are any items left, hide buttons if not
+    var remainingItems = ul.querySelectorAll('li');
+    if (remainingItems.length === 0) {
+        document.querySelector("#" + categoryID + " .list-action-buttons").classList.add("invisible");
+    }
     
-    // Make an HTTP request to delete all items from database
+    // Make an HTTP request to delete checked items from database
     fetch('deleteAllItems.php', {
         method: 'POST',
         headers: {
@@ -854,7 +864,7 @@ function deleteAllItems(categoryID, categoryName) {
         body: JSON.stringify({ categoryID: categoryID, itemIDs: itemIDsToDelete })
     })
     .then(response => response.json())
-    .then(data => console.log('Deleted all items:', data))
+    .then(data => console.log('Deleted checked items:', data))
     .catch((error) => {
         console.error('Error:', error);
     });
@@ -903,9 +913,16 @@ function closeItemModal() {
 function handleImageUpload(event) {
     var file = event.target.files[0];
     if (file) {
+        console.log('=== IMAGE UPLOAD DEBUG ===');
+        console.log('File name:', file.name);
+        console.log('File type:', file.type);
+        console.log('File size:', file.size, 'bytes');
+        console.log('File extension:', file.name.split('.').pop().toLowerCase());
+        
         uploadedImageFile = file;
         var reader = new FileReader();
         reader.onload = function(e) {
+            console.log('File read successfully');
             var previewImg = document.getElementById('previewImg');
             var noImageText = document.getElementById('noImageText');
             previewImg.src = e.target.result;
@@ -913,7 +930,12 @@ function handleImageUpload(event) {
             noImageText.style.display = 'none';
             document.getElementById('removeImageBtn').style.display = 'inline-block';
         };
+        reader.onerror = function(e) {
+            console.error('FileReader error:', e);
+        };
         reader.readAsDataURL(file);
+    } else {
+        console.log('No file selected');
     }
 }
 
@@ -939,36 +961,56 @@ function saveItemDetails() {
     
     if (!item) return;
     
+    console.log('=== SAVING ITEM DETAILS ===');
+    console.log('Item ID:', currentItemID);
+    console.log('Description:', description);
+    console.log('Has uploaded file:', !!uploadedImageFile);
+    if (uploadedImageFile) {
+        console.log('Uploaded file name:', uploadedImageFile.name);
+        console.log('Uploaded file type:', uploadedImageFile.type);
+        console.log('Uploaded file size:', uploadedImageFile.size);
+    }
+    
     var formData = new FormData();
     formData.append('itemID', currentItemID);
     formData.append('description', description);
     
     if (uploadedImageFile) {
         formData.append('image', uploadedImageFile);
+        console.log('Image appended to FormData');
     } else if (item.image_url === '') {
         formData.append('removeImage', 'true');
+        console.log('Remove image flag set');
     }
+    
+    console.log('Sending request to saveItemDetails.php...');
     
     fetch('saveItemDetails.php', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.success) {
             item.description = description;
             if (data.image_url !== undefined) {
                 item.image_url = data.image_url;
             }
+            console.log('Details saved successfully');
             // Update the indicator
             updateItemIndicator(currentItemID);
             closeItemModal();
         } else {
+            console.error('Save failed:', data.message);
             alert('Error saving details: ' + data.message);
         }
     })
     .catch((error) => {
-        console.error('Error:', error);
+        console.error('Fetch error:', error);
         alert('Error saving details');
     });
 }
