@@ -15,6 +15,16 @@ $con = mysqli_connect($localhost,$DBusername,$DBpassword, $database);
 
 $itemID = mysqli_real_escape_string($con, $data['itemID']);
 
+// Get the image URL before deleting
+$imageQuery = "SELECT image_url FROM Groceries WHERE id = '$itemID'";
+$result = mysqli_query($con, $imageQuery);
+$row = mysqli_fetch_assoc($result);
+
+// Delete the image file if it exists
+if ($row && !empty($row['image_url']) && file_exists($row['image_url'])) {
+    unlink($row['image_url']);
+}
+
 $sql = "DELETE FROM Groceries WHERE id = '$itemID'";
 
 // Execute the query

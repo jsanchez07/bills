@@ -30,7 +30,7 @@
     $beginningCategoriesResult = mysqli_query($con, $categoriesQuery);
     $numBeginningCategories = mysqli_num_rows($beginningCategoriesResult);
 
-    $groceriesQuery="SELECT id, isChecked, item, category, category_id FROM Groceries";
+    $groceriesQuery="SELECT id, isChecked, item, category, category_id, image_url, description FROM Groceries";
     $objectGroceriesListResult = mysqli_query($con, $groceriesQuery);
     $numObjectGroceriesList = mysqli_num_rows($objectGroceriesListResult);
     
@@ -51,7 +51,7 @@
         $objRow = mysqli_fetch_array($objectGroceriesListResult);
     ?>
         <script>
-            groceries.push(new Groceries("<?php echo $objRow['id']; ?>", "<?php echo $objRow['item']; ?>", <?php echo $objRow['isChecked']; ?>, "<?php echo $objRow['category']; ?>", "<?php echo $objRow['category_id']; ?>"));
+            groceries.push(new Groceries("<?php echo $objRow['id']; ?>", "<?php echo $objRow['item']; ?>", <?php echo $objRow['isChecked']; ?>, "<?php echo $objRow['category']; ?>", "<?php echo $objRow['category_id']; ?>", "<?php echo $objRow['image_url'] ?? ''; ?>", "<?php echo addslashes($objRow['description'] ?? ''); ?>"));
        </script>
     <?php   
         }
@@ -134,6 +134,31 @@
             </select>
             <button id= "delete-category-button" onclick="deleteCategory(document.querySelector('#category-dropdown').selectedOptions[0].id)">Delete Category</button>
         </div>
+
+        <!-- Item Details Modal -->
+        <div id="itemDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeItemModal()">&times;</span>
+                <h2 id="modalItemName"></h2>
+                <div class="modal-body">
+                    <div class="image-section">
+                        <h3>Image</h3>
+                        <div id="imagePreview" class="image-preview">
+                            <img id="previewImg" src="" alt="No image" style="display:none;">
+                            <p id="noImageText">No image uploaded</p>
+                        </div>
+                        <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+                        <button onclick="removeImage()" id="removeImageBtn" style="display:none;">Remove Image</button>
+                    </div>
+                    <div class="description-section">
+                        <h3>Description / Notes</h3>
+                        <textarea id="itemDescription" placeholder="e.g., Aisle 5, near the bread section" rows="4"></textarea>
+                        <button onclick="saveItemDetails()">Save Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <?php mysqli_close($con);?>
     </body>
 </html>

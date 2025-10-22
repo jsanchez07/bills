@@ -1,7 +1,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+    background: white; /*linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);*/
     margin: 0;
     padding: 0;
     width: 95%;
@@ -46,6 +46,17 @@ h1 {
     align-items: start; /* Aligns items at the start of the container */
     justify-content: space-between;
     width: 100%;
+    cursor: pointer;
+    user-select: none;
+    border: 3px solid #4a90e2;
+    border-radius: 10px;
+    padding: 10px 15px;
+    background-color: rgba(74, 144, 226, 0.1);
+    transition: background-color 0.2s ease;
+  }
+
+.heading-and-buttons:hover {
+    background-color: rgba(74, 144, 226, 0.2);
   }
 
 .move-list {
@@ -187,6 +198,16 @@ h1 {
     background-color: #0469e3;
 }
 
+.list-action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 55px;
+    padding: 0 20px;
+    width: 100%;
+}
+
 .uncheck-all-button {
     display:inline-flex;
     background-color: white;
@@ -195,10 +216,25 @@ h1 {
     border-radius: 25px;
     text-align: center;
     cursor: pointer;
-    margin-left: 20px;
-    margin-bottom: 55px;
     padding: 15px 20px;
     font-size: 18px;
+}
+
+.delete-all-button {
+    display:inline-flex;
+    background-color: #ff4444;
+    color: white;
+    border: 1px solid #cc0000;
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
+    padding: 15px 20px;
+    font-size: 18px;
+    transition: background-color 0.2s ease;
+}
+
+.delete-all-button:hover {
+    background-color: #cc0000;
 }
 
 .invisible {
@@ -326,4 +362,169 @@ h1 {
 
 .hidden {
     display: none;
+}
+
+/* Collapsible category styles */
+.collapse-arrow {
+    font-size: 24px;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.collapsed .collapse-arrow {
+    transform: rotate(-90deg);
+}
+
+.category-content {
+    max-height: 5000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 1;
+}
+
+.collapsed .category-content {
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
+}
+
+/* Item text styling */
+.item-text {
+    cursor: pointer;
+    flex-grow: 1;
+    padding: 5px;
+    transition: background-color 0.2s ease;
+    position: relative;
+}
+
+.item-text:hover {
+    background-color: rgba(74, 144, 226, 0.1);
+    border-radius: 5px;
+}
+
+.details-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #ff4444;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+}
+
+.modal-body {
+    margin-top: 20px;
+}
+
+.image-section, .description-section {
+    margin-bottom: 30px;
+}
+
+.image-section h3, .description-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.image-preview {
+    width: 100%;
+    min-height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+}
+
+.image-preview p {
+    color: #999;
+    font-size: 18px;
+}
+
+#imageUpload {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+#removeImageBtn {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#removeImageBtn:hover {
+    background-color: #cc0000;
+}
+
+#itemDescription {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+}
+
+.description-section button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.description-section button:hover {
+    background-color: #357abd;
 }

@@ -1,10 +1,12 @@
 
-function Groceries(id, item, isChecked, category, categoryID) {
+function Groceries(id, item, isChecked, category, categoryID, image_url, description) {
     this.id = id;
     this.item = item;
     this.isChecked = isChecked;
     this.category = category;
     this.categoryID = categoryID;
+    this.image_url = image_url || '';
+    this.description = description || '';
 }
 
 function Categories(id, category_name, order_index) {
@@ -29,7 +31,7 @@ function populateAllLists() {
         // Create the list div
         var listDiv = document.createElement('div');
         listDiv.className = 'list';
-        listDiv.innerHTML = "<div class='heading-and-buttons'><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button></ul>";
+        listDiv.innerHTML = "<div class='heading-and-buttons' onclick='toggleCategory(\"" + categoryID + "\")'><span class='collapse-arrow'>▼</span><h2>" + categoryName + "</h2><div class='move-list'><button id='" + categoryID + "-up' onclick='event.stopPropagation(); moveCategoryUp(\"" + categoryID + "\")'></button><button id='" + categoryID + "-down' onclick='event.stopPropagation(); moveCategoryDown(\"" + categoryID + "\")'></button></div></div><ul id='" + categoryID + "' class='category-content'><div class='list-action-buttons'><button class='uncheck-all-button' onclick='uncheckAll(\"" + categoryID + "\")'>Uncheck All</button><button class='delete-all-button' onclick='deleteAllItems(\"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\")'>Delete All</button></div></ul>";
 
         // Append list items to the list div
         var numItemsinCategory = 0;
@@ -38,7 +40,9 @@ function populateAllLists() {
                 var itemID = grocery.id;
                 var listItem = document.createElement('li');
                 listItem.id = itemID;
-                listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onclick='rearrangeList(\"" + categoryID + "\")'" + (grocery.isChecked == 1 ? 'checked' : '') + ">" + grocery.item + "<button class='remove-item-button' onclick='removeThisItem(\"" + itemID + "\")'>x</button>";
+                var hasDetails = (grocery.image_url && grocery.image_url !== '') || (grocery.description && grocery.description !== '');
+                var indicator = hasDetails ? '<span class="details-indicator"></span>' : '';
+                listItem.innerHTML = "<input class='list-checkbox' type='checkbox' onclick='event.stopPropagation(); rearrangeList(\"" + categoryID + "\")'" + (grocery.isChecked == 1 ? 'checked' : '') + "><span class='item-text' onclick='openItemModal(\"" + itemID + "\")'>" + indicator + grocery.item + "</span><button class='remove-item-button' onclick='event.stopPropagation(); removeThisItem(\"" + itemID + "\")'>x</button>";
                 listDiv.querySelector('ul').appendChild(listItem);
                 numItemsinCategory++;
             }
@@ -46,7 +50,7 @@ function populateAllLists() {
 
         // Create the actions div
         var actionsDiv = document.createElement('div');
-        actionsDiv.className = 'actions';
+        actionsDiv.className = 'actions category-content';
         actionsDiv.innerHTML = "<input type='text' class='add-item-textbox' id='" + addToListTextboxID + "' placeholder='Add an item'><button class='add-item-button' onclick='addToList(document.querySelector(\"#" + addToListTextboxID + "\").value, \"" + categoryID + "\", \"" + escapeHTML(categoryName) + "\"); document.querySelector(\"#" + addToListTextboxID + "\").focus()'>Add</button><div class='error-message' id='error-" + categoryID + "'></div>";
 
         // Append the list and actions divs to the wrapper div
@@ -60,9 +64,9 @@ function populateAllLists() {
         rearrangeList(categoryID);
 
         if (numItemsinCategory == 0) {
-            document.querySelector("#" + categoryID + " button").classList.add("invisible");
+            document.querySelector("#" + categoryID + " .list-action-buttons").classList.add("invisible");
         } else if (numItemsinCategory > 0) {
-            document.querySelector("#" + categoryID + " button").classList.remove("invisible");
+            document.querySelector("#" + categoryID + " .list-action-buttons").classList.remove("invisible");
         }
     });
 
@@ -146,10 +150,38 @@ function addToList(newItem, categoryID, categoryName){
     //trim input to make it less messy
     newItem = newItem.trim();
 
-
-    document.querySelector("#"+categoryID).innerHTML += "<li id='"+itemID+"'><input class='list-checkbox' onchange='rearrangeList(\""+categoryID+ "\")' type='checkbox'>"+newItem+"<button class='remove-item-button' onclick='removeThisItem(\""+itemID+"\")'>x</button></li>";
+    // Create new list item using DOM methods to preserve existing checkbox states
+    var newListItem = document.createElement('li');
+    newListItem.id = itemID;
+    
+    var checkbox = document.createElement('input');
+    checkbox.className = 'list-checkbox';
+    checkbox.type = 'checkbox';
+    checkbox.onclick = function(e) { 
+        e.stopPropagation(); 
+        rearrangeList(categoryID); 
+    };
+    
+    var itemTextSpan = document.createElement('span');
+    itemTextSpan.className = 'item-text';
+    itemTextSpan.textContent = newItem;
+    itemTextSpan.onclick = function() { openItemModal(itemID); };
+    
+    var removeButton = document.createElement('button');
+    removeButton.className = 'remove-item-button';
+    removeButton.onclick = function(e) { 
+        e.stopPropagation(); 
+        removeThisItem(itemID); 
+    };
+    removeButton.textContent = 'x';
+    
+    newListItem.appendChild(checkbox);
+    newListItem.appendChild(itemTextSpan);
+    newListItem.appendChild(removeButton);
+    
+    document.querySelector("#"+categoryID).appendChild(newListItem);
                            
-    groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID));
+    groceries.push(new Groceries(itemID, newItem, false, categoryName, categoryID, '', ''));
 
     // Make an HTTP request to a server-side script
     fetch('addItem.php', {
@@ -167,8 +199,8 @@ function addToList(newItem, categoryID, categoryName){
 
     document.querySelector('#add-to-list-'+categoryID).value = "";
    
-    //show the uncheck all button    
-    document.querySelector("#"+categoryID+" button").classList.remove("invisible");
+    //show the action buttons    
+    document.querySelector("#"+categoryID+" .list-action-buttons").classList.remove("invisible");
         
     
 
@@ -253,10 +285,10 @@ function removeThisItem(itemID){
     console.log("li: ", li);
     li.remove(); 
 
-    // Check if there are any <li> elements left in the list and make uncheck button invisible if not
+    // Check if there are any <li> elements left in the list and make action buttons invisible if not
     if(parentUl.querySelectorAll('li').length === 0) {
         // No <li> elements left, do something here
-        document.querySelector("#"+parentUl.id+" button").classList.add("invisible");
+        document.querySelector("#"+parentUl.id+" .list-action-buttons").classList.add("invisible");
     }
 
     //remove it from the array
@@ -657,7 +689,8 @@ function rearrangeList(listID){
 
     // First, separate items into checked and unchecked without modifying the DOM
     items.forEach(function(item) {
-        if(item.firstChild.checked){
+        var checkbox = item.querySelector('input[type="checkbox"]');
+        if(checkbox && checkbox.checked){
             itemText = item.id.replace("#li", "");
             checkedItemsText.push(itemText);
             checkedItems.push(item);
@@ -666,7 +699,7 @@ function rearrangeList(listID){
                     groceries[i].isChecked = 1;
                 }
             }
-        } else if(!item.firstChild.checked && !item.classList.contains("uncheck-all-button")){
+        } else if(checkbox && !checkbox.checked){
             itemText = item.id.replace("#li", "");
             uncheckedItemsText.push(itemText);
             uncheckedItems.push(item);
@@ -710,7 +743,10 @@ function uncheckAll(categoryID){
     var ul = document.querySelector("#"+categoryID);
     var items = Array.from(ul.children); // Convert to array for stable iteration
     items.forEach(function(item){
-        item.firstChild.checked = false;
+        var checkbox = item.querySelector('input[type="checkbox"]');
+        if(checkbox){
+            checkbox.checked = false;
+        }
     });
     rearrangeList(categoryID);
 
@@ -768,4 +804,203 @@ function replaceSpecialCharacters(str){
     const regex = /[\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\'\"\@\#]/g;
     // Replace each special character with an escape character followed by the character itself
     return str.replace(regex, "\\$&");
+}
+
+function toggleCategory(categoryID) {
+    var wrapper = document.getElementById('category-wrapper-' + categoryID);
+    if (wrapper) {
+        wrapper.classList.toggle('collapsed');
+    }
+}
+
+function deleteAllItems(categoryID, categoryName) {
+    var ul = document.querySelector("#" + categoryID);
+    var items = Array.from(ul.querySelectorAll('li'));
+    
+    if (items.length === 0) {
+        return;
+    }
+    
+    // Ask for confirmation
+    if (!confirm("Are you sure you want to delete all items in '" + categoryName + "'? This cannot be undone.")) {
+        return;
+    }
+    
+    // Get all item IDs to delete
+    var itemIDsToDelete = [];
+    items.forEach(function(item) {
+        itemIDsToDelete.push(item.id);
+    });
+    
+    // Remove from DOM
+    items.forEach(function(item) {
+        item.remove();
+    });
+    
+    // Remove from groceries array
+    groceries = groceries.filter(function(grocery) {
+        return !itemIDsToDelete.includes(grocery.id);
+    });
+    
+    // Hide the action buttons
+    document.querySelector("#" + categoryID + " .list-action-buttons").classList.add("invisible");
+    
+    // Make an HTTP request to delete all items from database
+    fetch('deleteAllItems.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryID: categoryID, itemIDs: itemIDsToDelete })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Deleted all items:', data))
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+// Modal functions for item details
+var currentItemID = null;
+var uploadedImageFile = null;
+
+function openItemModal(itemID) {
+    currentItemID = itemID;
+    var item = groceries.find(g => g.id === itemID);
+    
+    if (!item) return;
+    
+    document.getElementById('modalItemName').textContent = item.item;
+    document.getElementById('itemDescription').value = item.description || '';
+    
+    // Handle image display
+    var previewImg = document.getElementById('previewImg');
+    var noImageText = document.getElementById('noImageText');
+    var removeBtn = document.getElementById('removeImageBtn');
+    
+    if (item.image_url && item.image_url !== '') {
+        previewImg.src = item.image_url;
+        previewImg.style.display = 'block';
+        noImageText.style.display = 'none';
+        removeBtn.style.display = 'inline-block';
+    } else {
+        previewImg.style.display = 'none';
+        noImageText.style.display = 'block';
+        removeBtn.style.display = 'none';
+    }
+    
+    uploadedImageFile = null;
+    document.getElementById('imageUpload').value = '';
+    document.getElementById('itemDetailsModal').style.display = 'block';
+}
+
+function closeItemModal() {
+    document.getElementById('itemDetailsModal').style.display = 'none';
+    currentItemID = null;
+    uploadedImageFile = null;
+}
+
+function handleImageUpload(event) {
+    var file = event.target.files[0];
+    if (file) {
+        uploadedImageFile = file;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var previewImg = document.getElementById('previewImg');
+            var noImageText = document.getElementById('noImageText');
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            noImageText.style.display = 'none';
+            document.getElementById('removeImageBtn').style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeImage() {
+    uploadedImageFile = null;
+    document.getElementById('imageUpload').value = '';
+    document.getElementById('previewImg').style.display = 'none';
+    document.getElementById('noImageText').style.display = 'block';
+    document.getElementById('removeImageBtn').style.display = 'none';
+    
+    // Mark for deletion on save
+    var item = groceries.find(g => g.id === currentItemID);
+    if (item) {
+        item.image_url = '';
+    }
+}
+
+function saveItemDetails() {
+    if (!currentItemID) return;
+    
+    var description = document.getElementById('itemDescription').value;
+    var item = groceries.find(g => g.id === currentItemID);
+    
+    if (!item) return;
+    
+    var formData = new FormData();
+    formData.append('itemID', currentItemID);
+    formData.append('description', description);
+    
+    if (uploadedImageFile) {
+        formData.append('image', uploadedImageFile);
+    } else if (item.image_url === '') {
+        formData.append('removeImage', 'true');
+    }
+    
+    fetch('saveItemDetails.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            item.description = description;
+            if (data.image_url !== undefined) {
+                item.image_url = data.image_url;
+            }
+            // Update the indicator
+            updateItemIndicator(currentItemID);
+            closeItemModal();
+        } else {
+            alert('Error saving details: ' + data.message);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error saving details');
+    });
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    var modal = document.getElementById('itemDetailsModal');
+    if (event.target == modal) {
+        closeItemModal();
+    }
+}
+
+function updateItemIndicator(itemID) {
+    var item = groceries.find(g => g.id === itemID);
+    if (!item) return;
+    
+    var listItem = document.getElementById(itemID);
+    if (!listItem) return;
+    
+    var itemTextSpan = listItem.querySelector('.item-text');
+    if (!itemTextSpan) return;
+    
+    var hasDetails = (item.image_url && item.image_url !== '') || (item.description && item.description !== '');
+    var existingIndicator = itemTextSpan.querySelector('.details-indicator');
+    
+    if (hasDetails && !existingIndicator) {
+        // Add indicator
+        var indicator = document.createElement('span');
+        indicator.className = 'details-indicator';
+        itemTextSpan.insertBefore(indicator, itemTextSpan.firstChild);
+    } else if (!hasDetails && existingIndicator) {
+        // Remove indicator
+        existingIndicator.remove();
+    }
 }
