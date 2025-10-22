@@ -62,13 +62,16 @@ try {
     $stmt = mysqli_prepare($con, $oldImageQuery);
     mysqli_stmt_bind_param($stmt, 's', $itemID);
     mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
     
-    if ($row && !empty($row['image_url']) && file_exists($row['image_url'])) {
-        unlink($row['image_url']);
-    }
+    // Use bind_result instead of get_result for compatibility
+    $old_image_url = null;
+    mysqli_stmt_bind_result($stmt, $old_image_url);
+    mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
+    
+    if ($old_image_url && !empty($old_image_url) && file_exists($old_image_url)) {
+        unlink($old_image_url);
+    }
     
     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
         // Try to convert HEIC to JPG if ImageMagick is available
@@ -102,13 +105,16 @@ try {
     $stmt = mysqli_prepare($con, $oldImageQuery);
     mysqli_stmt_bind_param($stmt, 's', $itemID);
     mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
     
-    if ($row && !empty($row['image_url']) && file_exists($row['image_url'])) {
-        unlink($row['image_url']);
-    }
+    // Use bind_result instead of get_result for compatibility
+    $old_image_url = null;
+    mysqli_stmt_bind_result($stmt, $old_image_url);
+    mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
+    
+    if ($old_image_url && !empty($old_image_url) && file_exists($old_image_url)) {
+        unlink($old_image_url);
+    }
     
     $image_url = '';
 }

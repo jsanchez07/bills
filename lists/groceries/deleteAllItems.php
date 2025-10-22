@@ -30,12 +30,15 @@ if ($imageStmt) {
     $types = str_repeat('s', count($itemIDs));
     mysqli_stmt_bind_param($imageStmt, $types, ...$itemIDs);
     mysqli_stmt_execute($imageStmt);
-    $imageResult = mysqli_stmt_get_result($imageStmt);
+    
+    // Use bind_result instead of get_result for compatibility
+    $image_url = null;
+    mysqli_stmt_bind_result($imageStmt, $image_url);
     
     // Delete all image files
-    while ($row = mysqli_fetch_assoc($imageResult)) {
-        if (!empty($row['image_url']) && file_exists($row['image_url'])) {
-            unlink($row['image_url']);
+    while (mysqli_stmt_fetch($imageStmt)) {
+        if (!empty($image_url) && file_exists($image_url)) {
+            unlink($image_url);
         }
     }
     mysqli_stmt_close($imageStmt);
