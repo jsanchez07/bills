@@ -94,6 +94,72 @@ $num=mysqli_num_rows($result);
 date_default_timezone_set('America/Chicago');
 $today = date("m-d-Y", time());
 
+// Auto-update recurring bills with auto_pay enabled
+$i_temp = 0;
+while ($i_temp < $num) {
+    $row_temp = mysqli_fetch_row($result);
+    
+    $store_temp = $row_temp[0];
+    $due_on_temp = $row_temp[1];
+    $last_payment_temp = $row_temp[2];
+    $auto_pay_temp = $row_temp[7];
+    $recurring_amount_temp = $row_temp[8];
+    
+    // Only process if auto_pay is enabled
+    if($auto_pay_temp == 1 && $recurring_amount_temp > 0) {
+        list($monthNow_temp, $dayNow_temp, $yearNow_temp) = explode("-", $today);
+        list($last_year_temp, $last_month_temp, $last_day_temp) = explode("-", $last_payment_temp);
+        
+        // Check if we've passed the due date and haven't paid this cycle yet
+        $should_update = false;
+        
+        // If current day is >= due date and we're in a new month from last payment
+        if($dayNow_temp >= $due_on_temp) {
+            // Check if last payment was in a previous month or year
+            if($yearNow_temp > $last_year_temp) {
+                $should_update = true;
+            } else if($yearNow_temp == $last_year_temp && $monthNow_temp > $last_month_temp) {
+                $should_update = true;
+            }
+        }
+        
+        // Update the payment record if needed
+        if($should_update) {
+            // Calculate the payment date as day before due date
+            $payment_day = $due_on_temp - 1;
+            $payment_month = $monthNow_temp;
+            $payment_year = $yearNow_temp;
+            
+            // Handle case where due date is the 1st (payment date would be last day of previous month)
+            if($payment_day < 1) {
+                $payment_month = $monthNow_temp - 1;
+                if($payment_month < 1) {
+                    $payment_month = 12;
+                    $payment_year = $yearNow_temp - 1;
+                }
+                $payment_day = cal_days_in_month(CAL_GREGORIAN, $payment_month, $payment_year);
+            }
+            
+            // Format the payment date
+            $new_payment_date = sprintf("%04d-%02d-%02d", $payment_year, $payment_month, $payment_day);
+            $formatted_amount = number_format($recurring_amount_temp, 2, '.', '');
+            
+            // Update the database
+            $update_sql = "UPDATE `{$_SESSION['db_num']}` SET last_payment = '$new_payment_date', last_amount = '$formatted_amount' WHERE store = '$store_temp'";
+            mysqli_query($con, $update_sql);
+            
+            // Also add to history
+            $history_sql = "INSERT INTO `history{$_SESSION['db_num']}` (store, last_payment, last_amount, due_on, paidOn) VALUES('$store_temp', '$new_payment_date', '$formatted_amount', '$due_on_temp', NOW())";
+            mysqli_query($con, $history_sql);
+        }
+    }
+    
+    $i_temp++;
+}
+
+// Reset result pointer to beginning
+mysqli_data_seek($result, 0);
+
 
 ?>
 
