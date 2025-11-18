@@ -3,12 +3,13 @@ require_once('session_init.php');
  
  
  if(!isset($_SESSION['role'])) {
-      header("Location: logout.php");
+     header("Location: logout.php");
+     exit();
  }
  if ($_SESSION['role'] == 0){
-  header("Location: logout.php");
- 
- }
+ header("Location: logout.php");
+ exit();
+}
 // echo $_SESSION['db_num'];
 
 // index.php

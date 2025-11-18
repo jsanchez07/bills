@@ -94,5 +94,6 @@ mysqli_close($con);
      
     // display the thank you page
    header("Location: bills.php");
+   exit();
 }
 ?>

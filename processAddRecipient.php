@@ -27,6 +27,7 @@ $insert = "INSERT INTO messages (name, phone_number, carrier, table_name, bill) 
          die('Error: ' . mysql_error());
         }
         header("Location: alertManager.php");
+        exit();
     }
 }
 

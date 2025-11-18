@@ -2,14 +2,17 @@
 require_once('session_init.php');
 
  if(!isset($_SESSION['role'])) {
-      header("Location: logout.php");
+     header("Location: logout.php");
+     exit();
  }
  if ($_SESSION['role'] == null) {
+header("Location: logout.php");
+exit();
+}
+if ($_SESSION['role'] == 0){
  header("Location: logout.php");
- }
- if ($_SESSION['role'] == 0){
-  header("Location: logout.php"); 
- }
+ exit();
+}
  echo "hello is this working?";
  $table = $_SESSION['db_num'];
  $bill = $_GET['bill'];

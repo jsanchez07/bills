@@ -4,11 +4,13 @@ require_once('session_init.php');
  
 
  if(!isset($_SESSION['role'])) {
-      header("Location: logout.php");
+     header("Location: logout.php");
+     exit();
  }
  if ($_SESSION['role'] == 0){
-  header("Location: logout.php");
- }
+ header("Location: logout.php");
+ exit();
+}
 
 /*$localhost="anaRoot.db.10947084.hostedresource.com";
 $DBusername="anaRoot";

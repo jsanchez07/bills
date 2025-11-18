@@ -44,6 +44,7 @@ $num=mysqli_num_rows($result);
 if ($num == 0)
 {
 	header("Location: loginFalse.html");
+	exit();
 }
 
 // Process the user data

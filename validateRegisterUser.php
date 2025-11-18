@@ -158,6 +158,7 @@ mysql_close($con);
     // each allowed form field name is now a php variable that you can access
      
     // display the thank you page
-    header("Location: thanks.html");  
+    header("Location: thanks.html");
+    exit();
 }
 ?>
