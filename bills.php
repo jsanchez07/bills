@@ -27,6 +27,7 @@ if ($_SESSION['role'] == 0){
 <?ini_set( 'error_reporting', E_ALL ^ E_NOTICE );?>
 <?ini_set( 'display_errors', '0' );?>
 
+<meta name="robots" content="noindex, nofollow">
 
 <link rel="stylesheet" type="text/css" href="style.css" media="all"/>
 <script src="scripts.js" defer></script>
