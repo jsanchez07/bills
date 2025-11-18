@@ -1,5 +1,10 @@
 <?php
 require_once('session_init.php');
+
+// Prevent caching of this page
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
  
  //echo $_SESSION['db_num'];
 

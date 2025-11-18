@@ -1,12 +1,27 @@
 <?php
-
 session_start();
+
+// Unset all session variables
+$_SESSION = array();
+
+// Destroy the session cookie
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Destroy the session
 session_destroy();
-if(isset($_SESSION['role']))
-  unset($_SESSION['role']);
-  header("Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0");
-header("Cache-Control: private");
-header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+
+// Clear cache headers
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Redirect to login page
 header("Location: index.php");
 exit();
 ?>
